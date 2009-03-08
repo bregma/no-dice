@@ -19,6 +19,9 @@
  */
 #include "nodice/app.h"
 
+#include <SDL/SDL.h>
+
+
 NoDice::App::App(int argc, char* argv[])
 {
 }
