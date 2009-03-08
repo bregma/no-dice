@@ -20,19 +20,36 @@
 #ifndef NODICE_APP_H
 #define NODICE_APP_H 1
 
+#include "nodice/video.h"
+
+
 namespace NoDice
 {
+  class Config;
+
   /**
    * A wrapper class to provide application-wide setup and teardown.
    */
   class App
   {
   public:
-    App(int argc, char* argv[]);
+    App(const Config& config);
 
     ~App();
 
     int run();
+
+  private:
+    /** @brief A special RAII object for SDL initialization and teardown. */
+    struct SdlInit
+    {
+      SdlInit();
+      ~SdlInit();
+    };
+
+  private:
+    SdlInit  m_sdlInit;
+    Video    m_video;
   };
 
 } // namespace NoDice

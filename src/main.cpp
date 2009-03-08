@@ -20,7 +20,9 @@
 #include <fstream>
 #include <iostream>
 #include "nodice/app.h"
+#include "nodice/config.h"
 #include <SDL/SDL_main.h>
+#include <stdexcept>
 
 
 namespace
@@ -58,11 +60,27 @@ namespace
 
 int main(int argc, char* argv[])
 {
+	using NoDice::Config;
+	using NoDice::App;
+
 #if defined(_WIN32)
 	LogFutzer out(std::cout);
 	LogFutzer err(std::cerr);
 #endif
-	NoDice::App app(argc, argv);
-	return app.run();
-}
+	try
+	{
+		Config config(argc, argv);
+		return NoDice::App(config).run();
 
+	}
+	catch (std::exception& ex)
+	{
+		std::cerr << "*** ERROR exception caught: " << ex.what() << "\n";
+		exit(1);
+	}
+	catch (...)
+	{
+		std::cerr << "*** ERROR unknown exception caught.\n";
+		exit(1);
+	}
+}

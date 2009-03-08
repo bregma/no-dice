@@ -61,8 +61,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="kernel32.lib SDLmain.lib SDL.lib $(NOINHERIT)"
+				AdditionalDependencies="kernel32.lib SDLmain.lib SDL.lib MSVCRTD.lib MSVCPRTD.lib $(NOINHERIT)"
 				LinkIncremental="2"
+				IgnoreAllDefaultLibraries="true"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"
@@ -182,7 +183,15 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\nodice\config.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\main.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\nodice\video.cpp"
 				>
 			</File>
 		</Filter>
@@ -196,7 +205,15 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\nodice\config.h"
+				>
+			</File>
+			<File
 				RelativePath="..\src\opengl.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\nodice\video.h"
 				>
 			</File>
 		</Filter>

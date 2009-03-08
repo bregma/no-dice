@@ -1,6 +1,6 @@
 /**
- * @file nodice/app.cpp
- * @brief Implemntation of the nodice/app module.
+ * @file nodice/config.h
+ * @brief Public interface of the nodice/config module.
  *
  * Copyright 2009 Stephen M. Webb  <stephen.webb@bregmasoft.ca>
  *
@@ -17,49 +17,17 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-#include "nodice/app.h"
+#ifndef NODICE_CONFIG_H
+#define NODICE_CONFIG_H 1
 
-#include <cstdlib>
-#include <iostream>
-#include "nodice/config.h"
-#include <SDL/SDL.h>
-
-
-NoDice::App::SdlInit::SdlInit()
+namespace NoDice
 {
-	Uint32 flags = SDL_INIT_NOPARACHUTE;
-	int istat = ::SDL_Init(flags);
-	if (istat < 0)
-	{
-		std::cerr << "*** ERRROR in SDL_Init: " << ::SDL_GetError() << "\n";
-		exit(1);
-	}
+  class Config
+  {
+  public:
+	  Config(int argc, char* argv[]);
+	  ~Config();
+  };
+} // namespace NoDice
 
-	std::atexit(::SDL_Quit);
-}
-
-
-NoDice::App::SdlInit::~SdlInit()
-{
-	::SDL_Quit();
-}
-
-/**
- * The App object takes care of initializing the even system.
- */
-NoDice::App::App(const NoDice::Config& config)
-: m_sdlInit()
-, m_video(config)
-{
-}
-
-
-NoDice::App::~App()
-{
-}
-
-int NoDice::App::run()
-{
-	return 0;
-}
-
+#endif // NODICE_CONFIG_H
