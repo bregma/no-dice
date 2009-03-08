@@ -1,0 +1,8 @@
+*.dll
+*.exe
+*.log
+*.ncb
+*.suo
+*.vcproj.*.user
+Debug
+Release
