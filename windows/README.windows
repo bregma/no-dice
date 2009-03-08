@@ -1,0 +1,11 @@
+How to Build no-dice on Microsoft Windows
+=========================================
+
+No-dice has been built for Microsft Windows using Microsoft Visual Studio 2005
+Express Edition.  In order to build and run the program you will need to install
+the excellent SDL development kit, which can be found at (among other places)
+http://www.libsdl.org.
+
+You will want to install the SDL.dll fil into the windows subdirectory (where
+you have likely found the file you are at this moment reading).
+
