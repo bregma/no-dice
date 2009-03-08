@@ -1,6 +1,6 @@
 /**
- * @file main.cpp
- * @brief Implemntation of the no-dice mainline.
+ * @file nodice/app.cpp
+ * @brief Implemntation of the nodice/app module.
  *
  * Copyright 2009 Stephen M. Webb  <stephen.webb@bregmasoft.ca>
  *
@@ -19,9 +19,17 @@
  */
 #include "nodice/app.h"
 
-int main(int argc, char* argv[])
+NoDice::App::App(int argc, char* argv[])
 {
-	NoDice::App app(argc, argv);
-	return app.run();
+}
+
+
+NoDice::App::~App()
+{
+}
+
+int NoDice::App::run()
+{
+	return 0;
 }
 

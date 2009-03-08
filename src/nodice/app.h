@@ -1,6 +1,6 @@
 /**
- * @file main.cpp
- * @brief Implemntation of the no-dice mainline.
+ * @file nodice/app.h
+ * @brief Public interface of the nodice/app module.
  *
  * Copyright 2009 Stephen M. Webb  <stephen.webb@bregmasoft.ca>
  *
@@ -17,11 +17,24 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-#include "nodice/app.h"
+#ifndef NODICE_APP_H
+#define NODICE_APP_H 1
 
-int main(int argc, char* argv[])
+namespace NoDice
 {
-	NoDice::App app(argc, argv);
-	return app.run();
-}
+  /**
+   * A wrapper class to provide application-wide setup and teardown.
+   */
+  class App
+  {
+  public:
+    App(int argc, char* argv[]);
+
+    ~App();
+
+    int run();
+  };
+
+} // namespace NoDice
+#endif // NODICE_APP_H
 
