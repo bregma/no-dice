@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(ProjectDir)\..\..\src&quot;"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)\..\src&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -178,11 +178,11 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\..\src\nodice\app.cpp"
+				RelativePath="..\src\nodice\app.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\main.cpp"
+				RelativePath="..\src\main.cpp"
 				>
 			</File>
 		</Filter>
@@ -192,11 +192,11 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath="..\..\src\nodice\app.h"
+				RelativePath="..\src\nodice\app.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\opengl.h"
+				RelativePath="..\src\opengl.h"
 				>
 			</File>
 		</Filter>
@@ -207,7 +207,7 @@
 			>
 		</Filter>
 		<File
-			RelativePath="..\README.windows"
+			RelativePath=".\README.windows"
 			>
 		</File>
 	</Files>
