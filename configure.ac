@@ -23,5 +23,11 @@ AC_PROG_CXX
 
 # Checks for library functions.
 
+# Checks for third-party packages
+PKG_CHECK_MODULES([SDL],      [sdl >= 1.2.11])
+PKG_CHECK_MODULES([FREETYPE], [freetype2 >= 9.10.3])
+
 AC_CONFIG_FILES(Makefile)
+AC_CONFIG_FILES(src/Makefile)
+AC_CONFIG_FILES(assets/Makefile)
 AC_OUTPUT
