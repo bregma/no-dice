@@ -30,6 +30,7 @@ no_dice_SOURCES = \
 	main.cpp \
 	nodice/app.h nodice/app.cpp \
 	nodice/config.h nodice/config.cpp \
+	nodice/fint.h nodice/font.cpp \
 	nodice/video.h nodice/video.cpp
 
 no_dice_CXXFLAGS = \
