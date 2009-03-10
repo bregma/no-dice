@@ -60,6 +60,38 @@ NoDice::App::~App()
 
 int NoDice::App::run()
 {
+	bool done = false;
+	bool isActive = true;
+	while (!done)
+	{
+		SDL_Event event;
+		while (SDL_PollEvent(&event))
+		{
+			switch (event.type)
+			{
+			case SDL_ACTIVEEVENT:
+				std::cerr << "==smw> SDL_ACTIVEEVENT event type received.\n";
+				isActive = (event.active.gain != 0);
+				break;
+			case SDL_KEYDOWN:
+				std::cerr << "==smw> SDL_KEYDOWN event type received.\n";
+				done = true;
+				break;
+			case SDL_QUIT:
+				std::cerr << "==smw> SDL_QUIT event type received.\n";
+				done = true;
+				break;
+			default:
+				std::cerr << "==smw> event type " << static_cast<int>(event.type) << " received.\n";
+				break;
+			}
+		}
+
+		if (isActive)
+		{
+			m_video.update();
+		}
+	}
 	return 0;
 }
 

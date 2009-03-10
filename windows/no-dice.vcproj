@@ -61,8 +61,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="kernel32.lib SDLmain.lib SDL.lib MSVCRTD.lib MSVCPRTD.lib $(NOINHERIT)"
+				AdditionalDependencies="kernel32.lib SDLmain.lib SDL.lib OpenGL32.lib freetype238MT_D.lib MSVCRTD.lib MSVCPRTD.lib $(NOINHERIT)"
 				LinkIncremental="2"
+				AdditionalLibraryDirectories="&quot;C:\cygwin\home\Stephen\dev\no-dice\freetype\lib&quot;"
 				IgnoreAllDefaultLibraries="true"
 				GenerateDebugInformation="true"
 				SubSystem="1"
