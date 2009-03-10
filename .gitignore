@@ -1,0 +1,15 @@
+*-stamp
+*.o
+.*.swp
+.deps
+aclocal.m4
+autom4te.cache
+config
+config.log
+config.status
+configure
+no-dice
+nodice_config.h*
+Makefile
+Makefile.in
+stamp-h1

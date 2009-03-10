@@ -1,0 +1,9 @@
+#!/bin/sh
+#
+# Bootstrap file for the PoopmUp-2.0 project.  Run this script to generate a
+# configure script fron a fresh source repository checkout.
+#
+# This script requires autoconf 2.59 or later to be installed.
+#
+autoreconf -ivf
+
