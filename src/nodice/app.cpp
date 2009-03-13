@@ -22,6 +22,7 @@
 #include <cstdlib>
 #include <iostream>
 #include "nodice/config.h"
+#include "nodice/font.h"
 #include <SDL/SDL.h>
 
 
@@ -60,6 +61,8 @@ NoDice::App::~App()
 
 int NoDice::App::run()
 {
+	Font testFont("assets/FreeSans.ttf", 14);
+
 	bool done = false;
 	bool isActive = true;
 	while (!done)
@@ -70,7 +73,7 @@ int NoDice::App::run()
 			switch (event.type)
 			{
 			case SDL_ACTIVEEVENT:
-				std::cerr << "==smw> SDL_ACTIVEEVENT event type received.\n";
+				std::cerr << "==smw> SDL_ACTIVEEVENT event type received, gain=" << (int)event.active.gain << ".\n";
 				isActive = (event.active.gain != 0);
 				break;
 			case SDL_KEYDOWN:
@@ -89,6 +92,7 @@ int NoDice::App::run()
 
 		if (isActive)
 		{
+			testFont.print(10.0, 10.0, "This is a test");
 			m_video.update();
 		}
 	}

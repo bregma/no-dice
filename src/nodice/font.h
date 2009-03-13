@@ -22,20 +22,47 @@
 
 #include "opengl.h"
 #include <string>
+#include <vector>
 
 
 namespace NoDice
 {
+	struct Glyph
+	{
+		typedef std::vector<GLubyte> Bitmap;
+
+		Bitmap   bitmap;  // bitmap
+		GLsizei  width;	  // width of bitmap in pixels
+		GLsizei  height;  // height of bitmap in pixels
+		GLsizei  advance; // horizontal advance in pixels
+
+		GLfloat  s;       // X-offset of glyph within texture
+		GLfloat  t;       // Y-offset of glyph within texture
+		GLfloat  w;       // width of glyph within texture
+		GLfloat  h;       // height of glyph within texture
+	};
+
 	class Font
 	{
 	public:
 		Font(const std::string& fontname, unsigned int height);
 		~Font();
 
+		void mapToTexture();
+
+		// temporary function for testing
+		void print(GLfloat x, GLfloat y, const std::string& text);
+
 	private:
-		float   m_height;
-		GLuint* m_textures;
+		std::string        m_name;
+		float              m_height;
+		std::vector<Glyph> m_glyph;
+
+		GLsizei            m_textureWidth;
+		GLsizei            m_textureHeight;
+		GLuint             m_texture;
 	};
+
 } // namespace NoDice
 
 #endif // NODICE_FONT_H

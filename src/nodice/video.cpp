@@ -54,7 +54,8 @@ NoDice::Video::Video(const Config& config)
 	}
 	std::cerr << "==smw> video bpp = " << static_cast<int>(videoInfo->vfmt->BitsPerPixel) << "\n";
 
-	SDL_Rect** modes = SDL_ListModes(videoInfo->vfmt, SDL_OPENGL|SDL_FULLSCREEN);
+//	SDL_Rect** modes = SDL_ListModes(videoInfo->vfmt, SDL_OPENGL|SDL_FULLSCREEN);
+	SDL_Rect** modes = SDL_ListModes(videoInfo->vfmt, SDL_OPENGL);
 	if (modes == 0)
 	{
 		std::cerr << "*** ERRROR no supported video modes available.\n";
@@ -83,7 +84,8 @@ NoDice::Video::Video(const Config& config)
 		  << "x" << static_cast<int>(videoInfo->vfmt->BitsPerPixel) << ".\n";
 
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-	Uint32 videoFlags = SDL_OPENGL | SDL_GL_DOUBLEBUFFER | SDL_FULLSCREEN;
+//	Uint32 videoFlags = SDL_OPENGL | SDL_GL_DOUBLEBUFFER | SDL_FULLSCREEN;
+	Uint32 videoFlags = SDL_OPENGL | SDL_GL_DOUBLEBUFFER;
 	SDL_Surface* surface = SDL_SetVideoMode(m_screenWidth, m_screenHeight, videoInfo->vfmt->BitsPerPixel, videoFlags);
 	if (!surface)
 	{
