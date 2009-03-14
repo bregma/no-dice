@@ -9,3 +9,6 @@ http://www.libsdl.org.
 You will want to install the SDL.dll fil into the windows subdirectory (where
 you have likely found the file you are at this moment reading).
 
+You will also want to install the freetype2 development kit into the $(top_srcdir)/freetype folder. This should have the headers in include and the lib in lib.
+
+

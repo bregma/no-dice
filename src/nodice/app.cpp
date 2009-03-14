@@ -25,6 +25,9 @@
 #include "nodice/font.h"
 #include <SDL/SDL.h>
 
+#ifndef DATA_DIR
+# define DATA_DIR
+#endif
 
 NoDice::App::SdlInit::SdlInit()
 {
@@ -61,7 +64,7 @@ NoDice::App::~App()
 
 int NoDice::App::run()
 {
-	Font testFont("assets/FreeSans.ttf", 14);
+	Font testFont(DATA_DIR"assets/FreeSans.ttf", 14);
 
 	bool done = false;
 	bool isActive = true;

@@ -40,8 +40,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(ProjectDir)\..\src&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)\..\src&quot;;&quot;C:\cygwin\home\Stephen\dev\no-dice\freetype\include&quot;"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;DATA_DIR=\&quot;../\&quot;"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -188,6 +188,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\nodice\font.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\main.cpp"
 				>
 			</File>
@@ -210,6 +214,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\nodice\font.h"
+				>
+			</File>
+			<File
 				RelativePath="..\src\opengl.h"
 				>
 			</File>
@@ -223,6 +231,26 @@
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
+		</Filter>
+		<Filter
+			Name="Assets"
+			>
+			<Filter
+				Name="Fonts"
+				>
+				<File
+					RelativePath="..\assets\FreeSans.ttf"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Graphics"
+				>
+			</Filter>
+			<Filter
+				Name="Sounds"
+				>
+			</Filter>
 		</Filter>
 		<File
 			RelativePath=".\README.windows"

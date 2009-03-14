@@ -24,6 +24,12 @@
 # define WIN32_LEAN_AND_MEAN 1
 # include <windows.h>
 #endif
+#ifdef min
+# undef min
+#endif
+#ifdef max
+# undef max
+#endif
 
 #ifdef HAVE_OPENGL_ES
 # include <GLES/gl.h>

@@ -145,12 +145,12 @@ NoDice::Font::~Font()
  */
 void NoDice::Font::mapToTexture()
 {
-	GLfloat fTextureWidth = m_textureWidth;
+	GLfloat fTextureWidth = static_cast<GLfloat>(m_textureWidth);
 
 	// Build a texture from the individual bitmaps.
 	std::vector<GLubyte> texture(m_textureWidth
-															 * m_textureHeight
-															 * 2*sizeof(GLubyte));
+	                             * m_textureHeight
+	                             * 2*sizeof(GLubyte));
 	std::vector<GLubyte>::iterator it = texture.begin();
 	GLsizei xoff = 0;
 	for (unsigned char c = 0; c < s_max_char; ++c)
@@ -174,9 +174,9 @@ void NoDice::Font::mapToTexture()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE_ALPHA,
-							 m_textureWidth, m_textureHeight,
-							 0, GL_RGBA, GL_UNSIGNED_BYTE,
-							 &texture[0]);
+	             m_textureWidth, m_textureHeight,
+	             0, GL_LUMINANCE_ALPHA, GL_UNSIGNED_BYTE,
+	             &texture[0]);
 	check_gl_error("glTexImage2D");
 	glDisable(GL_TEXTURE_2D);
 }
@@ -204,9 +204,9 @@ void NoDice::Font::print(GLfloat x, GLfloat y, const std::string& text)
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
   GLfloat varray[16];
-	for (int i = 0; i < text.length(); ++i)
+  for (std::string::const_iterator it = text.begin(); it != text.end(); ++it)
 	{
-		char c = text[i];
+		char c = *it;
 #if 0
 		std::cerr << "==smw> c='" << c << "'"
 		          << " x=" << x
