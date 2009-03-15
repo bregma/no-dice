@@ -51,7 +51,7 @@ namespace NoDice
 		void mapToTexture();
 
 		// temporary function for testing
-		void print(GLfloat x, GLfloat y, const std::string& text);
+		void print(GLfloat x, GLfloat y, GLfloat scale, const std::string& text);
 
 	private:
 		std::string        m_name;

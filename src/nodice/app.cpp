@@ -23,6 +23,7 @@
 #include <iostream>
 #include "nodice/config.h"
 #include "nodice/font.h"
+#include "nodice/fontcache.h"
 #include <SDL/SDL.h>
 
 #ifndef DATA_DIR
@@ -64,8 +65,6 @@ NoDice::App::~App()
 
 int NoDice::App::run()
 {
-	Font testFont(DATA_DIR"assets/FreeSans.ttf", 24);
-
 	bool done = false;
 	bool isActive = true;
 	while (!done)
@@ -95,7 +94,11 @@ int NoDice::App::run()
 
 		if (isActive)
 		{
-			testFont.print(32.0, 32.0, "This is a test");
+			Font& font = FontCache::get("FreeSans", 18);
+			glColor3ub(0, 0, 0xff);
+			font.print(32.0f, 64.0f, 1.0f, "This is a test");
+			glColor3ub(0xff, 0, 0);
+			font.print(32.0f, 32.0f, 2.0f, "This is another test");
 			m_video.update();
 		}
 	}

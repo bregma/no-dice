@@ -192,6 +192,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\nodice\fontcache.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\main.cpp"
 				>
 			</File>
@@ -215,6 +219,10 @@
 			</File>
 			<File
 				RelativePath="..\src\nodice\font.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\nodice\fontcache.h"
 				>
 			</File>
 			<File

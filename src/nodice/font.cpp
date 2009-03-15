@@ -189,18 +189,17 @@ void NoDice::Font::mapToTexture()
 }
 
 
-void NoDice::Font::print(GLfloat x, GLfloat y, const std::string& text)
+void NoDice::Font::print(GLfloat x, GLfloat y, GLfloat scale, const std::string& text)
 {
 	glPushAttrib(GL_TRANSFORM_BIT);
 	GLint viewport[4];
 	glGetIntegerv(GL_VIEWPORT, viewport);
+	glPopAttrib();
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
 	glLoadIdentity();
-	glPopAttrib();
 	glOrtho(viewport[0], viewport[2], viewport[1], viewport[3], -1.0f, 1.0f);
 
-	glColor3ub(0, 0, 0xff);
 	glDisable(GL_DEPTH_TEST);
 	glBindTexture(GL_TEXTURE_2D, m_texture);
 	glEnable(GL_BLEND);
@@ -219,16 +218,16 @@ void NoDice::Font::print(GLfloat x, GLfloat y, const std::string& text)
 		varray[1]  = y;
 		varray[2]  = m_glyph[c].s;
 		varray[3]  = m_glyph[c].t + m_glyph[c].h;
-		varray[4]  = x + m_glyph[c].width;
+		varray[4]  = x + m_glyph[c].width * scale;
 		varray[5]  = y;
 		varray[6]  = m_glyph[c].s + m_glyph[c].w;
 		varray[7]  = m_glyph[c].t + m_glyph[c].h;
 		varray[8]  = x;
-		varray[9]  = y + m_glyph[c].height;
+		varray[9]  = y + m_glyph[c].height * scale;
 		varray[10] = m_glyph[c].s;
 		varray[11] = m_glyph[c].t;
-		varray[12] = x + m_glyph[c].width;
-		varray[13] = y + m_glyph[c].height;
+		varray[12] = x + m_glyph[c].width * scale;
+		varray[13] = y + m_glyph[c].height * scale;
 		varray[14] = m_glyph[c].s + m_glyph[c].w;
 		varray[15] = m_glyph[c].t;
 
@@ -237,7 +236,7 @@ void NoDice::Font::print(GLfloat x, GLfloat y, const std::string& text)
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 		check_gl_error("glDrawArrays");
 
-		x += m_glyph[c].advance;
+		x += m_glyph[c].advance * scale;
 	}
 
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
@@ -246,9 +245,7 @@ void NoDice::Font::print(GLfloat x, GLfloat y, const std::string& text)
 	glDisable(GL_TEXTURE_2D);
 	glEnable(GL_DEPTH_TEST);
 
-	glPushAttrib(GL_TRANSFORM_BIT);
 	glMatrixMode(GL_PROJECTION);
 	glPopMatrix();
-	glPopAttrib();
 }
 
