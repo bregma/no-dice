@@ -41,16 +41,6 @@ namespace
 		x |= x >> 16;
 		return ++x;
 	}
-
-	void check_gl_error(const std::string& msg)
-	{
-		GLenum err = glGetError();
-		while (err != 0)
-		{
-			std::cerr << "GL error 0x" << std::hex << err << std::dec << " at " << msg << "\n";
-			err = glGetError();
-		}
-	}
 }
 
 
@@ -108,7 +98,7 @@ NoDice::Font::Font(const std::string& fontname, unsigned int pointsize)
 		// Allocate the required memory for this glyph's bitmap
 		m_glyph[c].bitmap = Glyph::Bitmap(m_glyph[c].width
 		                                  * m_glyph[c].height
-																			* 2*sizeof(GLubyte));
+		                                  * 2*sizeof(GLubyte));
 
 		// Convert the freefont bitmap into an opengl GL_LUMINANCE_ALPHA bitmap
 		int i = 0;
@@ -118,7 +108,7 @@ NoDice::Font::Font(const std::string& fontname, unsigned int pointsize)
 			{
 				int index = x + m_glyph[c].width*y;
 				m_glyph[c].bitmap[i++] = ftFace->glyph->bitmap.buffer[index];
-				m_glyph[c].bitmap[i++] = ftFace->glyph->bitmap.buffer[index];
+				m_glyph[c].bitmap[i++] = (ftFace->glyph->bitmap.buffer[index] > 0 ? 0xff : 0);
 			}
 		}
 	}
@@ -145,24 +135,41 @@ NoDice::Font::~Font()
  */
 void NoDice::Font::mapToTexture()
 {
-	GLfloat fTextureWidth = static_cast<GLfloat>(m_textureWidth);
+	typedef std::vector<GLubyte> Texture;
+	static const std::size_t bitmapDepth = 2*sizeof(GLubyte);
+	const GLfloat fTextureWidth  = static_cast<GLfloat>(m_textureWidth);
+	const GLfloat fTextureHeight = static_cast<GLfloat>(m_textureHeight);
 
 	// Build a texture from the individual bitmaps.
-	std::vector<GLubyte> texture(m_textureWidth
-	                             * m_textureHeight
-	                             * 2*sizeof(GLubyte));
-	std::vector<GLubyte>::iterator it = texture.begin();
-	GLsizei xoff = 0;
+	//
+	// Start by allocating enough memory for the texture in
+	// GL_LUMINANCE_ALPHA format, which requires 2 values for each pixel.
+	// The data in the freetype bitmap are bytes, so each pixel in the
+	// bitmap requires two bytes in the texture.
+	//
+	Texture texture(m_textureWidth * m_textureHeight * bitmapDepth);
+	GLsizei texOffset = 0;
 	for (unsigned char c = 0; c < s_max_char; ++c)
 	{
-		std::copy(m_glyph[c].bitmap.begin(), m_glyph[c].bitmap.end(), it);
-		it += m_glyph[c].bitmap.size();
-		xoff += m_glyph[c].width;
+		// Copy the glyph bitmap into the texture
+		Texture::iterator  texLine  = texture.begin() + (texOffset * bitmapDepth);
+		Texture::size_type texWidth = m_textureWidth * bitmapDepth;
+		Glyph::Bitmap::size_type bitmapWidth = m_glyph[c].width * bitmapDepth;
+		for (Glyph::Bitmap::const_iterator bitmapLine = m_glyph[c].bitmap.begin();
+		     bitmapLine != m_glyph[c].bitmap.end();
+		     bitmapLine += bitmapWidth, texLine += texWidth)
+		{
+			std::copy(bitmapLine, bitmapLine + bitmapWidth, texLine);
+		}
 
-		m_glyph[c].s = static_cast<GLfloat>(xoff) / fTextureWidth;
+		// Remember the texel coordinates for the glyph
+		m_glyph[c].s = static_cast<GLfloat>(texOffset) / fTextureWidth;
 		m_glyph[c].t = 0.0f;
 		m_glyph[c].w = static_cast<GLfloat>(m_glyph[c].width) / fTextureWidth;
-		m_glyph[c].h = 1.0f;
+		m_glyph[c].h = static_cast<GLfloat>(m_glyph[c].height) / fTextureHeight;
+
+		// Adjust the destination offset for the next glyph
+		texOffset += m_glyph[c].width;
 	}
 
 	// Send it to the OpenGL engine.
@@ -203,20 +210,11 @@ void NoDice::Font::print(GLfloat x, GLfloat y, const std::string& text)
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
-  GLfloat varray[16];
-  for (std::string::const_iterator it = text.begin(); it != text.end(); ++it)
+	GLfloat varray[16];
+	for (std::string::const_iterator it = text.begin(); it != text.end(); ++it)
 	{
 		char c = *it;
-#if 0
-		std::cerr << "==smw> c='" << c << "'"
-		          << " x=" << x
-		          << " y=" << y
-			        << " s=" << m_glyph[c].s
-			        << " t=" << m_glyph[c].t
-			        << " s+w=" << m_glyph[c].s + m_glyph[c].w
-			        << " t+h=" << m_glyph[c].t + m_glyph[c].h
-			        << "\n";
-#endif
+
 		varray[0]  = x;
 		varray[1]  = y;
 		varray[2]  = m_glyph[c].s;

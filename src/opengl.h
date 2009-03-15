@@ -37,4 +37,19 @@
 # include <GL/gl.h>
 #endif
 
+#ifndef _NDEBUG
+# include <iostream>
+# include <string>
+
+inline void check_gl_error(const std::string& msg)
+{
+	GLenum err = glGetError();
+	while (err != 0)
+	{
+		std::cerr << "GL error 0x" << std::hex << err << std::dec << " at " << msg << "\n";
+		err = glGetError();
+	}
+}
+#endif
+
 #endif // NO_DICE_OPENGL_H

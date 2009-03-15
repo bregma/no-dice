@@ -109,11 +109,10 @@ NoDice::Video::~Video()
 
 void NoDice::Video::update()
 {
+	SDL_GL_SwapBuffers();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 	glTranslatef(0.0f, 0.0f, -1.0f);
-
-	SDL_GL_SwapBuffers();
 }
 
 

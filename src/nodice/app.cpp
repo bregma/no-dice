@@ -64,7 +64,7 @@ NoDice::App::~App()
 
 int NoDice::App::run()
 {
-	Font testFont(DATA_DIR"assets/FreeSans.ttf", 14);
+	Font testFont(DATA_DIR"assets/FreeSans.ttf", 24);
 
 	bool done = false;
 	bool isActive = true;
@@ -95,7 +95,7 @@ int NoDice::App::run()
 
 		if (isActive)
 		{
-			testFont.print(10.0, 10.0, "This is a test");
+			testFont.print(32.0, 32.0, "This is a test");
 			m_video.update();
 		}
 	}
