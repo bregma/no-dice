@@ -26,9 +26,6 @@
 #include "nodice/fontcache.h"
 #include <SDL/SDL.h>
 
-#ifndef DATA_DIR
-# define DATA_DIR
-#endif
 
 NoDice::App::SdlInit::SdlInit()
 {

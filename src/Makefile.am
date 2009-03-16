@@ -28,10 +28,11 @@ bin_PROGRAMS = no-dice
 
 no_dice_SOURCES = \
 	main.cpp \
-	nodice/app.h nodice/app.cpp \
-	nodice/config.h nodice/config.cpp \
-	nodice/fint.h nodice/font.cpp \
-	nodice/video.h nodice/video.cpp
+	nodice/app.h       nodice/app.cpp \
+	nodice/config.h    nodice/config.cpp \
+	nodice/font.h      nodice/font.cpp \
+	nodice/fontcache.h nodice/fontcache.cpp \
+	nodice/video.h     nodice/video.cpp
 
 no_dice_CXXFLAGS = \
 	$(SDL_CFLAGS) \

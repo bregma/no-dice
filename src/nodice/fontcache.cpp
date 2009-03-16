@@ -21,6 +21,10 @@
 
 #include "nodice/font.h"
 
+#ifndef DATA_DIR
+# define DATA_DIR
+#endif
+
 
 NoDice::FontCache::FontCache()
 {
