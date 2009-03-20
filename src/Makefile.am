@@ -26,21 +26,30 @@ datadir = /usr/share/games/gljewel/data
 
 bin_PROGRAMS = no-dice
 
+if HAVE_EGL
+vcontext_SOURCES = nodice/videocontextegl.h nodice/videocontextegl.cpp
+else
+vcontext_SOURCES = nodice/videocontextsdl.h nodice/videocontextsdl.cpp
+endif
+
 no_dice_SOURCES = \
 	main.cpp \
-	nodice/app.h       nodice/app.cpp \
-	nodice/config.h    nodice/config.cpp \
-	nodice/font.h      nodice/font.cpp \
-	nodice/fontcache.h nodice/fontcache.cpp \
-	nodice/video.h     nodice/video.cpp
+	nodice/app.h              nodice/app.cpp \
+	nodice/config.h           nodice/config.cpp \
+	nodice/font.h             nodice/font.cpp \
+	nodice/fontcache.h        nodice/fontcache.cpp \
+	nodice/video.h            nodice/video.cpp \
+	nodice/videocontext.h \
+	$(vcontext_SOURCES)
 
 no_dice_CXXFLAGS = \
 	$(SDL_CFLAGS) \
-	$(FREETYPE_CFLAGS)
+	$(FREETYPE_CFLAGS) \
+	$(GL_CFLAGS)
 
 no_dice_LDADD = \
 	$(SDL_LIBS) \
 	$(FREETYPE_LIBS) \
-	-lGL
+	$(GL_LIBS)
 
 

@@ -1,6 +1,6 @@
 /**
- * @file opengl.h
- * @brief Portable wrapper for OpenGL/OpenGL ES inclusion.
+ * @file nodice/videocontext/g.h
+ * @brief Public interface of the nodice/videocontext/g module.
  *
  * Copyright 2009 Stephen M. Webb  <stephen.webb@bregmasoft.ca>
  *
@@ -17,41 +17,30 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-#ifndef NO_DICE_OPENGL_H
-#define NO_DICE_OPENGL_H 1
+#ifndef NODICE_VIDEOCONTEXT_H
+#define NODICE_VIDEOCONTEXT_H 1
 
-#include "nodice_config.h"
-
-#if defined(_WIN32) && !defined(__CYGWIN__)
-# define WIN32_LEAN_AND_MEAN 1
-# include <windows.h>
-#endif
-#ifdef min
-# undef min
-#endif
-#ifdef max
-# undef max
-#endif
-
-#ifdef HAVE_OPENGL_ES
-# include <GLES/gl.h>
-#else
-# include <GL/gl.h>
-#endif
-
-#ifndef _NDEBUG
-# include <iostream>
-# include <string>
-
-inline void check_gl_error(const std::string& msg)
+namespace NoDice
 {
-	GLenum err = glGetError();
-	while (err != 0)
+	/**
+	 * A base class for the various platform-specific video contexts.
+	 */
+	class VideoContext
 	{
-		std::cerr << "GL error 0x" << std::hex << err << std::dec << " at " << msg << "\n";
-		err = glGetError();
-	}
-}
-#endif
+	public:
+		virtual ~VideoContext() { }
 
-#endif // NO_DICE_OPENGL_H
+		virtual void swapBuffers() = 0;
+
+		int width()  const { return m_width; }
+		int height() const { return m_height; }
+		int depth()  const { return m_depth; }
+
+	protected:
+		int m_width;
+		int m_height;
+		int m_depth;
+	};
+} // namespace NoDice
+
+#endif // NODICE_VIDEOCONTEXT_H

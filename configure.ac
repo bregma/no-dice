@@ -14,6 +14,7 @@ AC_CONFIG_HEADER([nodice_config.h])
 
 # Checks for tools.
 AC_PROG_CXX
+AC_LANG(C++)
 
 # Checks for libraries.
 
@@ -26,6 +27,23 @@ AC_PROG_CXX
 # Checks for third-party packages
 PKG_CHECK_MODULES([SDL],      [sdl >= 1.2.11])
 PKG_CHECK_MODULES([FREETYPE], [freetype2 >= 9.10.3])
+
+# Use SDL or EGL for video context?
+GL_CFLAGS=""
+GL_LIBS="-lGL"
+AC_ARG_WITH(wm,
+						AC_HELP_STRING([--with-wm=@<:@sdl|egl@:>@],
+													 [selects the window manager]),
+						nd_wm=$with_wm)
+if test "x$nd_wm" = "xegl"; then
+	AC_CHECK_HEADERS([GLES/egl.h],, AC_MSG_ERROR([missing EGL headers]))
+	AC_DEFINE([HAVE_EGL], [1], [Use EGL for the video context])
+	AC_DEFINE([HAVE_OPENGL_ES], [1], [Use OpenGL ES])
+	GL_LIBS="-lgles11 -legl13"
+fi
+AM_CONDITIONAL([HAVE_EGL], [test "x$nd_wm" = "xegl"])
+AC_SUBST([GL_CFLAGS])
+AC_SUBST([GL_LIBS])
 
 AC_CONFIG_FILES(Makefile)
 AC_CONFIG_FILES(src/Makefile)

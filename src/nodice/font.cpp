@@ -191,14 +191,16 @@ void NoDice::Font::mapToTexture()
 
 void NoDice::Font::print(GLfloat x, GLfloat y, GLfloat scale, const std::string& text)
 {
-	glPushAttrib(GL_TRANSFORM_BIT);
-	GLint viewport[4];
-	glGetIntegerv(GL_VIEWPORT, viewport);
-	glPopAttrib();
+	GLfloat viewport[4];
+	glGetFloatv(GL_VIEWPORT, viewport);
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
 	glLoadIdentity();
+#ifdef HAVE_OPENGL_ES
+	glOrthof(viewport[0], viewport[2], viewport[1], viewport[3], -1.0f, 1.0f);
+#else
 	glOrtho(viewport[0], viewport[2], viewport[1], viewport[3], -1.0f, 1.0f);
+#endif
 
 	glDisable(GL_DEPTH_TEST);
 	glBindTexture(GL_TEXTURE_2D, m_texture);

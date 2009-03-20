@@ -92,9 +92,9 @@ int NoDice::App::run()
 		if (isActive)
 		{
 			Font& font = FontCache::get("FreeSans", 18);
-			glColor3ub(0, 0, 0xff);
+			glColor4f(0.0f, 0.0f, 1.0f, 1.0f);
 			font.print(32.0f, 64.0f, 1.0f, "This is a test");
-			glColor3ub(0xff, 0, 0);
+			glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
 			font.print(32.0f, 32.0f, 2.0f, "This is another test");
 			m_video.update();
 		}

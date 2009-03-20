@@ -17,11 +17,16 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+#include "nodice_config.h"
 #include "nodice/video.h"
 
 #include <iostream>
 #include "nodice/config.h"
-#include <SDL/SDL.h>
+#ifdef HAVE_EGL
+# include "nodice/videocontextegl.h"
+#else
+# include "nodice/videocontextsdl.h"
+#endif
 
 namespace
 {
@@ -29,7 +34,11 @@ namespace
 	{
 		glShadeModel(GL_SMOOTH);
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+#ifdef HAVE_OPENGL_ES
+		glClearDepthf(1.0f);
+#else
 		glClearDepth(1.0f);
+#endif
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_EQUAL);
 		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
@@ -37,62 +46,14 @@ namespace
 }
 
 NoDice::Video::Video(const Config& config)
-: m_screenWidth(640)
+#ifdef HAVE_EGL
+: m_context(new VideoContextEGL(config))
+#else
+: m_context(new VideoContextSDL(config))
+#endif
+, m_screenWidth(640)
 , m_screenHeight(480)
 {
-	if (0 != ::SDL_InitSubSystem(SDL_INIT_VIDEO))
-	{
-		std::cerr << "*** ERRROR in SDL_InitSubSystem(SDL_INIT_VIDEO): " << ::SDL_GetError() << "\n";
-		exit(1);
-	}
-
-	const SDL_VideoInfo* videoInfo = SDL_GetVideoInfo();
-	if (!videoInfo)
-	{
-		std::cerr << "*** ERRROR in SDL_GetVideoInfo(): " << ::SDL_GetError() << "\n";
-		exit(1);
-	}
-	std::cerr << "==smw> video bpp = " << static_cast<int>(videoInfo->vfmt->BitsPerPixel) << "\n";
-
-//	SDL_Rect** modes = SDL_ListModes(videoInfo->vfmt, SDL_OPENGL|SDL_FULLSCREEN);
-	SDL_Rect** modes = SDL_ListModes(videoInfo->vfmt, SDL_OPENGL);
-	if (modes == 0)
-	{
-		std::cerr << "*** ERRROR no supported video modes available.\n";
-		exit(1);
-	}
-
-	if (modes == (SDL_Rect **)-1)
-	{
-		std::cerr << "==smw> all video resolutions available.\n";
-	}
-	else
-	{
-		std::cerr << "==smw> Available Modes\n";
-		for (int i=0; modes[i]; ++i)
-		{
-			std::cerr << "==smw> " << modes[i]->w << "x" << modes[i]->h << "\n";
-		}
-		if (modes[0])
-		{
-			m_screenWidth = modes[0]->w;
-			m_screenHeight = modes[0]->h;
-		}
-	}
-	std::cerr << "==smw> choosing full-screen mode " << m_screenWidth
-		  << "x" << m_screenHeight
-		  << "x" << static_cast<int>(videoInfo->vfmt->BitsPerPixel) << ".\n";
-
-	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-//	Uint32 videoFlags = SDL_OPENGL | SDL_GL_DOUBLEBUFFER | SDL_FULLSCREEN;
-	Uint32 videoFlags = SDL_OPENGL | SDL_GL_DOUBLEBUFFER;
-	SDL_Surface* surface = SDL_SetVideoMode(m_screenWidth, m_screenHeight, videoInfo->vfmt->BitsPerPixel, videoFlags);
-	if (!surface)
-	{
-		std::cerr << "*** ERRROR in SDL_SetVideoMode(): " << ::SDL_GetError() << "\n";
-		exit(1);
-	}
-
 	initGL();
 	glViewport(0, 0, m_screenWidth, m_screenHeight);
 	glMatrixMode(GL_PROJECTION);
@@ -109,7 +70,7 @@ NoDice::Video::~Video()
 
 void NoDice::Video::update()
 {
-	SDL_GL_SwapBuffers();
+	m_context->swapBuffers();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 	glTranslatef(0.0f, 0.0f, -1.0f);

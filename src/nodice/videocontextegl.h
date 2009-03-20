@@ -1,6 +1,6 @@
 /**
- * @file opengl.h
- * @brief Portable wrapper for OpenGL/OpenGL ES inclusion.
+ * @file nodice/videocontextegl.h
+ * @brief Public interface of the nodice/videocontextegl module.
  *
  * Copyright 2009 Stephen M. Webb  <stephen.webb@bregmasoft.ca>
  *
@@ -17,41 +17,33 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-#ifndef NO_DICE_OPENGL_H
-#define NO_DICE_OPENGL_H 1
+#ifndef NODICE_VIDEOCONTEXTEGL_H
+#define NODICE_VIDEOCONTEXTEGL_H 1
 
-#include "nodice_config.h"
+#include "nodice/videocontext.h"
+#include "GLES/egl.h"
 
-#if defined(_WIN32) && !defined(__CYGWIN__)
-# define WIN32_LEAN_AND_MEAN 1
-# include <windows.h>
-#endif
-#ifdef min
-# undef min
-#endif
-#ifdef max
-# undef max
-#endif
 
-#ifdef HAVE_OPENGL_ES
-# include <GLES/gl.h>
-#else
-# include <GL/gl.h>
-#endif
-
-#ifndef _NDEBUG
-# include <iostream>
-# include <string>
-
-inline void check_gl_error(const std::string& msg)
+namespace NoDice
 {
-	GLenum err = glGetError();
-	while (err != 0)
-	{
-		std::cerr << "GL error 0x" << std::hex << err << std::dec << " at " << msg << "\n";
-		err = glGetError();
-	}
-}
-#endif
+	class Config;
 
-#endif // NO_DICE_OPENGL_H
+
+	class VideoContextEGL
+	: public VideoContext
+	{
+	public:
+		VideoContextEGL(const Config& config);
+
+		void swapBuffers();
+
+	private:
+		EGLDisplay m_eglDisplay;
+		EGLConfig  m_eglConfig;
+		EGLContext m_eglContext;
+		EGLSurface m_eglSurface;
+	};
+
+} // namespace NoDice
+
+#endif // NODICE_VIDEOCONTEXTEGL_H

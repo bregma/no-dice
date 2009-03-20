@@ -20,12 +20,14 @@
 #ifndef NODICE_VIDEO_H
 #define NODICE_VIDEO_H 1
 
+#include <memory>
 #include "opengl.h"
 
 
 namespace NoDice
 {
   class Config;
+  class VideoContext;
 
   class Video
   {
@@ -36,8 +38,9 @@ namespace NoDice
     void update();
 
   private:
-    GLsizei  m_screenWidth;
-    GLsizei  m_screenHeight;
+		std::auto_ptr<VideoContext> m_context;
+    GLsizei                     m_screenWidth;
+    GLsizei                     m_screenHeight;
   };
 } // namespace NoDice
 
