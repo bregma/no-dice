@@ -1,0 +1,19 @@
+To_Do for version 1
+===================
+
+* create matrix and vector classes
+* replace the following missing OpenGL functions:
+    glMatrixMode -- replace with specialized matrixes for projection and
+                    modelview
+    glLoadIdentity -- replace with special identity matrix
+    glRotate
+    glScale
+    glTranslate
+    glOrtho (or glFrustrum?)
+
+* create intrusive list class(es)
+* provide intrusive lists for renderable and updatable objects
+
+* game loop
+* texture generators (numbers on dice)
+
