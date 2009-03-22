@@ -203,6 +203,10 @@
 				RelativePath="..\src\nodice\video.cpp"
 				>
 			</File>
+			<File
+				RelativePath="..\src\nodice\videocontextsdl.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -231,6 +235,10 @@
 			</File>
 			<File
 				RelativePath="..\src\nodice\video.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\nodice\videocontextsdl.h"
 				>
 			</File>
 		</Filter>

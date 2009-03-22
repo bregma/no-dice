@@ -38,7 +38,7 @@ namespace NoDice
     void update();
 
   private:
-		std::auto_ptr<VideoContext> m_context;
+    std::auto_ptr<VideoContext> m_context;
     GLsizei                     m_screenWidth;
     GLsizei                     m_screenHeight;
   };

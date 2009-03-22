@@ -28,7 +28,15 @@ namespace NoDice
 	class VideoContext
 	{
 	public:
-		virtual ~VideoContext() { }
+		VideoContext()
+		: m_width(640)
+		, m_height(480)
+		, m_depth(32)
+		{ }
+
+		virtual ~VideoContext()
+		{ }
+
 
 		virtual void swapBuffers() = 0;
 

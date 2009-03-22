@@ -42,7 +42,7 @@ NoDice::VideoContextSDL::VideoContextSDL(const Config& config)
 
 //	SDL_Rect** modes = SDL_ListModes(videoInfo->vfmt, SDL_OPENGL|SDL_FULLSCREEN);
 	SDL_Rect** modes = SDL_ListModes(videoInfo->vfmt, SDL_OPENGL);
-	if (modes == 0)
+	if (modes == NULL)
 	{
 		std::cerr << "*** ERRROR no supported video modes available.\n";
 		exit(1);

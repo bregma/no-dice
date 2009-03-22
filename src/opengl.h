@@ -20,7 +20,9 @@
 #ifndef NO_DICE_OPENGL_H
 #define NO_DICE_OPENGL_H 1
 
-#include "nodice_config.h"
+#ifdef HAVE_NODICE_CONFIG_H
+# include "nodice_config.h"
+#endif
 
 #if defined(_WIN32) && !defined(__CYGWIN__)
 # define WIN32_LEAN_AND_MEAN 1
