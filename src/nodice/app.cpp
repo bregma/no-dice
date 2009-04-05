@@ -21,6 +21,7 @@
 
 #include <cstdlib>
 #include <iostream>
+#include <sstream>
 #include "nodice/config.h"
 #include "nodice/font.h"
 #include "nodice/fontcache.h"
@@ -64,8 +65,12 @@ int NoDice::App::run()
 {
 	bool done = false;
 	bool isActive = true;
+	Uint32 epochTics = SDL_GetTicks();
 	while (!done)
 	{
+		Uint32 currentTics = SDL_GetTicks();
+		Uint32 deltaTics = currentTics - epochTics;
+		std::cerr << "==smw> deltaTics = " << deltaTics << "\n";
 		SDL_Event event;
 		while (SDL_PollEvent(&event))
 		{
@@ -96,8 +101,16 @@ int NoDice::App::run()
 			font.print(32.0f, 64.0f, 1.0f, "This is a test");
 			glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
 			font.print(32.0f, 32.0f, 2.0f, "This is another test");
+
+			std::ostringstream ostr;
+			ostr << "deltaTics=" << deltaTics << " font.height()=" << font.height();
+			glColor4f(0.5f, 1.0f, 0.5f, 0.8f);
+			font.print(32.0f, m_video.screenHeight() - font.height() - 2, 1.0f, ostr.str());
 			m_video.update();
 		}
+
+		epochTics = SDL_GetTicks();
+		SDL_Delay(30);
 	}
 	return 0;
 }

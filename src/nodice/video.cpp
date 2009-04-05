@@ -66,6 +66,18 @@ NoDice::Video::~Video()
 }
 
 
+GLsizei NoDice::Video::screenWidth() const
+{
+	return m_screenWidth;
+}
+
+
+GLsizei NoDice::Video::screenHeight() const
+{
+	return m_screenHeight;
+}
+
+
 void NoDice::Video::update()
 {
 	m_context->swapBuffers();

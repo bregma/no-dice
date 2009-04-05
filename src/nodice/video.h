@@ -37,6 +37,10 @@ namespace NoDice
 
     void update();
 
+    GLsizei screenWidth() const;
+    GLsizei screenHeight() const;
+
+
   private:
     std::auto_ptr<VideoContext> m_context;
     GLsizei                     m_screenWidth;

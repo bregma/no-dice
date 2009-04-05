@@ -50,6 +50,8 @@ namespace NoDice
 
 		void mapToTexture();
 
+		GLsizei height() const;
+
 		// temporary function for testing
 		void print(GLfloat x, GLfloat y, GLfloat scale, const std::string& text);
 

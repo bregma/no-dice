@@ -46,6 +46,7 @@ namespace
 
 NoDice::Font::Font(const std::string& fontname, unsigned int pointsize)
 : m_name(fontname)
+, m_height(pointsize)
 , m_glyph(s_max_char)
 {
 	FT_Library ftLib;
@@ -186,6 +187,12 @@ void NoDice::Font::mapToTexture()
 	             &texture[0]);
 	check_gl_error("glTexImage2D");
 	glDisable(GL_TEXTURE_2D);
+}
+
+
+GLsizei NoDice::Font::height() const
+{
+	return m_height;
 }
 
 
