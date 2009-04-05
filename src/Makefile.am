@@ -38,6 +38,7 @@ no_dice_SOURCES = \
 	nodice/config.h           nodice/config.cpp \
 	nodice/font.h             nodice/font.cpp \
 	nodice/fontcache.h        nodice/fontcache.cpp \
+	nodice/shape.h            nodice/shape.cpp \
 	nodice/video.h            nodice/video.cpp \
 	nodice/videocontext.h \
 	$(vcontext_SOURCES)

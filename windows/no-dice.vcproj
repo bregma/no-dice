@@ -200,6 +200,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\nodice\shape.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\nodice\video.cpp"
 				>
 			</File>
@@ -231,6 +235,10 @@
 			</File>
 			<File
 				RelativePath="..\src\opengl.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\nodice\shape.h"
 				>
 			</File>
 			<File
