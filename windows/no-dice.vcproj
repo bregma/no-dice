@@ -200,6 +200,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\nodice\object.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\nodice\shape.cpp"
 				>
 			</File>
@@ -231,6 +235,10 @@
 			</File>
 			<File
 				RelativePath="..\src\nodice\fontcache.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\nodice\object.h"
 				>
 			</File>
 			<File

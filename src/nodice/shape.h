@@ -25,6 +25,9 @@
 
 namespace NoDice
 {
+  /**
+   * Base class for all drawable shapes.
+   */
   class Shape
   {
   public:
@@ -34,7 +37,7 @@ namespace NoDice
 
     const std::string& name() const;
 
-    virtual void draw() = 0;
+    virtual void draw() const;
 
   private:
     std::string m_name;

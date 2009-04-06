@@ -1,6 +1,6 @@
 /**
- * @file nodice/shape.cpp
- * @brief Implemntation of the nodice/shape module.
+ * @file nodice/object.cpp
+ * @brief Implemntation of the nodice/object module.
  *
  * Copyright 2009 Stephen M. Webb  <stephen.webb@bregmasoft.ca>
  *
@@ -17,28 +17,17 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-#include "nodice/shape.h"
+#include "nodice/object.h"
 
-NoDice::Shape::Shape(const std::string& name)
-: m_name(name)
+NoDice::Object::Object(const Shape* shape)
+: m_shape(shape)
 {
 }
 
 
-NoDice::Shape::~Shape()
+NoDice::Object::~Object()
 {
 }
 
-
-const std::string& NoDice::Shape::name() const
-{
-  return m_name;
-}
-
-
-void NoDice::Shape::draw() const
-{
-  /* later dude */
-}
 
 

@@ -1,6 +1,6 @@
 /**
- * @file nodice/shape.cpp
- * @brief Implemntation of the nodice/shape module.
+ * @file nodice/object.h
+ * @brief Public interface of the nodice/object module.
  *
  * Copyright 2009 Stephen M. Webb  <stephen.webb@bregmasoft.ca>
  *
@@ -17,28 +17,32 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-#include "nodice/shape.h"
+#ifndef NODICE_OBJECT_H
+#define NODICE_OBJECT_H 1
 
-NoDice::Shape::Shape(const std::string& name)
-: m_name(name)
+namespace NoDice
 {
-}
+  class Shape;
 
+  /**
+   * A drawable object.
+   *
+   * A drawable object has a shape, a transform (modelview matrix), a colour,
+   * and um, I dunno, other state.
+   */
+  class Object
+  {
+  public:
+    Object(const Shape* shape);
+    ~Object();
 
-NoDice::Shape::~Shape()
-{
-}
+  private:
+    Object(const Object&);
+    Object& operator=(const Object&);
 
+  private:
+    const Shape* m_shape;
+  };
+} // namespace NoDice
 
-const std::string& NoDice::Shape::name() const
-{
-  return m_name;
-}
-
-
-void NoDice::Shape::draw() const
-{
-  /* later dude */
-}
-
-
+#endif // NODICE_OBJECT_H
