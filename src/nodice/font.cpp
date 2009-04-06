@@ -88,6 +88,8 @@ NoDice::Font::Font(const std::string& fontname, unsigned int pointsize)
 			throw std::runtime_error("error in FT_Load_Glyph");
 		}
 
+		m_glyph[c].left      = ftFace->glyph->bitmap_left;
+		m_glyph[c].top       = ftFace->glyph->bitmap_top;
 		m_glyph[c].width     = ftFace->glyph->bitmap.width;
 		m_glyph[c].height    = ftFace->glyph->bitmap.rows;
 		m_glyph[c].advance   = ftFace->glyph->advance.x >> 6;
@@ -223,20 +225,20 @@ void NoDice::Font::print(GLfloat x, GLfloat y, GLfloat scale, const std::string&
 	{
 		char c = *it;
 
-		varray[0]  = x;
-		varray[1]  = y;
+		varray[0]  = x + m_glyph[c].left * scale;
+		varray[1]  = y - (m_glyph[c].height - m_glyph[c].top) * scale;
 		varray[2]  = m_glyph[c].s;
 		varray[3]  = m_glyph[c].t + m_glyph[c].h;
 		varray[4]  = x + m_glyph[c].width * scale;
-		varray[5]  = y;
+		varray[5]  = y - (m_glyph[c].height - m_glyph[c].top) * scale;
 		varray[6]  = m_glyph[c].s + m_glyph[c].w;
 		varray[7]  = m_glyph[c].t + m_glyph[c].h;
-		varray[8]  = x;
-		varray[9]  = y + m_glyph[c].height * scale;
+		varray[8]  = x + m_glyph[c].left * scale;
+		varray[9]  = y + m_glyph[c].top * scale;
 		varray[10] = m_glyph[c].s;
 		varray[11] = m_glyph[c].t;
 		varray[12] = x + m_glyph[c].width * scale;
-		varray[13] = y + m_glyph[c].height * scale;
+		varray[13] = y + m_glyph[c].top * scale;
 		varray[14] = m_glyph[c].s + m_glyph[c].w;
 		varray[15] = m_glyph[c].t;
 

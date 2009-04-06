@@ -32,6 +32,8 @@ namespace NoDice
 		typedef std::vector<GLubyte> Bitmap;
 
 		Bitmap   bitmap;  // bitmap
+		GLsizei  left;
+		GLsizei  top;
 		GLsizei  width;	  // width of bitmap in pixels
 		GLsizei  height;  // height of bitmap in pixels
 		GLsizei  advance; // horizontal advance in pixels
