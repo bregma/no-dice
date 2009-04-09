@@ -45,6 +45,7 @@ no_dice_SOURCES = \
 	$(vcontext_SOURCES)
 
 no_dice_CXXFLAGS = \
+	-I$(top_srcdir)/include \
 	$(SDL_CFLAGS) \
 	$(FREETYPE_CFLAGS) \
 	$(GL_CFLAGS)
