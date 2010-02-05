@@ -27,10 +27,9 @@ AC_LANG(C++)
 # Checks for third-party packages
 PKG_CHECK_MODULES([SDL],      [sdl >= 1.2.11])
 PKG_CHECK_MODULES([FREETYPE], [freetype2 >= 9.10.3])
+PKG_CHECK_MODULES([GL],       [gl >= 7])
 
 # Use SDL or EGL for video context?
-GL_CFLAGS=""
-GL_LIBS="-lGL"
 AC_ARG_WITH(wm,
 						AC_HELP_STRING([--with-wm=@<:@sdl|egl@:>@],
 													 [selects the window manager]),
