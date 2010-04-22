@@ -2,7 +2,7 @@
  * @file nodice/app.h
  * @brief Public interface of the nodice/app module.
  *
- * Copyright 2009 Stephen M. Webb  <stephen.webb@bregmasoft.ca>
+ * Copyright 2009, 2010 Stephen M. Webb  <stephen.webb@bregmasoft.ca>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of Version 2 of the GNU General Public License as
@@ -47,9 +47,20 @@ namespace NoDice
       ~SdlInit();
     };
 
+    /** Performs gamewise updates. */
+    void action();
+
+    /** Performs screen updates. */
+    void draw();
+
+    void pointerDown(int x, int y);
+    void pointerMove(int x, int y);
+    void pointerUp(int x, int y);
+
   private:
     SdlInit  m_sdlInit;
     Video    m_video;
+    bool     m_isMovingObject;
   };
 
 } // namespace NoDice

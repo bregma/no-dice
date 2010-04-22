@@ -2,7 +2,7 @@
  * @file nodice/object.h
  * @brief Public interface of the nodice/object module.
  *
- * Copyright 2009 Stephen M. Webb  <stephen.webb@bregmasoft.ca>
+ * Copyright 2009, 2010 Stephen M. Webb  <stephen.webb@bregmasoft.ca>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of Version 2 of the GNU General Public License as
@@ -25,10 +25,10 @@ namespace NoDice
   class Shape;
 
   /**
-   * A drawable object.
+   * An instance of a drawable object.
    *
-   * A drawable object has a shape, a transform (modelview matrix), a colour,
-   * and um, I dunno, other state.
+   * A drawable object instance has a shape, a transform (modelview matrix),
+   * a colour, and um, I dunno, other state.
    */
   class Object
   {
