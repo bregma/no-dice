@@ -54,13 +54,15 @@ namespace NoDice
     void draw();
 
     void pointerDown(int x, int y);
-    void pointerMove(int x, int y);
+    void pointerMove(int x, int y, int dx, int dy);
     void pointerUp(int x, int y);
 
   private:
     SdlInit  m_sdlInit;
     Video    m_video;
     bool     m_isMovingObject;
+    float    m_tx;
+		float    m_ty;
   };
 
 } // namespace NoDice

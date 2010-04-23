@@ -57,6 +57,7 @@ App(const NoDice::Config& config)
 : m_sdlInit()
 , m_video(config)
 , m_isMovingObject(false)
+, m_tx(32.0), m_ty(64.0)
 {
 }
 
@@ -101,13 +102,14 @@ run()
 				isActive = (event.active.gain != 0);
 				break;
 			case SDL_MOUSEMOTION:
-				pointerMove( event.motion.x, event.motion.y);
+				pointerMove(event.motion.x, event.motion.y,
+										event.motion.xrel, event.motion.yrel);
 				break;
 			case SDL_MOUSEBUTTONDOWN:
-				pointerDown( event.button.x, event.button.y);
+				pointerDown(event.button.x, event.button.y);
 				break;
 			case SDL_MOUSEBUTTONUP:
-				pointerUp( event.button.x, event.button.y);
+				pointerUp(event.button.x, event.button.y);
 				break;
 			case SDL_KEYDOWN:
 				std::cerr << "==smw> SDL_KEYDOWN event type received.\n";
@@ -125,7 +127,7 @@ run()
 
 		if (isActive)
 		{
-			SDL_Delay(1);
+			SDL_Delay(10);
 		}
 		else
 		{
@@ -140,6 +142,8 @@ void NoDice::App::
 action()
 {
 	std::cerr << __PRETTY_FUNCTION__ << "\n";
+	m_tx += 1.0f;
+	m_ty -= 1.0f;
 }
 
 
@@ -149,7 +153,7 @@ draw()
 	std::cerr << __PRETTY_FUNCTION__ << "\n";
 	Font& font = FontCache::get("FreeSans", 18);
 	glColor4f(0.0f, 0.0f, 1.0f, 1.0f);
-	font.print(32.0f, 64.0f, 1.0f, "This is a test");
+	font.print(m_tx, m_ty, 1.0f, "This is a test");
 	glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
 	font.print(32.0f, 32.0f, 2.0f, "This is another test");
 
@@ -170,12 +174,14 @@ pointerDown(int x, int y)
 
 
 void NoDice::App::
-pointerMove(int x, int y)
+pointerMove(int x, int y, int dx, int dy)
 {
 	if (!m_isMovingObject)
 		return;
 
-	std::cerr << __PRETTY_FUNCTION__ << "(" << x << ", " << y << ")\n";
+	std::cerr << __PRETTY_FUNCTION__ << "(" << x << ", " << y << ", " << dx << ", " << dy << ")\n";
+	m_tx += dx;
+	m_ty -= dy;
 }
 
 
