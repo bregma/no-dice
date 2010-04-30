@@ -37,6 +37,9 @@ namespace NoDice
 
 		~IntroState();
 
+		void pause();
+		void resume();
+
 		void pointerMove(int x, int y, int dx, int dy);
 		void pointerClick(int x, int y, PointerAction action);
 		void update();

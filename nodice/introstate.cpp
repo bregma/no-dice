@@ -38,6 +38,20 @@ IntroState::
 }
 
 void IntroState::
+pause()
+{
+	m_isActive = false;
+}
+
+
+void IntroState::
+resume()
+{
+	m_isActive = true;
+}
+
+
+void IntroState::
 pointerMove(int x, int y, int dx, int dy)
 {
 	std::cerr << "==smw> " << __PRETTY_FUNCTION__ << "\n";
@@ -47,7 +61,6 @@ void IntroState::
 pointerClick(int x, int y, PointerAction action)
 {
 	std::cerr << "==smw> " << __PRETTY_FUNCTION__ << "\n";
-	m_isActive = (action != pointerUp);
 }
 
 void IntroState::
@@ -62,10 +75,9 @@ draw(Video& video)
 	float tx = 0.25 * video.screenWidth();
 	float ty = video.screenHeight() - (0.25 * video.screenHeight());
 	glColor4f(0.25f, 0.5f, 1.0f, 0.5f);
-	if (m_isActive)
-		font.print(tx, ty, 2.0f, "No Dice!");
-	else
-		font.print(tx, ty, 2.0f, "No Dice (inactive)!");
+	font.print(tx, ty, 2.0f, "No Dice!");
+	if (!m_isActive)
+		font.print(tx, ty - 2.0f * font.height(), 2.0f, "(inactive)!");
 }
 
 
