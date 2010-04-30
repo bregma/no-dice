@@ -45,6 +45,6 @@ AC_SUBST([GL_CFLAGS])
 AC_SUBST([GL_LIBS])
 
 AC_CONFIG_FILES(Makefile)
-AC_CONFIG_FILES(src/Makefile)
+AC_CONFIG_FILES(nodice/Makefile)
 AC_CONFIG_FILES(assets/Makefile)
 AC_OUTPUT

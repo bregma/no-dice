@@ -21,27 +21,27 @@
 AM_CXXFLAGS = -W -Wall -Wextra 
 
 bindir = /usr/games
-datadir = /usr/share/games/gljewel/data
+datadir = /usr/share/games/no-dice/data
 
 
 bin_PROGRAMS = no-dice
 
 if HAVE_EGL
-vcontext_SOURCES = nodice/videocontextegl.h nodice/videocontextegl.cpp
+vcontext_SOURCES = videocontextegl.h videocontextegl.cpp
 else
-vcontext_SOURCES = nodice/videocontextsdl.h nodice/videocontextsdl.cpp
+vcontext_SOURCES = videocontextsdl.h videocontextsdl.cpp
 endif
 
 no_dice_SOURCES = \
 	main.cpp \
-	nodice/app.h              nodice/app.cpp \
-	nodice/config.h           nodice/config.cpp \
-	nodice/font.h             nodice/font.cpp \
-	nodice/fontcache.h        nodice/fontcache.cpp \
-	nodice/object.h            nodice/object.cpp \
-	nodice/shape.h            nodice/shape.cpp \
-	nodice/video.h            nodice/video.cpp \
-	nodice/videocontext.h \
+	app.h              app.cpp \
+	config.h           config.cpp \
+	font.h             font.cpp \
+	fontcache.h        fontcache.cpp \
+	object.h           object.cpp \
+	shape.h            shape.cpp \
+	video.h            video.cpp \
+	videocontext.h \
 	$(vcontext_SOURCES)
 
 no_dice_CXXFLAGS = \
