@@ -21,10 +21,12 @@
 #define IntroState_H 1
 
 #include "nodice/gamestate.h"
+#include "vmmlib/vmmlib.h"
 
 
 namespace NoDice
 {
+	class Font;
 
 	/**
 	 * Provides the "game introduction" state:  mostly just the loading screen.
@@ -33,7 +35,7 @@ namespace NoDice
 	: public GameState
 	{
 	public:
-		IntroState();
+		IntroState(const Video& video);
 
 		~IntroState();
 
@@ -47,7 +49,12 @@ namespace NoDice
 		void draw(Video& video);
 
 	private:
-		bool m_isActive;
+		bool            m_isActive;
+		Font&           m_menuFont;
+		vmml::Vector2f  m_titlePos;
+		vmml::Vector2f  m_optionsPos;
+		vmml::Vector2f  m_playPos;
+		vmml::Vector2f  m_quitPos;
 	};
 
 } // namespace NoDice

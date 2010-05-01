@@ -64,7 +64,7 @@ App(const NoDice::Config& config)
 : m_sdlInit()
 , m_video(config)
 {
-	m_stateStack.push(GameStatePtr(new IntroState));
+	m_stateStack.push(GameStatePtr(new IntroState(m_video)));
 }
 
 
