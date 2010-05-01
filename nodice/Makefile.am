@@ -38,6 +38,8 @@ no_dice_SOURCES = \
 	config.h           config.cpp \
 	font.h             font.cpp \
 	fontcache.h        fontcache.cpp \
+	gamestate.h        gamestate.cpp \
+	introstate.h       introstate.cpp \
 	object.h           object.cpp \
 	shape.h            shape.cpp \
 	video.h            video.cpp \

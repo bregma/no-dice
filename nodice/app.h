@@ -20,7 +20,10 @@
 #ifndef NODICE_APP_H
 #define NODICE_APP_H 1
 
+#include "nodice/gamestate.h"
 #include "nodice/video.h"
+#include <stack>
+#include <vector>
 
 
 namespace NoDice
@@ -53,16 +56,12 @@ namespace NoDice
     /** Performs screen updates. */
     void draw();
 
-    void pointerDown(int x, int y);
-    void pointerMove(int x, int y, int dx, int dy);
-    void pointerUp(int x, int y);
-
   private:
-    SdlInit  m_sdlInit;
-    Video    m_video;
-    bool     m_isMovingObject;
-    float    m_tx;
-		float    m_ty;
+  	typedef std::stack<GameStatePtr, std::vector<GameStatePtr> > StateStack;
+
+    SdlInit    m_sdlInit;
+    Video      m_video;
+    StateStack m_stateStack;
   };
 
 } // namespace NoDice
