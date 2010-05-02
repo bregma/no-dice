@@ -20,7 +20,6 @@
 #include "introstate.h"
 
 #include "nodice/font.h"
-#include "nodice/fontcache.h"
 #include "nodice/video.h"
 
 namespace NoDice
@@ -29,7 +28,7 @@ namespace NoDice
 IntroState::
 IntroState(const Video& video)
 : m_isActive(true)
-, m_menuFont(FontCache::get("FreeSans", video.screenHeight() / 10))
+, m_menuFont(getFont("spindle", video.screenHeight() / 18))
 , m_titlePos(0.25 * video.screenWidth(), 0.75 * video.screenHeight())
 , m_optionsPos(0.25 * video.screenWidth(),
 							 m_titlePos.y - 2.0f * m_menuFont.height())

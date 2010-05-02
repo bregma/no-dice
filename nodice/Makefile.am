@@ -1,7 +1,7 @@
 ##
 ## Makefile for the no-dice project src directory.
 ##
-## Copyright 2009 Stephen M. Webb  <stephen.webb@bregmasoft.com>
+## Copyright 2009, 2010 Stephen M. Webb  <stephen.webb@bregmasoft.com>
 ##
 ##
 ## This program is free software; you can redistribute it and/or modify
@@ -37,7 +37,6 @@ no_dice_SOURCES = \
 	app.h              app.cpp \
 	config.h           config.cpp \
 	font.h             font.cpp \
-	fontcache.h        fontcache.cpp \
 	gamestate.h        gamestate.cpp \
 	introstate.h       introstate.cpp \
 	object.h           object.cpp \

@@ -2,7 +2,7 @@
  * @file nodice/font.cpp
  * @brief Implemntation of the nodice/font module.
  *
- * Copyright 2009 Stephen M. Webb  <stephen.webb@bregmasoft.ca>
+ * Copyright 2009, 2010 Stephen M. Webb  <stephen.webb@bregmasoft.ca>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of Version 2 of the GNU General Public License as
@@ -24,6 +24,8 @@
 #include FT_FREETYPE_H
 #include FT_GLYPH_H
 #include <iostream>
+#include <map>
+#include <sstream>
 #include <stdexcept>
 
 
@@ -258,5 +260,41 @@ void NoDice::Font::print(GLfloat x, GLfloat y, GLfloat scale, const std::string&
 
 	glMatrixMode(GL_PROJECTION);
 	glPopMatrix();
+}
+
+
+#ifndef DATA_DIR
+# define DATA_DIR "./"
+#endif
+
+/**
+ * @param typefaceName[in]  Name of the typeface.
+ * @param pointSize[in]     Size of the font in points.
+ *
+ * Checks the global font cache for the named font and returns a reference to
+ * it.  If the font is not in the cache, it gets loaded first.
+ */
+NoDice::Font& NoDice::
+getFont(const std::string& typefaceName, unsigned int pointSize)
+{
+	std::cerr << __PRETTY_FUNCTION__ << "("
+		        << typefaceName << ", " << pointSize << ")\n";
+	typedef std::map<std::string, Font> FontCache;
+	static FontCache s_fontCache;
+
+	std::ostringstream ostr;
+	ostr << typefaceName << '_' << pointSize;
+	std::string fontKey = ostr.str();
+	FontCache::iterator it = s_fontCache.find(fontKey);
+	if (it != s_fontCache.end())
+	{
+		return  it->second;
+	}
+	ostr.str("");
+	ostr << DATA_DIR << "assets/spindle.ttf";
+	std::string fileName = ostr.str();
+	std::pair<FontCache::iterator,bool> p = s_fontCache.insert(
+											std::make_pair(fontKey, Font(fileName, pointSize)));
+	return p.first->second;
 }
 

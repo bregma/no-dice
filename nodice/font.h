@@ -2,7 +2,7 @@
  * @file nodice/font.h
  * @brief Public interface of the nodice/font module.
  *
- * Copyright 2009 Stephen M. Webb  <stephen.webb@bregmasoft.ca>
+ * Copyright 2009, 2010 Stephen M. Webb  <stephen.webb@bregmasoft.ca>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of Version 2 of the GNU General Public License as
@@ -67,6 +67,8 @@ namespace NoDice
 		GLuint             m_texture;
 	};
 
+	/** Gets a font through the font loader/cache. */
+	Font& getFont(const std::string& fontName, unsigned int pointSize);
 } // namespace NoDice
 
 #endif // NODICE_FONT_H
