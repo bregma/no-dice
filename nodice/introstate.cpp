@@ -29,7 +29,7 @@ namespace NoDice
 IntroState::
 IntroState(const Video& video)
 : m_isActive(true)
-, m_menuFont(FontCache::get("FreeSans", video.screenHeight() / 20))
+, m_menuFont(FontCache::get("FreeSans", video.screenHeight() / 10))
 , m_titlePos(0.25 * video.screenWidth(), 0.75 * video.screenHeight())
 , m_optionsPos(0.25 * video.screenWidth(),
 							 m_titlePos.y - 2.0f * m_menuFont.height())
@@ -62,13 +62,11 @@ resume()
 void IntroState::
 pointerMove(int x, int y, int dx, int dy)
 {
-	std::cerr << "==smw> " << __PRETTY_FUNCTION__ << "\n";
 }
 
 void IntroState::
 pointerClick(int x, int y, PointerAction action)
 {
-	std::cerr << "==smw> " << __PRETTY_FUNCTION__ << "\n";
 }
 
 void IntroState::
