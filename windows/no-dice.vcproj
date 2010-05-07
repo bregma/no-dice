@@ -180,19 +180,23 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\src\nodice\app.cpp"
+				RelativePath="..\nodice\app.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\nodice\config.cpp"
+				RelativePath="..\nodice\config.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\nodice\font.cpp"
+				RelativePath="..\nodice\font.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\nodice\fontcache.cpp"
+				RelativePath="..\nodice\gamestate.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\nodice\introstate.cpp"
 				>
 			</File>
 			<File
@@ -200,19 +204,19 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\nodice\object.cpp"
+				RelativePath="..\nodice\object.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\nodice\shape.cpp"
+				RelativePath="..\nodice\shape.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\nodice\video.cpp"
+				RelativePath="..\nodice\video.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\nodice\videocontextsdl.cpp"
+				RelativePath="..\nodice\videocontextsdl.cpp"
 				>
 			</File>
 		</Filter>
@@ -222,23 +226,31 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath="..\src\nodice\app.h"
+				RelativePath="nodice_config.h"
 				>
 			</File>
 			<File
-				RelativePath="..\src\nodice\config.h"
+				RelativePath="..\nodice\app.h"
 				>
 			</File>
 			<File
-				RelativePath="..\src\nodice\font.h"
+				RelativePath="..\nodice\config.h"
 				>
 			</File>
 			<File
-				RelativePath="..\src\nodice\fontcache.h"
+				RelativePath="..\nodice\font.h"
 				>
 			</File>
 			<File
-				RelativePath="..\src\nodice\object.h"
+				RelativePath="..\nodice\gamestate.h"
+				>
+			</File>
+			<File
+				RelativePath="..\nodice\introstate.h"
+				>
+			</File>
+			<File
+				RelativePath="..\nodice\object.h"
 				>
 			</File>
 			<File
@@ -246,15 +258,15 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\nodice\shape.h"
+				RelativePath="..\nodice\shape.h"
 				>
 			</File>
 			<File
-				RelativePath="..\src\nodice\video.h"
+				RelativePath="..\nodice\video.h"
 				>
 			</File>
 			<File
-				RelativePath="..\src\nodice\videocontextsdl.h"
+				RelativePath="..\nodice\videocontextsdl.h"
 				>
 			</File>
 		</Filter>
