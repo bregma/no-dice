@@ -8,8 +8,8 @@ config
 config.log
 config.status
 configure
-no-dice
-nodice_config.h*
 Makefile
 Makefile.in
+no-dice
+nodice_config.h*
 stamp-h1

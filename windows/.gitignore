@@ -1,3 +1,4 @@
+!nodice_config.h
 *.dll
 *.exe
 *.log
