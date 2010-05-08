@@ -1,6 +1,6 @@
 /**
  * @file nodice/app.cpp
- * @brief Implemntation of the nodice/app module.
+ * @brief Implemntation of the no-dice app module.
  *
  * Copyright 2009, 2010 Stephen M. Webb  <stephen.webb@bregmasoft.ca>
  *
@@ -65,7 +65,7 @@ App(const NoDice::Config& config)
 , m_sdlInit()
 , m_video(m_config)
 {
-	pushGameState(GameStatePtr(new IntroState(m_video)));
+	pushGameState(GameStatePtr(new IntroState(m_config, m_video)));
 }
 
 

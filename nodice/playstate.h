@@ -1,6 +1,6 @@
 /**
- * @file introstate.h
- * @brief Public interface of the introstate module.
+ * @file nodice/playstate.h
+ * @brief Public interface of the nodice/playstate module.
  *
  * Copyright 2010 Stephen M. Webb  <stephen.webb@bregmasoft.ca>
  *
@@ -17,55 +17,25 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-#ifndef IntroState_H
-#define IntroState_H 1
+#ifndef NODICE_PLAYSTATE_H
+#define NODICE_PLAYSTATE_H 1
 
 #include "nodice/gamestate.h"
-#include "vmmlib/vmmlib.h"
-
 
 namespace NoDice
 {
-	class Font;
 
-	/**
-	 * Provides the "game introduction" state:  mostly just the loading screen.
-	 */
-	class IntroState
+	class PlayState
 	: public GameState
 	{
 	public:
-		enum NextState
-		{
-			next_state_same,
-			next_state_options,
-			next_state_play,
-			next_state_quit
-		};
+		PlayState(Config& config);
+		~PlayState();
 
-	public:
-		IntroState(Config& config, const Video& video);
-
-		~IntroState();
-
-		void pause();
-		void resume();
-
-		void key(SDL_keysym keysym);
-		void pointerMove(int x, int y, int dx, int dy);
-		void pointerClick(int x, int y, PointerAction action);
 		void update(App& app);
-
 		void draw(Video& video);
-
-	private:
-		bool            m_isActive;
-		Font&           m_menuFont;
-		vmml::Vector2f  m_titlePos;
-		int             m_selected;
-		NextState       m_nextState;
 	};
 
-} // namespace NoDice
+} // namespace noDice
 
-#endif // IntroState_H
+#endif // NODICE_PLAYSTATE_H

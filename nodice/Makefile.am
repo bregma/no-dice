@@ -40,6 +40,7 @@ no_dice_SOURCES = \
 	gamestate.h        gamestate.cpp \
 	introstate.h       introstate.cpp \
 	object.h           object.cpp \
+	playstate.h        playstate.cpp \
 	shape.h            shape.cpp \
 	video.h            video.cpp \
 	videocontext.h \

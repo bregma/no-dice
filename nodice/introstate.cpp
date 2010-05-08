@@ -17,10 +17,11 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-#include "introstate.h"
+#include "nodice/introstate.h"
 
 #include "nodice/app.h"
 #include "nodice/font.h"
+#include "nodice/playstate.h"
 #include "nodice/video.h"
 
 namespace 
@@ -49,8 +50,9 @@ namespace
 
 
 NoDice::IntroState::
-IntroState(const Video& video)
-: m_isActive(true)
+IntroState(Config& config, const Video& video)
+: GameState(config)
+, m_isActive(true)
 , m_menuFont(getFont("spindle", video.screenHeight() / 18))
 , m_titlePos(0.25 * video.screenWidth(), 0.75 * video.screenHeight())
 , m_selected(0)
@@ -139,6 +141,10 @@ update(App& app)
 	{
 		case next_state_quit:
 			app.popGameState();
+			break;
+
+		case next_state_play:
+			app.pushGameState(GameStatePtr(new PlayState(m_config)));
 			break;
 
 		default:

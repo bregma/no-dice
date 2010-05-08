@@ -1,6 +1,6 @@
 /**
- * @file nodice/gamestate.cpp
- * @brief Implemntation of the NoDice gamestate module.
+ * @file nodice/playstate.cpp
+ * @brief Implemntation of the nodice/playstate module.
  *
  * Copyright 2010 Stephen M. Webb  <stephen.webb@bregmasoft.ca>
  *
@@ -17,55 +17,31 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-#include "gamestate.h"
-
-#include <iostream>
+#include "nodice/playstate.h"
 
 
-NoDice::GameState::
-GameState(Config& config)
-: m_config(config)
+NoDice::PlayState::
+PlayState(Config& config)
+: GameState(config)
 {
 }
 
 
-NoDice::GameState::
-~GameState()
+NoDice::PlayState::
+~PlayState()
 {
 }
 
 
-void NoDice::GameState::
-pause()
+void NoDice::PlayState::
+update(App& app)
 {
-	std::cerr << __PRETTY_FUNCTION__ << "\n";
 }
 
 
-void NoDice::GameState::
-resume()
+void NoDice::PlayState::
+draw(Video& video)
 {
-	std::cerr << __PRETTY_FUNCTION__ << "\n";
 }
 
-
-void NoDice::GameState::
-key(SDL_keysym keysym)
-{
-	std::cerr << __PRETTY_FUNCTION__ << "\n";
-}
-
-
-void NoDice::GameState::
-pointerMove(int x, int y, int dx, int dy)
-{
-	std::cerr << __PRETTY_FUNCTION__ << "\n";
-}
-
-
-void NoDice::GameState::
-pointerClick(int x, int y, PointerAction action)
-{
-	std::cerr << __PRETTY_FUNCTION__ << "\n";
-}
 

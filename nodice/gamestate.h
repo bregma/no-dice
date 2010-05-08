@@ -1,6 +1,6 @@
 /**
- * @file gamestate.h
- * @brief Public interface of the gamestate module.
+ * @file nodice/gamestate.h
+ * @brief Public interface of the nodice/gamestate module.
  *
  * Copyright 2010 Stephen M. Webb  <stephen.webb@bregmasoft.ca>
  *
@@ -17,9 +17,10 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-#ifndef GAMESTATE_H
-#define GAMESTATE_H 1
+#ifndef NODICE_GAMESTATE_H
+#define NODICE_GAMESTATE_H 1
 
+#include "nodice/config.h"
 #include <SDL/SDL_events.h>
 #include <tr1/memory>
 
@@ -43,6 +44,7 @@ namespace NoDice
 		};
 
 	public:
+		GameState(Config& config);
 		virtual ~GameState() = 0;
 
 		virtual void pause();
@@ -54,10 +56,13 @@ namespace NoDice
 		virtual void update(App& app) = 0;
 
 		virtual void draw(Video& video) = 0;
+
+	protected:
+		Config& m_config;
 	};
 
 	typedef std::tr1::shared_ptr<GameState> GameStatePtr;
 
 } // namespace NoDice
 
-#endif // GAMESTATE_H
+#endif // NODICE_GAMESTATE_H
