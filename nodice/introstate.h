@@ -53,9 +53,7 @@ namespace NoDice
 		bool            m_isActive;
 		Font&           m_menuFont;
 		vmml::Vector2f  m_titlePos;
-		vmml::Vector2f  m_optionsPos;
-		vmml::Vector2f  m_playPos;
-		vmml::Vector2f  m_quitPos;
+		int             m_selected;
 	};
 
 } // namespace NoDice

@@ -22,81 +22,114 @@
 #include "nodice/font.h"
 #include "nodice/video.h"
 
-namespace NoDice
+namespace 
 {
+	struct MenuEntry
+	{
+		const char*    title;
+		vmml::Vector2f pos;
+	};
 
-IntroState::
+	static MenuEntry entry[] = 
+	{
+		{ "options", vmml::Vector2f(0.0f, 0.0f) },
+		{ "play",    vmml::Vector2f(0.0f, 0.0f) },
+		{ "quit",    vmml::Vector2f(0.0f, 0.0f) }
+	};
+
+	static const std::size_t menuCount = sizeof(entry) / sizeof(MenuEntry);
+
+	static float titleColour[] = { 1.00f, 0.10f, 0.10f, 1.00f };
+	static float selectedColour[] = { 0.50f, 0.50f, 1.00f, 0.80f };
+	static float unselectedColour[] = { 0.20f, 0.20f, 0.80f, 0.80f };
+
+} // anonymous namespace
+
+
+NoDice::IntroState::
 IntroState(const Video& video)
 : m_isActive(true)
 , m_menuFont(getFont("spindle", video.screenHeight() / 18))
 , m_titlePos(0.25 * video.screenWidth(), 0.75 * video.screenHeight())
-, m_optionsPos(0.25 * video.screenWidth(),
-							 m_titlePos.y - 2.0f * m_menuFont.height())
-, m_playPos(0.25 * video.screenWidth(), 
-							 m_optionsPos.y - 1.5f * m_menuFont.height())
-, m_quitPos(0.25 * video.screenWidth(), 
-							 m_playPos.y - 1.5f * m_menuFont.height())
+, m_selected(0)
 {
+	const float vspacing = -2.0f * m_menuFont.height();
+	entry[0].pos.set(m_titlePos.x, m_titlePos.y + vspacing);
+	for (int i = 1; i < menuCount; ++i)
+	{
+		entry[i].pos.set(entry[i-1].pos.x, entry[i-1].pos.y + vspacing);
+	}
 }
 
-IntroState::
+NoDice::IntroState::
 ~IntroState()
 {
 }
 
-void IntroState::
+void NoDice::IntroState::
 pause()
 {
 	m_isActive = false;
 }
 
 
-void IntroState::
+void NoDice::IntroState::
 resume()
 {
 	m_isActive = true;
 }
 
 
-void IntroState::
+void NoDice::IntroState::
 key(SDL_keysym keysym)
 {
+	if (keysym.sym == SDLK_UP)
+	{
+		--m_selected;
+		if (m_selected < 0)
+			m_selected = 0;
+	}
+	else if (keysym.sym == SDLK_DOWN)
+	{
+		++m_selected;
+		if (m_selected >= menuCount)
+			m_selected = menuCount-1;
+	}
 }
 
 
-void IntroState::
+void NoDice::IntroState::
 pointerMove(int x, int y, int dx, int dy)
 {
 }
 
-void IntroState::
+
+void NoDice::IntroState::
 pointerClick(int x, int y, PointerAction action)
 {
 }
 
-void IntroState::
+
+void NoDice::IntroState::
 update(App& app)
 {
 }
 
-void IntroState::
+
+void NoDice::IntroState::
 draw(Video& video)
 {
-	static float titleColour[] = { 1.00f, 0.10f, 0.10f, 1.00f };
-	static float selectedColour[] = { 0.40f, 0.40f, 1.00f, 0.80f };
-	static float unselectedColour[] = { 0.20f, 0.20f, 0.80f, 0.80f };
-
 	glColor4fv(titleColour);
 	m_menuFont.print(m_titlePos.x, m_titlePos.y, 1.0f, "No Dice!");
 
-	glColor4fv(unselectedColour);
-	m_menuFont.print(m_optionsPos.x, m_optionsPos.y, 1.0f, "options");
-	glColor4fv(selectedColour);
-	m_menuFont.print(m_playPos.x, m_playPos.y, 1.0f, "play");
-	glColor4fv(unselectedColour);
-	m_menuFont.print(m_quitPos.x, m_quitPos.y, 1.0f, "quit");
+	for (int i = 0; i < menuCount; ++i)
+	{
+		if (i == m_selected)
+			glColor4fv(selectedColour);
+		else
+			glColor4fv(unselectedColour);
+		m_menuFont.print(entry[i].pos.x, entry[i].pos.y, 1.0f, entry[i].title);
+	}
 }
 
-
-} // namespace NoDice
 
