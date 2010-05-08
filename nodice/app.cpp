@@ -65,7 +65,7 @@ App(const NoDice::Config& config)
 , m_sdlInit()
 , m_video(m_config)
 {
-	m_stateStack.push(GameStatePtr(new IntroState(m_video)));
+	pushGameState(GameStatePtr(new IntroState(m_video)));
 }
 
 
@@ -84,18 +84,10 @@ run()
 	{
 		assert(!m_stateStack.empty());
 
-		Uint32 currentTics = SDL_GetTicks();
-		Uint32 deltaTics = currentTics - epochTics;
-		if (deltaTics > UPDATE_TICKS)
-		{
-			action();
-			epochTics = currentTics;
-		}
-		draw();
-
 		SDL_Event event;
 		while (SDL_PollEvent(&event))
 		{
+
 			switch (event.type)
 			{
 			case SDL_ACTIVEEVENT:
@@ -109,34 +101,60 @@ run()
 					m_stateStack.top()->pause();
 				}
 				break;
+
 			case SDL_MOUSEMOTION:
 				m_stateStack.top()->pointerMove(event.motion.x, event.motion.y,
 										                    event.motion.xrel, event.motion.yrel);
 				break;
+
 			case SDL_MOUSEBUTTONDOWN:
-				m_stateStack.top()->pointerClick(event.button.x, event.button.y,
-																				GameState::pointerDown);
+				if (event.button.button == SDL_BUTTON_LEFT)
+					m_stateStack.top()->pointerClick(event.button.x, event.button.y,
+																					GameState::pointerDown);
 				break;
+
 			case SDL_MOUSEBUTTONUP:
-				m_stateStack.top()->pointerClick(event.button.x, event.button.y,
-																				GameState::pointerUp);
+				if (event.button.button == SDL_BUTTON_LEFT)
+					m_stateStack.top()->pointerClick(event.button.x, event.button.y,
+																					GameState::pointerUp);
 				break;
+
 			case SDL_KEYDOWN:
 				if (m_config.isDebugMode())
-					std::cerr << "==smw> SDL_KEYDOWN event type received.\n";
-				done = true;
+					std::cerr << "==smw> SDL_KEYDOWN event type received:"
+					          << " keysym.scancode=" << (int)event.key.keysym.scancode
+					          << " keysym.sym=" << event.key.keysym.sym
+					          << " keysym.mod=" << event.key.keysym.mod
+					          << " keysym.unicode=" << event.key.keysym.unicode
+					          << "\n";
+				if (event.key.keysym.sym == 27) // esc
+					done = true;
+				else
+					m_stateStack.top()->key(event.key.keysym);
 				break;
+
 			case SDL_QUIT:
 				if (m_config.isDebugMode())
 					std::cerr << "==smw> SDL_QUIT event type received.\n";
 				done = true;
 				break;
+
 			default:
 				if (m_config.isDebugMode())
 					std::cerr << "==smw> event type " << static_cast<int>(event.type) << " received.\n";
 				break;
 			}
 		}
+
+		Uint32 currentTics = SDL_GetTicks();
+		Uint32 deltaTics = currentTics - epochTics;
+		if (deltaTics > UPDATE_TICKS)
+		{
+			m_stateStack.top()->update(*this);
+			epochTics = currentTics;
+		}
+		m_stateStack.top()->draw(m_video);
+		m_video.update();
 
 		SDL_Delay(isActive ? ACTIVE_FRAME_DELAY : INACTIVE_FRAME_DELAY);
 	}
@@ -145,20 +163,16 @@ run()
 
 
 void NoDice::App::
-action()
+pushGameState(GameStatePtr state)
 {
-	assert(!m_stateStack.empty());
-	m_stateStack.top()->update();
+	m_stateStack.push(state);
 }
 
 
 void NoDice::App::
-draw()
+popGameState()
 {
-	assert(!m_stateStack.empty());
-
-	m_stateStack.top()->draw(m_video);
-	m_video.update();
+	m_stateStack.pop();
 }
 
 

@@ -43,6 +43,9 @@ namespace NoDice
 
     int run();
 
+		void pushGameState(GameStatePtr state);
+		void popGameState();
+
   private:
     /** @brief A special RAII object for SDL initialization and teardown. */
     struct SdlInit
@@ -50,12 +53,6 @@ namespace NoDice
       SdlInit();
       ~SdlInit();
     };
-
-    /** Performs gamewise updates. */
-    void action();
-
-    /** Performs screen updates. */
-    void draw();
 
   private:
   	typedef std::stack<GameStatePtr, std::vector<GameStatePtr> > StateStack;

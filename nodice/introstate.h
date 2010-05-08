@@ -42,9 +42,10 @@ namespace NoDice
 		void pause();
 		void resume();
 
+		void key(SDL_keysym keysym);
 		void pointerMove(int x, int y, int dx, int dy);
 		void pointerClick(int x, int y, PointerAction action);
-		void update();
+		void update(App& app);
 
 		void draw(Video& video);
 

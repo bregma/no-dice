@@ -59,6 +59,12 @@ resume()
 
 
 void IntroState::
+key(SDL_keysym keysym)
+{
+}
+
+
+void IntroState::
 pointerMove(int x, int y, int dx, int dy)
 {
 }
@@ -69,7 +75,7 @@ pointerClick(int x, int y, PointerAction action)
 }
 
 void IntroState::
-update()
+update(App& app)
 {
 }
 

@@ -46,10 +46,18 @@ resume()
 
 
 void GameState::
+key(SDL_keysym keysym)
+{
+	std::cerr << __PRETTY_FUNCTION__ << "\n";
+}
+
+
+void GameState::
 pointerMove(int x, int y, int dx, int dy)
 {
 	std::cerr << __PRETTY_FUNCTION__ << "\n";
 }
+
 
 void GameState::
 pointerClick(int x, int y, PointerAction action)

@@ -20,11 +20,13 @@
 #ifndef GAMESTATE_H
 #define GAMESTATE_H 1
 
+#include <SDL/SDL_events.h>
 #include <tr1/memory>
 
 
 namespace NoDice
 {
+	class App;
 	class Video;
 
 	/**
@@ -46,9 +48,10 @@ namespace NoDice
 		virtual void pause();
 		virtual void resume();
 
+		virtual void key(SDL_keysym keysym);
 		virtual void pointerMove(int x, int y, int dx, int dy);
 		virtual void pointerClick(int x, int y, PointerAction action);
-		virtual void update() = 0;
+		virtual void update(App& app) = 0;
 
 		virtual void draw(Video& video) = 0;
 	};
