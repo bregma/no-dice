@@ -20,6 +20,7 @@
 #ifndef NODICE_APP_H
 #define NODICE_APP_H 1
 
+#include "nodice/config.h"
 #include "nodice/gamestate.h"
 #include "nodice/video.h"
 #include <stack>
@@ -59,6 +60,7 @@ namespace NoDice
   private:
   	typedef std::stack<GameStatePtr, std::vector<GameStatePtr> > StateStack;
 
+    Config     m_config;
     SdlInit    m_sdlInit;
     Video      m_video;
     StateStack m_stateStack;

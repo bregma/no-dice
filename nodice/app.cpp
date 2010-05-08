@@ -61,8 +61,9 @@ NoDice::App::SdlInit::
  */
 NoDice::App::
 App(const NoDice::Config& config)
-: m_sdlInit()
-, m_video(config)
+: m_config(config)
+, m_sdlInit()
+, m_video(m_config)
 {
 	m_stateStack.push(GameStatePtr(new IntroState(m_video)));
 }
@@ -121,15 +122,18 @@ run()
 																				GameState::pointerUp);
 				break;
 			case SDL_KEYDOWN:
-				std::cerr << "==smw> SDL_KEYDOWN event type received.\n";
+				if (m_config.isDebugMode())
+					std::cerr << "==smw> SDL_KEYDOWN event type received.\n";
 				done = true;
 				break;
 			case SDL_QUIT:
-				std::cerr << "==smw> SDL_QUIT event type received.\n";
+				if (m_config.isDebugMode())
+					std::cerr << "==smw> SDL_QUIT event type received.\n";
 				done = true;
 				break;
 			default:
-				std::cerr << "==smw> event type " << static_cast<int>(event.type) << " received.\n";
+				if (m_config.isDebugMode())
+					std::cerr << "==smw> event type " << static_cast<int>(event.type) << " received.\n";
 				break;
 			}
 		}

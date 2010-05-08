@@ -2,7 +2,7 @@
  * @file nodice/videocontextsdl.cpp
  * @brief Implemntation of the nodice/videocontextsdl module.
  *
- * Copyright 2009 Stephen M. Webb  <stephen.webb@bregmasoft.ca>
+ * Copyright 2009, 2010 Stephen M. Webb  <stephen.webb@bregmasoft.ca>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of Version 2 of the GNU General Public License as
@@ -24,21 +24,27 @@
 #include <SDL/SDL.h>
 
 
-NoDice::VideoContextSDL::VideoContextSDL(const Config& config)
+NoDice::VideoContextSDL::
+VideoContextSDL(const Config& config)
 {
 	if (0 != ::SDL_InitSubSystem(SDL_INIT_VIDEO))
 	{
-		std::cerr << "*** ERRROR in SDL_InitSubSystem(SDL_INIT_VIDEO): " << ::SDL_GetError() << "\n";
+		std::cerr << "*** ERRROR in SDL_InitSubSystem(SDL_INIT_VIDEO): "
+		          << ::SDL_GetError() << "\n";
 		exit(1);
 	}
 
 	const SDL_VideoInfo* videoInfo = SDL_GetVideoInfo();
 	if (!videoInfo)
 	{
-		std::cerr << "*** ERRROR in SDL_GetVideoInfo(): " << ::SDL_GetError() << "\n";
+		std::cerr << "*** ERRROR in SDL_GetVideoInfo(): "
+		          << ::SDL_GetError() << "\n";
 		exit(1);
 	}
-	std::cerr << "==smw> video bpp = " << static_cast<int>(videoInfo->vfmt->BitsPerPixel) << "\n";
+
+	if (config.isDebugMode())
+		std::cerr << "==smw> video bpp = "
+		          << static_cast<int>(videoInfo->vfmt->BitsPerPixel) << "\n";
 
 //	SDL_Rect** modes = SDL_ListModes(videoInfo->vfmt, SDL_OPENGL|SDL_FULLSCREEN);
 	SDL_Rect** modes = SDL_ListModes(videoInfo->vfmt, SDL_OPENGL);
@@ -65,9 +71,10 @@ NoDice::VideoContextSDL::VideoContextSDL(const Config& config)
 			m_height = modes[0]->h;
 		}
 	}
-	std::cerr << "==smw> choosing full-screen mode " << m_width
-		  << "x" << m_height
-		  << "x" << static_cast<int>(videoInfo->vfmt->BitsPerPixel) << ".\n";
+	if (config.isDebugMode())
+		std::cerr << "==smw> choosing full-screen mode " << m_width
+				<< "x" << m_height
+				<< "x" << static_cast<int>(videoInfo->vfmt->BitsPerPixel) << ".\n";
 
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 //	Uint32 videoFlags = SDL_OPENGL | SDL_GL_DOUBLEBUFFER | SDL_FULLSCREEN;
