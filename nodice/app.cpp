@@ -82,8 +82,6 @@ run()
 	Uint32 epochTics = SDL_GetTicks();
 	while (!done)
 	{
-		assert(!m_stateStack.empty());
-
 		SDL_Event event;
 		while (SDL_PollEvent(&event))
 		{
@@ -151,6 +149,12 @@ run()
 		if (deltaTics > UPDATE_TICKS)
 		{
 			m_stateStack.top()->update(*this);
+			if (m_stateStack.empty())
+			{
+				done = true;
+				break;
+			}
+
 			epochTics = currentTics;
 		}
 		m_stateStack.top()->draw(m_video);

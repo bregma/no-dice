@@ -19,6 +19,7 @@
  */
 #include "introstate.h"
 
+#include "nodice/app.h"
 #include "nodice/font.h"
 #include "nodice/video.h"
 
@@ -26,21 +27,22 @@ namespace
 {
 	struct MenuEntry
 	{
-		const char*    title;
-		vmml::Vector2f pos;
+		const char*                    title;
+		vmml::Vector2f                 pos;
+		NoDice::IntroState::NextState  nextState;
 	};
 
 	static MenuEntry entry[] = 
 	{
-		{ "options", vmml::Vector2f(0.0f, 0.0f) },
-		{ "play",    vmml::Vector2f(0.0f, 0.0f) },
-		{ "quit",    vmml::Vector2f(0.0f, 0.0f) }
+		{ "options", vmml::Vector2f(0.0f, 0.0f), NoDice::IntroState::next_state_options },
+		{ "play",    vmml::Vector2f(0.0f, 0.0f), NoDice::IntroState::next_state_play },
+		{ "quit",    vmml::Vector2f(0.0f, 0.0f), NoDice::IntroState::next_state_quit }
 	};
 
 	static const std::size_t menuCount = sizeof(entry) / sizeof(MenuEntry);
 
 	static float titleColour[] = { 1.00f, 0.10f, 0.10f, 1.00f };
-	static float selectedColour[] = { 0.50f, 0.50f, 1.00f, 0.80f };
+	static float selectedColour[] = { 0.80f, 0.50f, 1.00f, 0.80f };
 	static float unselectedColour[] = { 0.20f, 0.20f, 0.80f, 0.80f };
 
 } // anonymous namespace
@@ -52,6 +54,7 @@ IntroState(const Video& video)
 , m_menuFont(getFont("spindle", video.screenHeight() / 18))
 , m_titlePos(0.25 * video.screenWidth(), 0.75 * video.screenHeight())
 , m_selected(0)
+, m_nextState(next_state_same)
 {
 	const float vspacing = -2.0f * m_menuFont.height();
 	entry[0].pos.set(m_titlePos.x, m_titlePos.y + vspacing);
@@ -83,17 +86,36 @@ resume()
 void NoDice::IntroState::
 key(SDL_keysym keysym)
 {
-	if (keysym.sym == SDLK_UP)
+	switch (keysym.sym)
 	{
-		--m_selected;
-		if (m_selected < 0)
-			m_selected = 0;
-	}
-	else if (keysym.sym == SDLK_DOWN)
-	{
-		++m_selected;
-		if (m_selected >= menuCount)
-			m_selected = menuCount-1;
+		case SDLK_UP:
+			--m_selected;
+			if (m_selected < 0)
+				m_selected = 0;
+			break;
+
+		case SDLK_DOWN:
+			++m_selected;
+			if (m_selected >= menuCount)
+				m_selected = menuCount-1;
+			break;
+
+		case SDLK_RETURN:
+		case SDLK_KP_ENTER:
+			m_nextState = entry[m_selected].nextState;
+			break;
+
+		case SDLK_o:
+			m_nextState = next_state_options;
+			break;
+
+		case SDLK_p:
+			m_nextState = next_state_play;
+			break;
+
+		case SDLK_q:
+			m_nextState = next_state_quit;
+			break;
 	}
 }
 
@@ -113,6 +135,15 @@ pointerClick(int x, int y, PointerAction action)
 void NoDice::IntroState::
 update(App& app)
 {
+	switch (m_nextState)
+	{
+		case next_state_quit:
+			app.popGameState();
+			break;
+
+		default:
+			break;
+	}
 }
 
 

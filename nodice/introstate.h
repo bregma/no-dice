@@ -35,6 +35,15 @@ namespace NoDice
 	: public GameState
 	{
 	public:
+		enum NextState
+		{
+			next_state_same,
+			next_state_options,
+			next_state_play,
+			next_state_quit
+		};
+
+	public:
 		IntroState(const Video& video);
 
 		~IntroState();
@@ -54,6 +63,7 @@ namespace NoDice
 		Font&           m_menuFont;
 		vmml::Vector2f  m_titlePos;
 		int             m_selected;
+		NextState       m_nextState;
 	};
 
 } // namespace NoDice
