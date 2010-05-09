@@ -27,7 +27,7 @@ namespace
 
 NoDice::D6::
 D6()
-: Shape("d6")
+: Shape("d6", NoDice::Colour(1.0f, 0.0f, 0.1f, 0.40f))
 {
 	const GLfloat sizex = 1.0f;
 	const GLfloat sizey = 1.0f;
@@ -218,16 +218,16 @@ void NoDice::D6::
 draw() const
 {
  	static const int stride = row_width * sizeof(GLfloat);
+ 	static const GLfloat* cube_verteces = 0;
+	static const GLfloat* cube_normals = cube_verteces + 3;
 
- 	GLfloat *cube_verteces = 0;
-	GLfloat *cube_normals = cube_verteces + 3;
 	glEnable(GL_NORMALIZE);
+	glDisable(GL_CULL_FACE); // for transparency -- move to object
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_NORMAL_ARRAY);
 	glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
 	glNormalPointer(GL_FLOAT, stride, cube_normals);
 	glVertexPointer(3, GL_FLOAT, stride, cube_verteces);
-	glScalef(0.6f, 0.6f, 0.6f);
 	glDrawArrays(GL_TRIANGLES, 0, m_vertexCount);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glDisableClientState(GL_NORMAL_ARRAY);

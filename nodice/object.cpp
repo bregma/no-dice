@@ -1,8 +1,8 @@
 /**
  * @file nodice/object.cpp
- * @brief Implemntation of the nodice/object module.
+ * @brief Implemntation of the no-dice object module.
  *
- * Copyright 2009 Stephen M. Webb  <stephen.webb@bregmasoft.ca>
+ * Copyright 2009, 2010 Stephen M. Webb  <stephen.webb@bregmasoft.ca>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of Version 2 of the GNU General Public License as
@@ -19,15 +19,28 @@
  */
 #include "nodice/object.h"
 
-NoDice::Object::Object(const ShapePtr shape)
+#include "nodice/video.h"
+
+
+NoDice::Object::
+Object(const ShapePtr shape)
 : m_shape(shape)
+, m_colour(m_shape->defaultColour())
 {
 }
 
 
-NoDice::Object::~Object()
+NoDice::Object::
+~Object()
 {
 }
 
 
+void NoDice::Object::
+draw() const
+{
+	glColor4fv(m_colour.rgba);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, m_colour.rgba);
+	m_shape->draw();
+}
 

@@ -20,6 +20,7 @@
 #ifndef NODICE_SHAPE_H
 #define NODICE_SHAPE_H 1
 
+#include "nodice/colour.h"
 #include <string>
 #include <tr1/memory>
 
@@ -33,7 +34,8 @@ namespace NoDice
   {
   public:
     /** Constructs a shape base object. */
-    Shape(const std::string& name);
+    Shape(const std::string& name,
+    			const Colour&      defaultColour);
 
     /** Destroys a shape. */
     virtual ~Shape() = 0;
@@ -41,11 +43,15 @@ namespace NoDice
     /** Gets the name of the shape. */
     const std::string& name() const;
 
+    /** Gets the default colour for the shape. */
+    const Colour& defaultColour() const;
+
     /** Renders the shape. */
     virtual void draw() const = 0;
 
   private:
-    std::string m_name;
+    std::string  m_name;
+		Colour       m_defaultColour;
   };
 
   /** Points to a shape. */

@@ -41,8 +41,10 @@ namespace
 
 
 NoDice::Shape::
-Shape(const std::string& name)
+Shape(const std::string& name,
+			const Colour&      defaultColour)
 : m_name(name)
+, m_defaultColour(defaultColour)
 {
 }
 
@@ -57,6 +59,13 @@ const std::string& NoDice::Shape::
 name() const
 {
   return m_name;
+}
+
+
+const NoDice::Colour& NoDice::Shape::
+defaultColour() const
+{
+  return m_defaultColour;
 }
 
 

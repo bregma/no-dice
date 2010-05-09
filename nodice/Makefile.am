@@ -35,6 +35,7 @@ endif
 no_dice_SOURCES = \
 	main.cpp \
 	app.h              app.cpp \
+	colour.h           colour.cpp \
 	config.h           config.cpp \
 	d6.h               d6.cpp \
 	font.h             font.cpp \

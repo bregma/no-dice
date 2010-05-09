@@ -20,6 +20,7 @@
 #ifndef NODICE_OBJECT_H
 #define NODICE_OBJECT_H 1
 
+#include "nodice/colour.h"
 #include "nodice/shape.h"
 #include <tr1/memory>
 
@@ -40,12 +41,15 @@ namespace NoDice
     Object(const ShapePtr shape);
     ~Object();
 
+    void draw() const;
+
   private:
     Object(const Object&);
     Object& operator=(const Object&);
 
   private:
     const ShapePtr m_shape;
+    Colour         m_colour;
   };
 
 	typedef std::tr1::shared_ptr<Object> ObjectPtr;
