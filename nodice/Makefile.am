@@ -36,10 +36,12 @@ no_dice_SOURCES = \
 	main.cpp \
 	app.h              app.cpp \
 	config.h           config.cpp \
+	d6.h               d6.cpp \
 	font.h             font.cpp \
 	gamestate.h        gamestate.cpp \
 	introstate.h       introstate.cpp \
 	object.h           object.cpp \
+	opengl.h           opengl.cpp \
 	playstate.h        playstate.cpp \
 	shape.h            shape.cpp \
 	video.h            video.cpp \
@@ -48,6 +50,7 @@ no_dice_SOURCES = \
 
 no_dice_CXXFLAGS = \
 	-I$(top_srcdir)/include \
+	-DHAVE_GL_VERTEX_BUFFERS \
 	$(SDL_CFLAGS) \
 	$(FREETYPE_CFLAGS) \
 	$(GL_CFLAGS)

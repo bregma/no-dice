@@ -2,7 +2,7 @@
  * @file nodice/video.cpp
  * @brief Implemntation of the nodice/video module.
  *
- * Copyright 2009 Stephen M. Webb  <stephen.webb@bregmasoft.ca>
+ * Copyright 2009, 2010 Stephen M. Webb  <stephen.webb@bregmasoft.ca>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of Version 2 of the GNU General Public License as
@@ -30,6 +30,8 @@ namespace
 {
 	void initGL()
 	{
+		initGlVboExtension();
+
 		glShadeModel(GL_SMOOTH);
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 #ifdef HAVE_OPENGL_ES

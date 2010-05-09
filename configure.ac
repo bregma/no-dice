@@ -1,10 +1,10 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 #
-# Copyright 2009 Stephen M. Webb  <stephen.webb@bregmasoft.com>
+# Copyright 2009, 2010 Stephen M. Webb  <stephen.webb@bregmasoft.com>
 #
 AC_PREREQ(2.61)
-AC_COPYRIGHT([Copyright 2009 Stephen M. Webb  <stephen.webb@bregmasoft.com>])
+AC_COPYRIGHT([Copyright 2010 Stephen M. Webb  <stephen.webb@bregmasoft.com>])
 AC_INIT(no-dice, 1.0, stephen.webb@bregmasoft.com)
 AC_CONFIG_AUX_DIR(config)
 AC_CONFIG_MACRO_DIR(config)
@@ -31,9 +31,9 @@ PKG_CHECK_MODULES([GL],       [gl >= 7])
 
 # Use SDL or EGL for video context?
 AC_ARG_WITH(wm,
-						AC_HELP_STRING([--with-wm=@<:@sdl|egl@:>@],
-													 [selects the window manager]),
-						nd_wm=$with_wm)
+            AC_HELP_STRING([--with-wm=@<:@sdl|egl@:>@],
+                           [selects the window manager]),
+            nd_wm=$with_wm)
 if test "x$nd_wm" = "xegl"; then
 	AC_CHECK_HEADERS([GLES/egl.h],, AC_MSG_ERROR([missing EGL headers]))
 	AC_DEFINE([HAVE_EGL], [1], [Use EGL for the video context])

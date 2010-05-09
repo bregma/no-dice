@@ -2,7 +2,7 @@
  * @file opengl.h
  * @brief Portable wrapper for OpenGL/OpenGL ES inclusion.
  *
- * Copyright 2009 Stephen M. Webb  <stephen.webb@bregmasoft.ca>
+ * Copyright 2009, 2010 Stephen M. Webb  <stephen.webb@bregmasoft.ca>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of Version 2 of the GNU General Public License as
@@ -38,22 +38,38 @@
 #ifdef HAVE_OPENGL_ES
 # include <GLES/gl.h>
 #else
+# define GL_GLEXT_PROTOTYPES int
 # include <GL/gl.h>
+extern int smw_save_me(GL_GLEXT_PROTOTYPES);
+# include <GL/glext.h>
 #endif
+
+#ifndef HAVE_GL_VERTEX_BUFFERS
+# ifndef GL_ARRAY_BUFFER
+#  define GL_ARRAY_BUFFER 0x8892
+# endif
+# ifndef GL_STATIC_DRAW
+#  define GL_STATIC_DRAW 0x88E4
+# endif
+
+typedef void (APIENTRY *PFNGLBINDBUFFERPROC)(GLenum, GLuint);
+typedef void (APIENTRY *PFNGLDELETEBUFFERSPROC)(GLsizei, const GLuint*);
+typedef void (APIENTRY *PFNGLGENBUFFERSPROC)(GLsizei, GLuint*);
+typedef void (APIENTRY *PFNGLBUFFERDATAPROC)(GLenum, int, const GLvoid*, GLenum);
+
+PFNGLBINDBUFFERPROC    glBindBuffer;
+PFNGLDELETEBUFFERSPROC glDeleteBuffers;
+PFNGLGENBUFFERSPROC    glGenBuffers;
+PFNGLBUFFERDATAPROC    glBufferData;
+#endif
+
+void initGlVboExtension(void);
 
 #ifndef _NDEBUG
 # include <iostream>
 # include <string>
 
-inline void check_gl_error(const std::string& msg)
-{
-	GLenum err = glGetError();
-	while (err != 0)
-	{
-		std::cerr << "GL error 0x" << std::hex << err << std::dec << " at " << msg << "\n";
-		err = glGetError();
-	}
-}
+void check_gl_error(const std::string& msg);
 #endif
 
 #endif // NO_DICE_OPENGL_H
