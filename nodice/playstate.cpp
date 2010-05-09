@@ -19,7 +19,7 @@
  */
 #include "nodice/playstate.h"
 
-#include "nodice/d6.h"
+#include "nodice/shape.h"
 #include "nodice/video.h"
 
 
@@ -45,8 +45,8 @@ update(App& app)
 }
 
 
-GLfloat lightAmbient[] = { 0.2f, 0.3f, 0.6f, 1.0f };
-GLfloat lightDiffuse[] = { 0.2f, 0.3f, 0.6f, 1.0f };
+GLfloat lightAmbient[] = { 0.2f, 0.2f, 0.2f, 1.0f };
+GLfloat lightDiffuse[] = { 0.8f, 0.8f, 0.8f, 1.0f };
 GLfloat lightSpecular[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 GLfloat lightPosition[] = { 2.0f, 2.0f, 3.0f, 0.0f };
 GLfloat lightDirection[] = { -2.0f, -2.0f, -3.0f };
@@ -69,7 +69,7 @@ draw(Video& video)
 	glDisable(GL_DEPTH_TEST);
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
-	glEnable(GL_CULL_FACE);
+	glDisable(GL_CULL_FACE);
 	glEnable(GL_COLOR_MATERIAL);
 	glEnable(GL_NORMALIZE);
 	glShadeModel(GL_SMOOTH);
@@ -78,7 +78,7 @@ draw(Video& video)
 
 	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, matAmbient);
 	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, matDiffuse);
-	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, matSpecular);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, matSpecular);
 	glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 20.0f);
 	glLightfv(GL_LIGHT0, GL_AMBIENT, lightAmbient);
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, lightDiffuse);
@@ -88,15 +88,16 @@ draw(Video& video)
 	glLightf(GL_LIGHT0, GL_SPOT_CUTOFF, 1.2f);
 	glLightf(GL_LIGHT0, GL_SPOT_EXPONENT, 20.0f);
 
-	static D6 d6;
+	static ShapePtr shape = chooseAShape();
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
+	glScalef(1.0f/4.0f, 1.0f/4.0f, 1.0f/4.0f);
 	glRotatef(float(xrot), 1.0f, 0.0f, 0.0f);
 	glRotatef(float(yrot), 0.0f, 1.0f, 0.0f);
 
 	glColor4f(1.0f, 0.0f, 0.0f, 0.5f);
-	d6.draw();
+	shape->draw();
 }
 
 

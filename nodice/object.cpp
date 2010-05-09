@@ -19,7 +19,7 @@
  */
 #include "nodice/object.h"
 
-NoDice::Object::Object(const Shape* shape)
+NoDice::Object::Object(const ShapePtr shape)
 : m_shape(shape)
 {
 }

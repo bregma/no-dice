@@ -21,6 +21,7 @@
 
 #include <cassert>
 #include <cstdlib>
+#include <ctime>
 #include <iostream>
 #include "nodice/config.h"
 #include "nodice/introstate.h"
@@ -65,6 +66,7 @@ App(const NoDice::Config& config)
 , m_sdlInit()
 , m_video(m_config)
 {
+	std::srand(std::time(NULL));
 	pushGameState(GameStatePtr(new IntroState(m_config, m_video)));
 }
 

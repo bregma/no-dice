@@ -20,6 +20,10 @@
 #ifndef NODICE_OBJECT_H
 #define NODICE_OBJECT_H 1
 
+#include "nodice/shape.h"
+#include <tr1/memory>
+
+
 namespace NoDice
 {
   class Shape;
@@ -33,7 +37,7 @@ namespace NoDice
   class Object
   {
   public:
-    Object(const Shape* shape);
+    Object(const ShapePtr shape);
     ~Object();
 
   private:
@@ -41,8 +45,10 @@ namespace NoDice
     Object& operator=(const Object&);
 
   private:
-    const Shape* m_shape;
+    const ShapePtr m_shape;
   };
+
+	typedef std::tr1::shared_ptr<Object> ObjectPtr;
 } // namespace NoDice
 
 #endif // NODICE_OBJECT_H

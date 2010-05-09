@@ -2,7 +2,7 @@
  * @file nodice/shape.cpp
  * @brief Implemntation of the nodice/shape module.
  *
- * Copyright 2009 Stephen M. Webb  <stephen.webb@bregmasoft.ca>
+ * Copyright 2009, 2010 Stephen M. Webb  <stephen.webb@bregmasoft.ca>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of Version 2 of the GNU General Public License as
@@ -19,26 +19,55 @@
  */
 #include "nodice/shape.h"
 
-NoDice::Shape::Shape(const std::string& name)
+#include <cstdlib>
+#include "nodice/d6.h"
+#include <vector>
+
+namespace
+{
+	typedef std::vector<NoDice::ShapePtr> ShapeBag;
+
+	ShapeBag
+	generateShapeBag()
+	{
+		ShapeBag bag;
+
+		bag.push_back(NoDice::ShapePtr(new NoDice::D6));
+		bag.push_back(NoDice::ShapePtr(new NoDice::D6)); // temp!
+
+		return bag;
+	}
+} // anonymous namespace
+
+
+NoDice::Shape::
+Shape(const std::string& name)
 : m_name(name)
 {
 }
 
 
-NoDice::Shape::~Shape()
+NoDice::Shape::
+~Shape()
 {
 }
 
 
-const std::string& NoDice::Shape::name() const
+const std::string& NoDice::Shape::
+name() const
 {
   return m_name;
 }
 
 
-void NoDice::Shape::draw() const
+NoDice::ShapePtr NoDice::
+chooseAShape()
 {
-  /* later dude */
+	static ShapeBag s_shapeBag = generateShapeBag();
+
+	int r = (rand() >> 2) % s_shapeBag.size();
+	std::cerr << "==smw> " << __PRETTY_FUNCTION__ << " r=" << r << "\n";
+	return s_shapeBag.front();
 }
 
 
