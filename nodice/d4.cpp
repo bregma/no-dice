@@ -42,10 +42,10 @@ D4()
 	const Vector3f C(-half, -half,  half);
 	const Vector3f D( half, -half, -half);
 
-	const Vector3f normal1 = A.cross(B).getNormalized();
-	const Vector3f normal2 = A.cross(C).getNormalized();
-	const Vector3f normal3 = B.cross(D).getNormalized();
-	const Vector3f normal4 = B.cross(A).getNormalized();
+	const Vector3f normal1 = (A - B).cross(C - B).getNormalized();
+	const Vector3f normal2 = (A - C).cross(D - C).getNormalized();
+	const Vector3f normal3 = (B - D).cross(C - D).getNormalized();
+	const Vector3f normal4 = (B - A).cross(D - A).getNormalized();
 
 	/* vertex-3, normal-3 */
 	GLfloat shape[] = {

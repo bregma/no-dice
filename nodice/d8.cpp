@@ -29,7 +29,7 @@ namespace
 } // anonymous namespace
 
 /**
- * Generates a bipyramidal polyhedron in the unit spehere.
+ * Generates an octohedron in the unit spehere.
  *
  * Uh, this is wrong.  This gives a 6-sided polyhedron, we need an eight-sided
  * polyhedron.  Rethink this.
@@ -40,49 +40,62 @@ D8()
 {
 	using vmml::Vector3f;
 
-	static const GLfloat size = 1.0f;
-	static const GLfloat pi = 3.14159265358979323846f;
-	static const GLfloat cos60 = std::cos(pi * 30.0f / 180.0f);
-	static const GLfloat sin60 = std::sin(pi * 30.0f / 180.0f);
+	// the octahedron is inscribed inside a sphere with this radius
+	static const GLfloat r = 1.0f;
+	static const GLfloat z = 0.0f;
 
-	const Vector3f top(0.0f, 1.0f, 0.0f);
-	const Vector3f bottom(0.0f, -1.0f, 0.0f);
-	const Vector3f back(0.0f, 0.0f, -1.0f);
-	const Vector3f left(-cos60, 0.0f, sin60);
-	const Vector3f right(cos60, 0.0f, sin60);
+	Vector3f vertex[6];
+	vertex[0].set( r,  z,  z);
+	vertex[1].set( z,  r,  z);
+	vertex[2].set( z,  z,  r);
+	vertex[3].set(-r,  z,  z);
+	vertex[4].set( z,  z, -r);
+	vertex[5].set( z, -r,  z);
 
-	const Vector3f normal1 = right.cross(top).getNormalized();
-	const Vector3f normal2 = left.cross(bottom).getNormalized();
-	const Vector3f normal3 = right.cross(bottom).getNormalized();
-	const Vector3f normal4 = back.cross(top).getNormalized();
-	const Vector3f normal5 = top.cross(back).getNormalized();
-	const Vector3f normal6 = left.cross(bottom).getNormalized();
-
+	Vector3f normal[8];
+	normal[0] = (vertex[0] - vertex[1]).cross(vertex[2] - vertex[1]).getNormalized();
+	normal[1] = (vertex[2] - vertex[1]).cross(vertex[3] - vertex[1]).getNormalized();
+	normal[2] = (vertex[3] - vertex[1]).cross(vertex[4] - vertex[1]).getNormalized();
+	normal[3] = (vertex[4] - vertex[1]).cross(vertex[0] - vertex[1]).getNormalized();
+	normal[4] = (vertex[0] - vertex[5]).cross(vertex[4] - vertex[5]).getNormalized();
+	normal[5] = (vertex[4] - vertex[5]).cross(vertex[3] - vertex[5]).getNormalized();
+	normal[6] = (vertex[3] - vertex[5]).cross(vertex[2] - vertex[5]).getNormalized();
+	normal[7] = (vertex[2] - vertex[5]).cross(vertex[0] - vertex[5]).getNormalized();
+	
 	/* vertex-3, normal-3 */
 	GLfloat shape[] = {
-		right.x,  right.y,  right.z,  normal1.x, normal1.y, normal1.z,
-		top.x,    top.y,    top.z,    normal1.x, normal1.y, normal1.z,
-		left.x,   left.y,   left.z,   normal1.x, normal1.y, normal1.z,
+		vertex[0]. x, vertex[0].y, vertex[0].z, normal[0].x, normal[0].y, normal[0].z,
+		vertex[1]. x, vertex[1].y, vertex[1].z, normal[0].x, normal[0].y, normal[0].z,
+		vertex[2]. x, vertex[2].y, vertex[2].z, normal[0].x, normal[0].y, normal[0].z,
 
-		left.x,   left.y,   left.z,   normal2.x, normal2.y, normal2.z,
-		bottom.x, bottom.y, bottom.z, normal2.x, normal2.y, normal2.z,
-		right.x,  right.y,  right.z,  normal2.x, normal2.y, normal2.z,
+		vertex[2]. x, vertex[2].y, vertex[2].z, normal[1].x, normal[1].y, normal[1].z,
+		vertex[1]. x, vertex[1].y, vertex[1].z, normal[1].x, normal[1].y, normal[1].z,
+		vertex[3]. x, vertex[3].y, vertex[3].z, normal[1].x, normal[1].y, normal[1].z,
 
-		right.x,  right.y,  right.z,  normal3.x, normal3.y, normal3.z,
-		bottom.x, bottom.y, bottom.z, normal3.x, normal3.y, normal3.z,
-		back.x,   back.y,   back.z,   normal3.x, normal3.y, normal3.z,
+		vertex[3]. x, vertex[3].y, vertex[3].z, normal[2].x, normal[2].y, normal[2].z,
+		vertex[1]. x, vertex[1].y, vertex[1].z, normal[2].x, normal[2].y, normal[2].z,
+		vertex[4]. x, vertex[4].y, vertex[4].z, normal[2].x, normal[2].y, normal[2].z,
 
-		back.x,   back.y,   back.z,   normal4.x, normal4.y, normal4.z,
-		top.x,    top.y,    top.z,    normal4.x, normal4.y, normal4.z,
-		right.x,  right.y,  right.z,  normal4.x, normal4.y, normal4.z,
+		vertex[4]. x, vertex[4].y, vertex[4].z, normal[3].x, normal[3].y, normal[3].z,
+		vertex[1]. x, vertex[1].y, vertex[1].z, normal[1].x, normal[3].y, normal[3].z,
+		vertex[0]. x, vertex[0].y, vertex[0].z, normal[3].x, normal[3].y, normal[3].z,
 
-		top.x,    top.y,    top.z,    normal5.x, normal5.y, normal5.z,
-		back.x,   back.y,   back.z,   normal5.x, normal5.y, normal5.z,
-		left.x,   left.y,   left.z,   normal5.x, normal5.y, normal5.z,
+		vertex[0]. x, vertex[0].y, vertex[0].z, normal[4].x, normal[4].y, normal[4].z,
+		vertex[5]. x, vertex[5].y, vertex[5].z, normal[4].x, normal[4].y, normal[4].z,
+		vertex[4]. x, vertex[4].y, vertex[4].z, normal[4].x, normal[4].y, normal[4].z,
 
-		left.x,   left.y,   left.z,   normal6.x, normal6.y, normal6.z,
-		bottom.x, bottom.y, bottom.z, normal6.x, normal6.y, normal6.z,
-		back.x,   back.y,   back.z,   normal6.x, normal6.y, normal6.z,
+		vertex[4]. x, vertex[4].y, vertex[4].z, normal[5].x, normal[5].y, normal[5].z,
+		vertex[5]. x, vertex[5].y, vertex[5].z, normal[5].x, normal[5].y, normal[5].z,
+		vertex[3]. x, vertex[3].y, vertex[3].z, normal[5].x, normal[5].y, normal[5].z,
+
+		vertex[3]. x, vertex[3].y, vertex[3].z, normal[6].x, normal[6].y, normal[6].z,
+		vertex[5]. x, vertex[5].y, vertex[5].z, normal[6].x, normal[6].y, normal[6].z,
+		vertex[2]. x, vertex[2].y, vertex[2].z, normal[6].x, normal[6].y, normal[6].z,
+
+		vertex[2]. x, vertex[2].y, vertex[2].z, normal[7].x, normal[7].y, normal[7].z,
+		vertex[5]. x, vertex[5].y, vertex[5].z, normal[7].x, normal[7].y, normal[7].z,
+		vertex[0]. x, vertex[0].y, vertex[0].z, normal[7].x, normal[7].y, normal[7].z,
+
 	};
 	m_vertexCount = (sizeof(shape) / sizeof(GLfloat)) / row_width;
 
