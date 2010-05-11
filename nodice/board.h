@@ -1,6 +1,6 @@
 /**
- * @file nodice/playstate.h
- * @brief Public interface of the nodice/playstate module.
+ * @file nodice/board.h
+ * @brief Public interface of the nodice/board module.
  *
  * Copyright 2010 Stephen M. Webb  <stephen.webb@bregmasoft.ca>
  *
@@ -17,30 +17,35 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-#ifndef NODICE_PLAYSTATE_H
-#define NODICE_PLAYSTATE_H 1
+#ifndef NODICE_BOARD_H
+#define NODICE_BOARD_H 1
 
-#include "nodice/gamestate.h"
+#include "nodice/object.h"
+#include <vector>
 
-#include "nodice/board.h"
 
 namespace NoDice
 {
+	class Config;
 
-	class PlayState
-	: public GameState
+	/**
+	 * The playing surface.
+	 */
+	class Board
 	{
 	public:
-		PlayState(Config& config);
-		~PlayState();
+		Board(const Config& config);
 
-		void update(App& app);
-		void draw(Video& video);
+		const ObjectPtr& at(int x, int y) const;
+
+		void update();
+		void draw() const;
 
 	private:
-		Board m_gameboard;
+		typedef std::vector<ObjectPtr> ObjectBag;
+
+		ObjectBag m_objects;
 	};
+} // namespace NoDice
 
-} // namespace noDice
-
-#endif // NODICE_PLAYSTATE_H
+#endif // NODICE_BOARD_H

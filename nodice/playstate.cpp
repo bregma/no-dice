@@ -28,8 +28,7 @@
 NoDice::PlayState::
 PlayState(Config& config)
 : GameState(config)
-, m_object1(NoDice::chooseAShape())
-, m_object2(NoDice::chooseAShape())
+, m_gameboard(config)
 {
 }
 
@@ -43,8 +42,7 @@ NoDice::PlayState::
 void NoDice::PlayState::
 update(App& app)
 {
-	m_object1.update();
-	m_object2.update();
+	m_gameboard.update();
 }
 
 
@@ -54,7 +52,7 @@ GLfloat lightPosition[] = { 2.0f, 2.0f, 3.0f, 0.0f };
 GLfloat lightDirection[] = { -2.0f, -2.0f, -3.0f };
 
 void NoDice::PlayState::
-draw(Video& video)
+draw(Video& video) 
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glMatrixMode(GL_PROJECTION);
@@ -88,10 +86,8 @@ draw(Video& video)
 	glPushMatrix();
 	glLoadIdentity();
 	glScalef(0.1f, 0.1f, 0.1f);
-	glTranslatef(-1.0f, 0.0f, 0.0f);
-	m_object1.draw();
-	glTranslatef(2.0f, 0.0f, 0.0f);
-	m_object2.draw();
+	glTranslatef(-5.5f, -5.8f, 0.0f);
+	m_gameboard.draw();
 	glPopMatrix();
 }
 
