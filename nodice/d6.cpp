@@ -19,6 +19,8 @@
  */
 #include "nodice/d6.h"
 
+#include <cmath>
+
 
 namespace
 {
@@ -29,10 +31,11 @@ NoDice::D6::
 D6()
 : Shape("d6", NoDice::Colour(1.0f, 0.0f, 0.1f, 0.40f))
 {
-	const GLfloat sizex = 1.0f;
-	const GLfloat sizey = 1.0f;
-	const GLfloat sizez = 1.0f;
-	const GLfloat bevel = 0.08f;
+	const GLfloat bevel = 0.05f;
+	const GLfloat size = std::sqrt(2.0f) / 2.0f;
+	const GLfloat sizex = size - bevel;
+	const GLfloat sizey = size - bevel;
+	const GLfloat sizez = size - bevel;
 	const GLfloat bsizex = sizex + bevel;
 	const GLfloat bsizey = sizey + bevel;
 	const GLfloat bsizez = sizez + bevel;

@@ -37,7 +37,9 @@ no_dice_SOURCES = \
 	app.h              app.cpp \
 	colour.h           colour.cpp \
 	config.h           config.cpp \
+	d4.h               d4.cpp \
 	d6.h               d6.cpp \
+	d8.h               d8.cpp \
 	font.h             font.cpp \
 	gamestate.h        gamestate.cpp \
 	introstate.h       introstate.cpp \

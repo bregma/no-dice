@@ -1,6 +1,6 @@
 /**
- * @file nodice/playstate.h
- * @brief Public interface of the nodice/playstate module.
+ * @file nodice/d4.h
+ * @brief Public interface of the no-dice d4 module.
  *
  * Copyright 2010 Stephen M. Webb  <stephen.webb@bregmasoft.ca>
  *
@@ -17,31 +17,31 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-#ifndef NODICE_PLAYSTATE_H
-#define NODICE_PLAYSTATE_H 1
+#ifndef NODICE_D4_H
+#define NODICE_D4_H 1
 
-#include "nodice/gamestate.h"
+#include "nodice/shape.h"
+#include "nodice/video.h"
 
-#include "nodice/object.h"
 
 namespace NoDice
 {
 
-	class PlayState
-	: public GameState
+	/**
+	 * A 4-sided (tetrahedral) polyhedral die.
+	 */
+	class D4
+	: public Shape
 	{
 	public:
-		PlayState(Config& config);
-		~PlayState();
-
-		void update(App& app);
-		void draw(Video& video);
+		D4();
+		~D4();
+		void draw() const;
 
 	private:
-		Object m_object1; // temp for testing
-		Object m_object2; // temp for testing
+		GLuint  m_vbo;
+		GLsizei m_vertexCount;
 	};
-
 } // namespace noDice
 
-#endif // NODICE_PLAYSTATE_H
+#endif // NODICE_D4_H

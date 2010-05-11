@@ -28,6 +28,8 @@
 NoDice::PlayState::
 PlayState(Config& config)
 : GameState(config)
+, m_object1(NoDice::chooseAShape())
+, m_object2(NoDice::chooseAShape())
 {
 }
 
@@ -37,13 +39,12 @@ NoDice::PlayState::
 {
 }
 
-int xrot = 0.0f, yrot = 0.0f;
 
 void NoDice::PlayState::
 update(App& app)
 {
-	xrot = (xrot + 1) % 360;
-	yrot = (yrot + 6) % 360;
+	m_object1.update();
+	m_object2.update();
 }
 
 
@@ -55,9 +56,6 @@ GLfloat lightDirection[] = { -2.0f, -2.0f, -3.0f };
 void NoDice::PlayState::
 draw(Video& video)
 {
-	// temporary, for testing
-	static NoDice::Object s_object(NoDice::chooseAShape());
-
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
@@ -87,12 +85,14 @@ draw(Video& video)
 	glLightf(GL_LIGHT0, GL_SPOT_EXPONENT, 20.0f);
 
 	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
 	glLoadIdentity();
-	glScalef(1.0f/4.0f, 1.0f/4.0f, 1.0f/4.0f);
-	glRotatef(float(xrot), 1.0f, 0.0f, 0.0f);
-	glRotatef(float(yrot), 0.0f, 1.0f, 0.0f);
-
-	s_object.draw();
+	glScalef(0.1f, 0.1f, 0.1f);
+	glTranslatef(-1.0f, 0.0f, 0.0f);
+	m_object1.draw();
+	glTranslatef(2.0f, 0.0f, 0.0f);
+	m_object2.draw();
+	glPopMatrix();
 }
 
 

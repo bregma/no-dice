@@ -20,7 +20,9 @@
 #include "nodice/shape.h"
 
 #include <cstdlib>
+#include "nodice/d4.h"
 #include "nodice/d6.h"
+#include "nodice/d8.h"
 #include <vector>
 
 namespace
@@ -32,8 +34,9 @@ namespace
 	{
 		ShapeBag bag;
 
-		bag.push_back(NoDice::ShapePtr(new NoDice::D6));
-		bag.push_back(NoDice::ShapePtr(new NoDice::D6)); // temp!
+		bag.push_back(NoDice::ShapePtr(new NoDice::D4));
+		bag.push_back(NoDice::ShapePtr(new NoDice::D6)); 
+		bag.push_back(NoDice::ShapePtr(new NoDice::D8)); 
 
 		return bag;
 	}
@@ -76,7 +79,7 @@ chooseAShape()
 
 	int r = (rand() >> 2) % s_shapeBag.size();
 	std::cerr << "==smw> " << __PRETTY_FUNCTION__ << " r=" << r << "\n";
-	return s_shapeBag.front();
+	return s_shapeBag.at(r);
 }
 
 

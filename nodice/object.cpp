@@ -26,6 +26,7 @@ NoDice::Object::
 Object(const ShapePtr shape)
 : m_shape(shape)
 , m_colour(m_shape->defaultColour())
+, m_xrot(0), m_yrot(0)
 {
 }
 
@@ -36,11 +37,40 @@ NoDice::Object::
 }
 
 
+/**
+ * The default type of an object is the name of it's shape.
+ * Non-base objects can do something fancier.
+ *
+ * The name type allows two different objects to be compared for, say, the
+ * purpose of matching.
+ */
+const std::string& NoDice::Object::
+type() const
+{
+	return m_shape->name();
+}
+
+
+void NoDice::Object::
+update() 
+{
+	m_xrot = (m_xrot + 1) % 360;
+	m_yrot = (m_yrot + 6) % 360;
+}
+
+
 void NoDice::Object::
 draw() const
 {
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
+
+	glRotatef(float(m_xrot), 1.0f, 0.0f, 0.0f);
+	glRotatef(float(m_yrot), 0.0f, 1.0f, 0.0f);
+
 	glColor4fv(m_colour.rgba);
 	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, m_colour.rgba);
 	m_shape->draw();
+	glPopMatrix();
 }
 

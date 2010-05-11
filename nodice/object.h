@@ -38,20 +38,32 @@ namespace NoDice
   class Object
   {
   public:
+    /** Constructs the object with a given shape. */
     Object(const ShapePtr shape);
-    ~Object();
 
-    void draw() const;
+    /** Destroys the object. */
+    virtual ~Object();
+
+    /** Gets the name of the type of the object. */
+    virtual const std::string& type() const;
+
+    /** Performs a one-tick update of the object. */
+    virtual void update();
+
+		/** Renders the object on the current drawing surface. */
+    virtual void draw() const;
 
   private:
     Object(const Object&);
     Object& operator=(const Object&);
 
-  private:
+  protected:
     const ShapePtr m_shape;
     Colour         m_colour;
+    int            m_xrot, m_yrot; // temp for testing
   };
 
+	/** Points to an object. */
 	typedef std::tr1::shared_ptr<Object> ObjectPtr;
 } // namespace NoDice
 
