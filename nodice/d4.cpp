@@ -30,7 +30,7 @@ namespace
 
 NoDice::D4::
 D4()
-: Shape("d4", NoDice::Colour(1.0f, 1.0f, 0.0f, 0.40f))
+: Shape("d4", NoDice::Colour(1.0f, 1.0f, 0.0f, 0.60f))
 {
 	using vmml::Vector3f;
 
@@ -42,28 +42,28 @@ D4()
 	const Vector3f C(-half, -half,  half);
 	const Vector3f D( half, -half, -half);
 
-	const Vector3f normal1 = (A - B).cross(C - B).getNormalized();
-	const Vector3f normal2 = (A - C).cross(D - C).getNormalized();
-	const Vector3f normal3 = (B - D).cross(C - D).getNormalized();
-	const Vector3f normal4 = (B - A).cross(D - A).getNormalized();
+	const Vector3f normal1 = (C - B).cross(A - B).getNormalized();
+	const Vector3f normal2 = (D - C).cross(A - C).getNormalized();
+	const Vector3f normal3 = (C - D).cross(B - D).getNormalized();
+	const Vector3f normal4 = (D - A).cross(B - A).getNormalized();
 
 	/* vertex-3, normal-3 */
 	GLfloat shape[] = {
 	  A.x, A.y, A.z, normal1.x, normal1.y, normal1.z,
-	  B.x, B.y, B.z, normal1.x, normal1.y, normal1.z,
 	  C.x, C.y, C.z, normal1.x, normal1.y, normal1.z,
+	  B.x, B.y, B.z, normal1.x, normal1.y, normal1.z,
 
 	  A.x, A.y, A.z, normal2.x, normal2.y, normal2.z,
-	  C.x, C.y, C.z, normal2.x, normal2.y, normal2.z,
 	  D.x, D.y, D.z, normal2.x, normal2.y, normal2.z,
+	  C.x, C.y, C.z, normal2.x, normal2.y, normal2.z,
 
 	  B.x, B.y, B.z, normal3.x, normal3.y, normal3.z,
-	  D.x, D.y, D.z, normal3.x, normal3.y, normal3.z,
 	  C.x, C.y, C.z, normal3.x, normal3.y, normal3.z,
+	  D.x, D.y, D.z, normal3.x, normal3.y, normal3.z,
 
 	  B.x, B.y, B.z, normal4.x, normal4.y, normal4.z,
-	  A.x, A.y, A.z, normal4.x, normal4.y, normal4.z,
 	  D.x, D.y, D.z, normal4.x, normal4.y, normal4.z,
+	  A.x, A.y, A.z, normal4.x, normal4.y, normal4.z,
 	};
 	m_vertexCount = (sizeof(shape) / sizeof(GLfloat)) / row_width;
 
