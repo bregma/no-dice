@@ -60,7 +60,7 @@ draw(Video& video)
 #ifdef HAVE_OPENGL_ES
 	glFrustumf(0.0f, 1.0f, 0.0f, 1.0f, -1.0f, 1.0f);
 #else
-	glFrustum(0.0f, 1.0f, 0.0f, 1.0f, -2.0f, 1.0f);
+	glFrustum(0.0f, 1.0f, 0.0f, 1.0f, -1.0f, 1.0f);
 #endif
 	glDisable(GL_DEPTH_TEST);
 	glEnable(GL_LIGHTING);
@@ -86,7 +86,7 @@ draw(Video& video)
 	glPushMatrix();
 	glLoadIdentity();
 	glScalef(0.1f, 0.1f, 0.1f);
-	glTranslatef(-5.5f, -5.8f, 0.0f);
+	glTranslatef(-5.5f, -7.5f, 0.0f);
 	m_gameboard.draw();
 	glPopMatrix();
 }

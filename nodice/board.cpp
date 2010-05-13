@@ -67,7 +67,7 @@ draw() const
 			glTranslatef(2.0f, 0.0f, 0.0f);
 		}
 		glPopMatrix();
-		glTranslatef(0.0f, 2.1f, 0.0f);
+		glTranslatef(0.0f, 2.25f, 0.0f);
 	}
 	glPopMatrix();
 }

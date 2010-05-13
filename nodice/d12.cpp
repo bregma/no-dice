@@ -64,9 +64,9 @@ D12()
 	const Vector3f normal3  = (L - B).cross(H - L).getNormalized();
 	const Vector3f normal4  = (M - C).cross(I - M).getNormalized();
 	const Vector3f normal5  = (N - D).cross(J - N).getNormalized();
-	const Vector3f normal6  = (F - E).cross(F - O).getNormalized();
+	const Vector3f normal6  = (O - E).cross(F - O).getNormalized();
 	const Vector3f normal7  = (G - P).cross(L - G).getNormalized();
-	const Vector3f normal8  = (D - Q).cross(M - D).getNormalized();
+	const Vector3f normal8  = (H - Q).cross(M - H).getNormalized();
 	const Vector3f normal9  = (I - R).cross(N - I).getNormalized();
 	const Vector3f normal10 = (J - S).cross(O - J).getNormalized();
 	const Vector3f normal11 = (F - T).cross(K - F).getNormalized();

@@ -32,174 +32,169 @@ D6()
 : Shape("d6", NoDice::Colour(1.0f, 0.0f, 0.1f, 0.40f))
 {
 	const GLfloat bevel = 0.05f;
-	const GLfloat size = std::sqrt(2.0f) / 2.0f;
-	const GLfloat sizex = size - bevel;
-	const GLfloat sizey = size - bevel;
-	const GLfloat sizez = size - bevel;
-	const GLfloat bsizex = sizex + bevel;
-	const GLfloat bsizey = sizey + bevel;
-	const GLfloat bsizez = sizez + bevel;
+	const GLfloat size = 1.0f / std::sqrt(2.0f);
+	const GLfloat bsize = size - bevel;
 
 	/* vertex-3, normal-3 */
 	GLfloat cube[] = {
 		/* right side */
-		 bsizex,  -sizey,   sizez,  1.0f,  0.0f,  0.0f, /* A */
-		 bsizex,  -sizey,  -sizez,  1.0f,  0.0f,  0.0f, /* B */
-		 bsizex,   sizey,   sizez,  1.0f,  0.0f,  0.0f, /* C */
-		 bsizex,   sizey,   sizez,  1.0f,  0.0f,  0.0f, /* C */
-		 bsizex,  -sizey,  -sizez,  1.0f,  0.0f,  0.0f, /* B */
-		 bsizex,   sizey,  -sizez,  1.0f,  0.0f,  0.0f, /* D */
+		 size,  -bsize,   bsize,  1.0f,  0.0f,  0.0f, /* A */
+		 size,  -bsize,  -bsize,  1.0f,  0.0f,  0.0f, /* B */
+		 size,   bsize,   bsize,  1.0f,  0.0f,  0.0f, /* C */
+		 size,   bsize,   bsize,  1.0f,  0.0f,  0.0f, /* C */
+		 size,  -bsize,  -bsize,  1.0f,  0.0f,  0.0f, /* B */
+		 size,   bsize,  -bsize,  1.0f,  0.0f,  0.0f, /* D */
 		/* right top bevel */
-		 bsizex,   sizey,   sizez,  1.0f,  1.0f,  0.0f, /* C */
-		 bsizex,   sizey,  -sizez,  1.0f,  1.0f,  0.0f, /* D */
-		 sizex,   bsizey,   sizez,  1.0f,  1.0f,  0.0f, /* E */
-		 sizex,   bsizey,   sizez,  1.0f,  1.0f,  0.0f, /* E */
-		 bsizex,   sizey,  -sizez,  1.0f,  1.0f,  0.0f, /* D */
-		 sizex,   bsizey,  -sizez,  1.0f,  1.0f,  0.0f, /* F */
+		 size,   bsize,   bsize,  1.0f,  1.0f,  0.0f, /* C */
+		 size,   bsize,  -bsize,  1.0f,  1.0f,  0.0f, /* D */
+		 bsize,   size,   bsize,  1.0f,  1.0f,  0.0f, /* E */
+		 bsize,   size,   bsize,  1.0f,  1.0f,  0.0f, /* E */
+		 size,   bsize,  -bsize,  1.0f,  1.0f,  0.0f, /* D */
+		 bsize,   size,  -bsize,  1.0f,  1.0f,  0.0f, /* F */
 		/* top side */
-		 sizex,   bsizey,   sizez,  0.0f,  1.0f,  0.0f, /* E */
-		 sizex,   bsizey,  -sizez,  0.0f,  1.0f,  0.0f, /* F */
-		-sizex,   bsizey,   sizez,  0.0f,  1.0f,  0.0f, /* G */
-		-sizex,   bsizey,   sizez,  0.0f,  1.0f,  0.0f, /* G */
-		 sizex,   bsizey,  -sizez,  0.0f,  1.0f,  0.0f, /* F */
-		-sizex,   bsizey,  -sizez,  0.0f,  1.0f,  0.0f, /* H */
+		 bsize,   size,   bsize,  0.0f,  1.0f,  0.0f, /* E */
+		 bsize,   size,  -bsize,  0.0f,  1.0f,  0.0f, /* F */
+		-bsize,   size,   bsize,  0.0f,  1.0f,  0.0f, /* G */
+		-bsize,   size,   bsize,  0.0f,  1.0f,  0.0f, /* G */
+		 bsize,   size,  -bsize,  0.0f,  1.0f,  0.0f, /* F */
+		-bsize,   size,  -bsize,  0.0f,  1.0f,  0.0f, /* H */
 		/* left top bevel */
-		-sizex,   bsizey,   sizez, -1.0f,  1.0f,  0.0f, /* G */
-		-sizex,   bsizey,  -sizez, -1.0f,  1.0f,  0.0f, /* H */
-		-bsizex,   sizey,   sizez, -1.0f,  1.0f,  0.0f, /* I */
-		-bsizex,   sizey,   sizez, -1.0f,  1.0f,  0.0f, /* I */
-		-sizex,   bsizey,  -sizez, -1.0f,  1.0f,  0.0f, /* H */
-		-bsizex,   sizey,  -sizez, -1.0f,  1.0f,  0.0f, /* J */
+		-bsize,   size,   bsize, -1.0f,  1.0f,  0.0f, /* G */
+		-bsize,   size,  -bsize, -1.0f,  1.0f,  0.0f, /* H */
+		-size,   bsize,   bsize, -1.0f,  1.0f,  0.0f, /* I */
+		-size,   bsize,   bsize, -1.0f,  1.0f,  0.0f, /* I */
+		-bsize,   size,  -bsize, -1.0f,  1.0f,  0.0f, /* H */
+		-size,   bsize,  -bsize, -1.0f,  1.0f,  0.0f, /* J */
 		/* left side */
-		-bsizex,   sizey,   sizez, -1.0f,  0.0f,  0.0f, /* I */
-		-bsizex,   sizey,  -sizez, -1.0f,  0.0f,  0.0f, /* J */
-		-bsizex,  -sizey,   sizez, -1.0f,  0.0f,  0.0f, /* K */
-		-bsizex,  -sizey,   sizez, -1.0f,  0.0f,  0.0f, /* K */
-		-bsizex,   sizey,  -sizez, -1.0f,  0.0f,  0.0f, /* J */
-		-bsizex,  -sizey,  -sizez, -1.0f,  0.0f,  0.0f, /* L */
+		-size,   bsize,   bsize, -1.0f,  0.0f,  0.0f, /* I */
+		-size,   bsize,  -bsize, -1.0f,  0.0f,  0.0f, /* J */
+		-size,  -bsize,   bsize, -1.0f,  0.0f,  0.0f, /* K */
+		-size,  -bsize,   bsize, -1.0f,  0.0f,  0.0f, /* K */
+		-size,   bsize,  -bsize, -1.0f,  0.0f,  0.0f, /* J */
+		-size,  -bsize,  -bsize, -1.0f,  0.0f,  0.0f, /* L */
 		/* left bottom bevel */
-		-bsizex,  -sizey,   sizez, -1.0f, -1.0f,  0.0f, /* K */
-		-bsizex,  -sizey,  -sizez, -1.0f, -1.0f,  0.0f, /* L */
-		-sizex,  -bsizey,   sizez, -1.0f, -1.0f,  0.0f, /* M */
-		-sizex,  -bsizey,   sizez, -1.0f, -1.0f,  0.0f, /* M */
-		-bsizex,  -sizey,  -sizez, -1.0f, -1.0f,  0.0f, /* L */
-		-sizex,  -bsizey,  -sizez, -1.0f, -1.0f,  0.0f, /* N */
+		-size,  -bsize,   bsize, -1.0f, -1.0f,  0.0f, /* K */
+		-size,  -bsize,  -bsize, -1.0f, -1.0f,  0.0f, /* L */
+		-bsize,  -size,   bsize, -1.0f, -1.0f,  0.0f, /* M */
+		-bsize,  -size,   bsize, -1.0f, -1.0f,  0.0f, /* M */
+		-size,  -bsize,  -bsize, -1.0f, -1.0f,  0.0f, /* L */
+		-bsize,  -size,  -bsize, -1.0f, -1.0f,  0.0f, /* N */
 		/* bottom */
-		-sizex,  -bsizey,   sizez,  0.0f, -1.0f,  0.0f, /* M */
-		-sizex,  -bsizey,  -sizez,  0.0f, -1.0f,  0.0f, /* N */
-		 sizex,  -bsizey,   sizez,  0.0f, -1.0f,  0.0f, /* O */
-		 sizex,  -bsizey,   sizez,  0.0f, -1.0f,  0.0f, /* O */
-		-sizex,  -bsizey,  -sizez,  0.0f, -1.0f,  0.0f, /* N */
-		 sizex,  -bsizey,  -sizez,  0.0f, -1.0f,  0.0f, /* P */
+		-bsize,  -size,   bsize,  0.0f, -1.0f,  0.0f, /* M */
+		-bsize,  -size,  -bsize,  0.0f, -1.0f,  0.0f, /* N */
+		 bsize,  -size,   bsize,  0.0f, -1.0f,  0.0f, /* O */
+		 bsize,  -size,   bsize,  0.0f, -1.0f,  0.0f, /* O */
+		-bsize,  -size,  -bsize,  0.0f, -1.0f,  0.0f, /* N */
+		 bsize,  -size,  -bsize,  0.0f, -1.0f,  0.0f, /* P */
 		/* right bottom bevel */
-		 sizex,  -bsizey,   sizez,  1.0f, -1.0f,  0.0f, /* O */
-		 sizex,  -bsizey,  -sizez,  1.0f, -1.0f,  0.0f, /* P */
-		 bsizex,  -sizey,   sizez,  1.0f, -1.0f,  0.0f, /* A */
-		 bsizex,  -sizey,   sizez,  1.0f, -1.0f,  0.0f, /* A */
-		 sizex,  -bsizey,  -sizez,  1.0f, -1.0f,  0.0f, /* P */
-		 bsizex,  -sizey,  -sizez,  1.0f, -1.0f,  0.0f, /* B */
+		 bsize,  -size,   bsize,  1.0f, -1.0f,  0.0f, /* O */
+		 bsize,  -size,  -bsize,  1.0f, -1.0f,  0.0f, /* P */
+		 size,  -bsize,   bsize,  1.0f, -1.0f,  0.0f, /* A */
+		 size,  -bsize,   bsize,  1.0f, -1.0f,  0.0f, /* A */
+		 bsize,  -size,  -bsize,  1.0f, -1.0f,  0.0f, /* P */
+		 size,  -bsize,  -bsize,  1.0f, -1.0f,  0.0f, /* B */
 		/* right front bevel */
-		 bsizex,  -sizey,   sizez,  1.0f,  0.0f,  1.0f, /* A */
-		 bsizex,   sizey,   sizez,  1.0f,  0.0f,  1.0f, /* C */
-		 sizex,   -sizey,  bsizez,  1.0f,  0.0f,  1.0f, /* Q */
-		 sizex,   -sizey,  bsizez,  1.0f,  0.0f,  1.0f, /* Q */
-		 bsizex,   sizey,   sizez,  1.0f,  0.0f,  1.0f, /* C */
-		 sizex,    sizey,  bsizez,  1.0f,  0.0f,  1.0f, /* R */
+		 size,  -bsize,   bsize,  1.0f,  0.0f,  1.0f, /* A */
+		 size,   bsize,   bsize,  1.0f,  0.0f,  1.0f, /* C */
+		 bsize, -bsize,  size,  1.0f,  0.0f,  1.0f, /* Q */
+		 bsize, -bsize,  size,  1.0f,  0.0f,  1.0f, /* Q */
+		 size,   bsize,   bsize,  1.0f,  0.0f,  1.0f, /* C */
+		 bsize,  bsize,  size,  1.0f,  0.0f,  1.0f, /* R */
 		/* right top front corner */
-		 sizex,    sizey,  bsizez,  1.0f,  1.0f,  1.0f, /* R */
-		 bsizex,   sizey,   sizez,  1.0f,  1.0f,  1.0f, /* C */
-		 sizex,   bsizey,   sizez,  1.0f,  1.0f,  1.0f, /* E */
+		 bsize,  bsize,  size,  1.0f,  1.0f,  1.0f, /* R */
+		 size,   bsize,   bsize,  1.0f,  1.0f,  1.0f, /* C */
+		 bsize,  size,   bsize,  1.0f,  1.0f,  1.0f, /* E */
 		/* top front bevel */
-		 sizex,    sizey,  bsizez,  0.0f,  1.0f,  1.0f, /* R */
-		 sizex,   bsizey,   sizez,  0.0f,  1.0f,  1.0f, /* E */
-		-sizex,    sizey,  bsizez,  0.0f,  1.0f,  1.0f, /* S */
-		-sizex,    sizey,  bsizez,  0.0f,  1.0f,  1.0f, /* S */
-		 sizex,   bsizey,   sizez,  0.0f,  1.0f,  1.0f, /* E */
-		-sizex,   bsizey,   sizez,  0.0f,  1.0f,  1.0f, /* G */
+		 bsize,  bsize,  size,  0.0f,  1.0f,  1.0f, /* R */
+		 bsize,  size,   bsize,  0.0f,  1.0f,  1.0f, /* E */
+		-bsize,  bsize,  size,  0.0f,  1.0f,  1.0f, /* S */
+		-bsize,  bsize,  size,  0.0f,  1.0f,  1.0f, /* S */
+		 bsize,  size,   bsize,  0.0f,  1.0f,  1.0f, /* E */
+		-bsize,  size,   bsize,  0.0f,  1.0f,  1.0f, /* G */
 		/* left top front corner */
-		-sizex,    sizey,  bsizez, -1.0f,  1.0f,  1.0f, /* S */
-		-sizex,   bsizey,   sizez, -1.0f,  1.0f,  1.0f, /* G */
-		-bsizex,   sizey,   sizez, -1.0f,  1.0f,  1.0f, /* I */
+		-bsize,  bsize,  size, -1.0f,  1.0f,  1.0f, /* S */
+		-bsize,  size,   bsize, -1.0f,  1.0f,  1.0f, /* G */
+		-size,   bsize,   bsize, -1.0f,  1.0f,  1.0f, /* I */
 		/* left front bevel */
-		-sizex,    sizey,  bsizez, -1.0f,  0.0f,  1.0f, /* S */
-		-bsizex,   sizey,   sizez, -1.0f,  0.0f,  1.0f, /* I */
-		-sizex,   -sizey,  bsizez, -1.0f,  0.0f,  1.0f, /* T */
-		-sizex,   -sizey,  bsizez, -1.0f,  0.0f,  1.0f, /* T */
-		-bsizex,   sizey,   sizez, -1.0f,  0.0f,  1.0f, /* I */
-		-bsizex,  -sizey,   sizez, -1.0f,  0.0f,  1.0f, /* K */
+		-bsize,  bsize,  size, -1.0f,  0.0f,  1.0f, /* S */
+		-size,   bsize,   bsize, -1.0f,  0.0f,  1.0f, /* I */
+		-bsize, -bsize,  size, -1.0f,  0.0f,  1.0f, /* T */
+		-bsize, -bsize,  size, -1.0f,  0.0f,  1.0f, /* T */
+		-size,   bsize,   bsize, -1.0f,  0.0f,  1.0f, /* I */
+		-size,  -bsize,   bsize, -1.0f,  0.0f,  1.0f, /* K */
 		/* left bottom front corner */
-		-sizex,   -sizey,  bsizez, -1.0f, -1.0f,  1.0f, /* T */
-		-bsizex,  -sizey,   sizez, -1.0f, -1.0f,  1.0f, /* K */
-		-sizex,  -bsizey,   sizez, -1.0f, -1.0f,  1.0f, /* M */
+		-bsize, -bsize,  size, -1.0f, -1.0f,  1.0f, /* T */
+		-size,  -bsize,   bsize, -1.0f, -1.0f,  1.0f, /* K */
+		-bsize, -size,   bsize, -1.0f, -1.0f,  1.0f, /* M */
 		/* bottom front bevel */
-		-sizex,  -bsizey,   sizez,  0.0f, -1.0f,  1.0f, /* M */
-		 sizex,  -bsizey,   sizez,  0.0f, -1.0f,  1.0f, /* O */
-		-sizex,   -sizey,  bsizez,  0.0f, -1.0f,  1.0f, /* T */
-		-sizex,   -sizey,  bsizez,  0.0f, -1.0f,  1.0f, /* T */
-		 sizex,  -bsizey,   sizez,  0.0f, -1.0f,  1.0f, /* O */
-		 sizex,   -sizey,  bsizez,  0.0f, -1.0f,  1.0f, /* Q */
+		-bsize, -size,   bsize,  0.0f, -1.0f,  1.0f, /* M */
+		 bsize, -size,   bsize,  0.0f, -1.0f,  1.0f, /* O */
+		-bsize, -bsize,  size,  0.0f, -1.0f,  1.0f, /* T */
+		-bsize, -bsize,  size,  0.0f, -1.0f,  1.0f, /* T */
+		 bsize, -size,   bsize,  0.0f, -1.0f,  1.0f, /* O */
+		 bsize, -bsize,  size,  0.0f, -1.0f,  1.0f, /* Q */
 		/* right bottom front corner */
-		 sizex,   -sizey,  bsizez,  1.0f, -1.0f,  1.0f, /* Q */
-		 sizex,  -bsizey,   sizez,  1.0f, -1.0f,  1.0f, /* O */
-		 bsizex,  -sizey,   sizez,  1.0f, -1.0f,  1.0f, /* A */
+		 bsize, -bsize,  size,  1.0f, -1.0f,  1.0f, /* Q */
+		 bsize, -size,   bsize,  1.0f, -1.0f,  1.0f, /* O */
+		 size,  -bsize,   bsize,  1.0f, -1.0f,  1.0f, /* A */
 		/* front */
-		-sizex,   -sizey,  bsizez,  0.0f,  0.0f,  1.0f, /* T */
-		 sizex,   -sizey,  bsizez,  0.0f,  0.0f,  1.0f, /* Q */
-		 sizex,    sizey,  bsizez,  0.0f,  0.0f,  1.0f, /* R */
-		-sizex,   -sizey,  bsizez,  0.0f,  0.0f,  1.0f, /* T */
-		 sizex,    sizey,  bsizez,  0.0f,  0.0f,  1.0f, /* R */
-		-sizex,    sizey,  bsizez,  0.0f,  0.0f,  1.0f, /* S */
+		-bsize,   -bsize,  size,  0.0f,  0.0f,  1.0f, /* T */
+		 bsize,   -bsize,  size,  0.0f,  0.0f,  1.0f, /* Q */
+		 bsize,    bsize,  size,  0.0f,  0.0f,  1.0f, /* R */
+		-bsize,   -bsize,  size,  0.0f,  0.0f,  1.0f, /* T */
+		 bsize,    bsize,  size,  0.0f,  0.0f,  1.0f, /* R */
+		-bsize,    bsize,  size,  0.0f,  0.0f,  1.0f, /* S */
 		/* right back bevel */
-		bsizex,  -sizey,  -sizez,  1.0f,  0.0f, -1.0f, /* B */
-		 sizex,  -sizey, -bsizez,  1.0f,  0.0f, -1.0f, /* V */
-		bsizex,   sizey,  -sizez,  1.0f,  0.0f, -1.0f, /* D */
-		bsizex,   sizey,  -sizez,  1.0f,  0.0f, -1.0f, /* D */
-		 sizex,  -sizey, -bsizez,  1.0f,  0.0f, -1.0f, /* V */
-		 sizex,   sizey, -bsizez,  1.0f,  0.0f, -1.0f, /* U */
+		size,  -bsize,  -bsize,  1.0f,  0.0f, -1.0f, /* B */
+		 bsize,  -bsize, -size,  1.0f,  0.0f, -1.0f, /* V */
+		size,   bsize,  -bsize,  1.0f,  0.0f, -1.0f, /* D */
+		size,   bsize,  -bsize,  1.0f,  0.0f, -1.0f, /* D */
+		 bsize,  -bsize, -size,  1.0f,  0.0f, -1.0f, /* V */
+		 bsize,   bsize, -size,  1.0f,  0.0f, -1.0f, /* U */
 		/* right top back corner */
-		 sizex,   sizey, -bsizez,  1.0f,  1.0f, -1.0f, /* U */
-		 sizex,  bsizey,  -sizez,  1.0f,  1.0f, -1.0f, /* F */
-		bsizex,   sizey,  -sizez,  1.0f,  1.0f, -1.0f, /* D */
+		 bsize,   bsize, -size,  1.0f,  1.0f, -1.0f, /* U */
+		 bsize,  size,  -bsize,  1.0f,  1.0f, -1.0f, /* F */
+		size,   bsize,  -bsize,  1.0f,  1.0f, -1.0f, /* D */
 		/* top back bevel */
-		 sizex,   sizey, -bsizez,  0.0f,  1.0f, -1.0f, /* U */
-		-sizex,   sizey, -bsizez,  0.0f,  1.0f, -1.0f, /* X */
-		 sizex,  bsizey,  -sizez,  0.0f,  1.0f, -1.0f, /* F */
-		 sizex,  bsizey,  -sizez,  0.0f,  1.0f, -1.0f, /* F */
-		-sizex,   sizey, -bsizez,  0.0f,  1.0f, -1.0f, /* X */
-		-sizex,  bsizey,  -sizez,  0.0f,  1.0f, -1.0f, /* H */
+		 bsize,   bsize, -size,  0.0f,  1.0f, -1.0f, /* U */
+		-bsize,   bsize, -size,  0.0f,  1.0f, -1.0f, /* X */
+		 bsize,  size,  -bsize,  0.0f,  1.0f, -1.0f, /* F */
+		 bsize,  size,  -bsize,  0.0f,  1.0f, -1.0f, /* F */
+		-bsize,   bsize, -size,  0.0f,  1.0f, -1.0f, /* X */
+		-bsize,  size,  -bsize,  0.0f,  1.0f, -1.0f, /* H */
 		/* left top back corner */
-		 -sizex,  bsizey,  -sizez, -1.0f,  1.0f, -1.0f, /* H */
-		 -sizex,   sizey, -bsizez, -1.0f,  1.0f, -1.0f, /* X */
-		-bsizex,   sizey,  -sizez, -1.0f,  1.0f, -1.0f, /* J */
+		 -bsize,  size,  -bsize, -1.0f,  1.0f, -1.0f, /* H */
+		 -bsize,   bsize, -size, -1.0f,  1.0f, -1.0f, /* X */
+		-size,   bsize,  -bsize, -1.0f,  1.0f, -1.0f, /* J */
 		/* left back bevel */
-		 -sizex,  -sizey, -bsizez, -1.0f,  0.0f, -1.0f, /* W */
-		-bsizex,  -sizey,  -sizez, -1.0f,  0.0f, -1.0f, /* L */
-		 -sizex,   sizey, -bsizez, -1.0f,  0.0f, -1.0f, /* X */
-		 -sizex,   sizey, -bsizez, -1.0f,  0.0f, -1.0f, /* X */
-		-bsizex,  -sizey,  -sizez, -1.0f,  0.0f, -1.0f, /* L */
-		-bsizex,   sizey,  -sizez, -1.0f,  0.0f, -1.0f, /* J */
+		 -bsize,  -bsize, -size, -1.0f,  0.0f, -1.0f, /* W */
+		-size,  -bsize,  -bsize, -1.0f,  0.0f, -1.0f, /* L */
+		 -bsize,   bsize, -size, -1.0f,  0.0f, -1.0f, /* X */
+		 -bsize,   bsize, -size, -1.0f,  0.0f, -1.0f, /* X */
+		-size,  -bsize,  -bsize, -1.0f,  0.0f, -1.0f, /* L */
+		-size,   bsize,  -bsize, -1.0f,  0.0f, -1.0f, /* J */
 		/* left bottom back corner */
-		 -sizex,  -sizey, -bsizez, -1.0f, -1.0f, -1.0f, /* W */
-		 -sizex, -bsizey,  -sizez, -1.0f, -1.0f, -1.0f, /* N */
-		-bsizex,  -sizey,  -sizez, -1.0f, -1.0f, -1.0f, /* L */
+		 -bsize,  -bsize, -size, -1.0f, -1.0f, -1.0f, /* W */
+		 -bsize, -size,  -bsize, -1.0f, -1.0f, -1.0f, /* N */
+		-size,  -bsize,  -bsize, -1.0f, -1.0f, -1.0f, /* L */
 		/* bottom back bevel */
-		  sizex, -bsizey,  -sizez,  0.0f, -1.0f, -1.0f, /* P */
-		 -sizex, -bsizey,  -sizez,  0.0f, -1.0f, -1.0f, /* N */
-		  sizex,  -sizey, -bsizez,  0.0f, -1.0f, -1.0f, /* V */
-		  sizex,  -sizey, -bsizez,  0.0f, -1.0f, -1.0f, /* V */
-		 -sizex, -bsizey,  -sizez,  0.0f, -1.0f, -1.0f, /* N */
-		 -sizex,  -sizey, -bsizez,  0.0f, -1.0f, -1.0f, /* W */
+		  bsize, -size,  -bsize,  0.0f, -1.0f, -1.0f, /* P */
+		 -bsize, -size,  -bsize,  0.0f, -1.0f, -1.0f, /* N */
+		  bsize,  -bsize, -size,  0.0f, -1.0f, -1.0f, /* V */
+		  bsize,  -bsize, -size,  0.0f, -1.0f, -1.0f, /* V */
+		 -bsize, -size,  -bsize,  0.0f, -1.0f, -1.0f, /* N */
+		 -bsize,  -bsize, -size,  0.0f, -1.0f, -1.0f, /* W */
 		/* right bottom back corner */
-		 bsizex,  -sizey,  -sizez,  1.0f, -1.0f, -1.0f, /* B */
-		  sizex, -bsizey,  -sizez,  1.0f, -1.0f, -1.0f, /* P */
-		  sizex,  -sizey, -bsizez,  1.0f, -1.0f, -1.0f, /* V */
+		 size,  -bsize,  -bsize,  1.0f, -1.0f, -1.0f, /* B */
+		 bsize, -size,  -bsize,  1.0f, -1.0f, -1.0f, /* P */
+		 bsize,  -bsize, -size,  1.0f, -1.0f, -1.0f, /* V */
 		/* back */
-		 sizex,   -sizey, -bsizez,  0.0f,  0.0f, -1.0f, /* V */
-		-sizex,   -sizey, -bsizez,  0.0f,  0.0f, -1.0f, /* W */
-		 sizex,    sizey, -bsizez,  0.0f,  0.0f, -1.0f, /* U */
-		 sizex,    sizey, -bsizez,  0.0f,  0.0f, -1.0f, /* U */
-		-sizex,   -sizey, -bsizez,  0.0f,  0.0f, -1.0f, /* W */
-		-sizex,    sizey, -bsizez,  0.0f,  0.0f, -1.0f, /* X */
+		 bsize,   -bsize, -size,  0.0f,  0.0f, -1.0f, /* V */
+		-bsize,   -bsize, -size,  0.0f,  0.0f, -1.0f, /* W */
+		 bsize,    bsize, -size,  0.0f,  0.0f, -1.0f, /* U */
+		 bsize,    bsize, -size,  0.0f,  0.0f, -1.0f, /* U */
+		-bsize,   -bsize, -size,  0.0f,  0.0f, -1.0f, /* W */
+		-bsize,    bsize, -size,  0.0f,  0.0f, -1.0f, /* X */
 	};
 	m_vertexCount = (sizeof(cube) / sizeof(GLfloat)) / row_width;
 
