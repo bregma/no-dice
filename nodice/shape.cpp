@@ -23,6 +23,7 @@
 #include "nodice/d4.h"
 #include "nodice/d6.h"
 #include "nodice/d8.h"
+#include "nodice/d12.h"
 #include <vector>
 
 namespace
@@ -37,6 +38,7 @@ namespace
 		bag.push_back(NoDice::ShapePtr(new NoDice::D4));
 		bag.push_back(NoDice::ShapePtr(new NoDice::D6)); 
 		bag.push_back(NoDice::ShapePtr(new NoDice::D8)); 
+		bag.push_back(NoDice::ShapePtr(new NoDice::D12)); 
 
 		return bag;
 	}
