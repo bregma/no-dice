@@ -25,6 +25,8 @@
 
 namespace
 {
+	static const int triangles_per_face    = 1;
+	static const int vertexes_per_triangle = 3;
 	static const int row_width = 3*2;
 } // anonymous namespace
 
@@ -44,59 +46,36 @@ D8()
 	static const GLfloat r = 1.0f;
 	static const GLfloat z = 0.0f;
 
-	Vector3f vertex[6];
-	vertex[0].set( r,  z,  z);
-	vertex[1].set( z,  r,  z);
-	vertex[2].set( z,  z,  r);
-	vertex[3].set(-r,  z,  z);
-	vertex[4].set( z,  z, -r);
-	vertex[5].set( z, -r,  z);
-
-	Vector3f normal[8];
-	normal[0] = (vertex[0] - vertex[1]).cross(vertex[2] - vertex[1]).getNormalized();
-	normal[1] = (vertex[2] - vertex[1]).cross(vertex[3] - vertex[1]).getNormalized();
-	normal[2] = (vertex[3] - vertex[1]).cross(vertex[4] - vertex[1]).getNormalized();
-	normal[3] = (vertex[4] - vertex[1]).cross(vertex[0] - vertex[1]).getNormalized();
-	normal[4] = (vertex[0] - vertex[5]).cross(vertex[4] - vertex[5]).getNormalized();
-	normal[5] = (vertex[4] - vertex[5]).cross(vertex[3] - vertex[5]).getNormalized();
-	normal[6] = (vertex[3] - vertex[5]).cross(vertex[2] - vertex[5]).getNormalized();
-	normal[7] = (vertex[2] - vertex[5]).cross(vertex[0] - vertex[5]).getNormalized();
-	
-	/* vertex-3, normal-3 */
-	GLfloat shape[] = {
-		vertex[0]. x, vertex[0].y, vertex[0].z, normal[0].x, normal[0].y, normal[0].z,
-		vertex[1]. x, vertex[1].y, vertex[1].z, normal[0].x, normal[0].y, normal[0].z,
-		vertex[2]. x, vertex[2].y, vertex[2].z, normal[0].x, normal[0].y, normal[0].z,
-
-		vertex[2]. x, vertex[2].y, vertex[2].z, normal[1].x, normal[1].y, normal[1].z,
-		vertex[1]. x, vertex[1].y, vertex[1].z, normal[1].x, normal[1].y, normal[1].z,
-		vertex[3]. x, vertex[3].y, vertex[3].z, normal[1].x, normal[1].y, normal[1].z,
-
-		vertex[3]. x, vertex[3].y, vertex[3].z, normal[2].x, normal[2].y, normal[2].z,
-		vertex[1]. x, vertex[1].y, vertex[1].z, normal[2].x, normal[2].y, normal[2].z,
-		vertex[4]. x, vertex[4].y, vertex[4].z, normal[2].x, normal[2].y, normal[2].z,
-
-		vertex[4]. x, vertex[4].y, vertex[4].z, normal[3].x, normal[3].y, normal[3].z,
-		vertex[1]. x, vertex[1].y, vertex[1].z, normal[1].x, normal[3].y, normal[3].z,
-		vertex[0]. x, vertex[0].y, vertex[0].z, normal[3].x, normal[3].y, normal[3].z,
-
-		vertex[0]. x, vertex[0].y, vertex[0].z, normal[4].x, normal[4].y, normal[4].z,
-		vertex[5]. x, vertex[5].y, vertex[5].z, normal[4].x, normal[4].y, normal[4].z,
-		vertex[4]. x, vertex[4].y, vertex[4].z, normal[4].x, normal[4].y, normal[4].z,
-
-		vertex[4]. x, vertex[4].y, vertex[4].z, normal[5].x, normal[5].y, normal[5].z,
-		vertex[5]. x, vertex[5].y, vertex[5].z, normal[5].x, normal[5].y, normal[5].z,
-		vertex[3]. x, vertex[3].y, vertex[3].z, normal[5].x, normal[5].y, normal[5].z,
-
-		vertex[3]. x, vertex[3].y, vertex[3].z, normal[6].x, normal[6].y, normal[6].z,
-		vertex[5]. x, vertex[5].y, vertex[5].z, normal[6].x, normal[6].y, normal[6].z,
-		vertex[2]. x, vertex[2].y, vertex[2].z, normal[6].x, normal[6].y, normal[6].z,
-
-		vertex[2]. x, vertex[2].y, vertex[2].z, normal[7].x, normal[7].y, normal[7].z,
-		vertex[5]. x, vertex[5].y, vertex[5].z, normal[7].x, normal[7].y, normal[7].z,
-		vertex[0]. x, vertex[0].y, vertex[0].z, normal[7].x, normal[7].y, normal[7].z,
-
+	static const Vector3f vertex[] = 
+	{
+		Vector3f( r,  z,  z),
+		Vector3f( z,  r,  z),
+		Vector3f( z,  z,  r),
+		Vector3f(-r,  z,  z),
+		Vector3f( z,  z, -r),
+		Vector3f( z, -r,  z)
 	};
+
+	static const int index[][3] =
+	{
+		 { 0, 1, 2 },
+		 { 2, 1, 3 },
+		 { 3, 1, 4 },
+		 { 4, 1, 0 },
+		 { 0, 5, 4 },
+		 { 4, 5, 3 },
+		 { 3, 5, 2 },
+		 { 2, 5, 0 },
+	};
+
+	static const int num_faces = sizeof(index) / (sizeof(int) * 3);
+	GLfloat shape[row_width * num_faces*triangles_per_face*vertexes_per_triangle];
+	GLfloat* p = shape;
+	for (int i = 0; i < num_faces; ++i)
+	{
+		triangle(vertex, index[i], p);
+	}
+
 	m_vertexCount = (sizeof(shape) / sizeof(GLfloat)) / row_width;
 
 	glGenBuffers(1, &m_vbo);
