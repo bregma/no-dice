@@ -25,6 +25,8 @@
 
 namespace
 {
+	static const int triangles_per_face    = 1;
+	static const int vertexes_per_triangle = 3;
 	static const int row_width = 3*2;
 } // anonymous namespace
 
@@ -34,37 +36,32 @@ D4()
 {
 	using vmml::Vector3f;
 
-	const GLfloat size = 1.0f;
-	const GLfloat half = 0.5773502692; // for tetrahedron in unit sphere
+	static const GLfloat half = 0.5773502692; // for tetrahedron in unit sphere
 
-	const Vector3f A( half,  half,  half);
-	const Vector3f B(-half,  half, -half);
-	const Vector3f C(-half, -half,  half);
-	const Vector3f D( half, -half, -half);
-
-	const Vector3f normal1 = (C - B).cross(A - B).getNormalized();
-	const Vector3f normal2 = (D - C).cross(A - C).getNormalized();
-	const Vector3f normal3 = (C - D).cross(B - D).getNormalized();
-	const Vector3f normal4 = (D - A).cross(B - A).getNormalized();
-
-	/* vertex-3, normal-3 */
-	GLfloat shape[] = {
-	  A.x, A.y, A.z, normal1.x, normal1.y, normal1.z,
-	  C.x, C.y, C.z, normal1.x, normal1.y, normal1.z,
-	  B.x, B.y, B.z, normal1.x, normal1.y, normal1.z,
-
-	  A.x, A.y, A.z, normal2.x, normal2.y, normal2.z,
-	  D.x, D.y, D.z, normal2.x, normal2.y, normal2.z,
-	  C.x, C.y, C.z, normal2.x, normal2.y, normal2.z,
-
-	  B.x, B.y, B.z, normal3.x, normal3.y, normal3.z,
-	  C.x, C.y, C.z, normal3.x, normal3.y, normal3.z,
-	  D.x, D.y, D.z, normal3.x, normal3.y, normal3.z,
-
-	  B.x, B.y, B.z, normal4.x, normal4.y, normal4.z,
-	  D.x, D.y, D.z, normal4.x, normal4.y, normal4.z,
-	  A.x, A.y, A.z, normal4.x, normal4.y, normal4.z,
+	static const Vector3f vertex[] =
+	{
+		Vector3f( half,  half,  half),
+		Vector3f(-half,  half, -half),
+		Vector3f(-half, -half,  half),
+		Vector3f( half, -half, -half)
 	};
+
+	static const int index[][3] =
+	{
+		{ 0, 2, 1 },
+		{ 0, 3, 2 },
+		{ 1, 2, 3 },
+		{ 1, 3, 0 }
+	};
+
+	static const int num_faces = sizeof(index) / (sizeof(int) * 3);
+	GLfloat shape[row_width * num_faces*triangles_per_face*vertexes_per_triangle];
+	GLfloat* p = shape;
+	for (int i = 0; i < num_faces; ++i)
+	{
+		triangle(vertex, index[i], p);
+	}
+
 	m_vertexCount = (sizeof(shape) / sizeof(GLfloat)) / row_width;
 
 	glGenBuffers(1, &m_vbo);
