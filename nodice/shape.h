@@ -23,6 +23,7 @@
 #include "nodice/colour.h"
 #include <string>
 #include <tr1/memory>
+#include "nodice/video.h"
 
 
 namespace NoDice
@@ -59,6 +60,9 @@ namespace NoDice
 
   /** Randomly chooses a shape from its bag. */
   ShapePtr chooseAShape();
+
+  /** Generates a pentagon. */
+  void pentagon(const vmml::Vector3f vertexes[], const int indexes[5], GLfloat*& buffer);
 } // namespace NoDice
 
 #endif // NODICE_SHAPE_H

@@ -20,12 +20,15 @@
 #include "nodice/d12.h"
 
 #include <cmath>
+#include <iostream>
 #include "vmmlib/vmmlib.h"
 
 
 namespace
 {
-	static const int row_width = 3*2;
+	static const int triangles_per_face    = 3;
+	static const int vertexes_per_triangle = 3;
+	static const int row_width             = 3 * 2;
 } // anonymous namespace
 
 NoDice::D12::
@@ -34,202 +37,56 @@ D12()
 {
 	using vmml::Vector3f;
 
-	const GLfloat size = 1.0f;
-	const GLfloat half = 0.5773502692; // for tetrahedron in unit sphere
-
 	// Magic precomputed vertexes of the unit-sphere dodecahedron
-	const Vector3f A( 0.607f,  0.000f,  0.795f);
-	const Vector3f B( 0.188f,  0.577f,  0.795f);
-	const Vector3f C(-0.491f,  0.357f,  0.795f);
-	const Vector3f D(-0.491f, -0.357f,  0.795f);
-	const Vector3f E( 0.188f, -0.577f,  0.795f);
-	const Vector3f F( 0.982f,  0.000f,  0.188f);
-	const Vector3f G( 0.304f,  0.934f,  0.188f);
-	const Vector3f H(-0.795f,  0.577f,  0.188f);
-	const Vector3f I(-0.795f, -0.577f,  0.188f);
-	const Vector3f J( 0.304f, -0.934f,  0.188f);
-	const Vector3f K( 0.795f,  0.577f, -0.188f);
-	const Vector3f L(-0.304f,  0.934f, -0.188f);
-	const Vector3f M(-0.982f,  0.000f, -0.188f);
-	const Vector3f N(-0.304f, -0.934f, -0.188f);
-	const Vector3f O( 0.795f, -0.577f, -0.188f);
-	const Vector3f P( 0.491f,  0.375f, -0.795f);
-	const Vector3f Q(-0.188f,  0.577f, -0.795f);
-	const Vector3f R(-0.607f,  0.000f, -0.795f);
-	const Vector3f S(-0.188f, -0.577f, -0.795f);
-	const Vector3f T( 0.491f, -0.357f, -0.795f);
-
-	const Vector3f normal1  = (D - A).cross(C - D).getNormalized();
-	const Vector3f normal2  = (K - A).cross(G - K).getNormalized();
-	const Vector3f normal3  = (L - B).cross(H - L).getNormalized();
-	const Vector3f normal4  = (M - C).cross(I - M).getNormalized();
-	const Vector3f normal5  = (N - D).cross(J - N).getNormalized();
-	const Vector3f normal6  = (O - E).cross(F - O).getNormalized();
-	const Vector3f normal7  = (G - P).cross(L - G).getNormalized();
-	const Vector3f normal8  = (H - Q).cross(M - H).getNormalized();
-	const Vector3f normal9  = (I - R).cross(N - I).getNormalized();
-	const Vector3f normal10 = (J - S).cross(O - J).getNormalized();
-	const Vector3f normal11 = (F - T).cross(K - F).getNormalized();
-	const Vector3f normal12 = (S - P).cross(R - S).getNormalized();
-
-	/* vertex-3, normal-3 */
-	GLfloat shape[] = {
-	  // face 1
-	  A.x, A.y, A.z, normal1.x, normal1.y, normal1.z,
-	  C.x, C.y, C.z, normal1.x, normal1.y, normal1.z,
-	  B.x, B.y, B.z, normal1.x, normal1.y, normal1.z,
-
-	  A.x, A.y, A.z, normal1.x, normal1.y, normal1.z,
-	  D.x, D.y, D.z, normal1.x, normal1.y, normal1.z,
-	  C.x, C.y, C.z, normal1.x, normal1.y, normal1.z,
-
-	  A.x, A.y, A.z, normal1.x, normal1.y, normal1.z,
-	  E.x, E.y, E.z, normal1.x, normal1.y, normal1.z,
-	  D.x, D.y, D.z, normal1.x, normal1.y, normal1.z,
-
-	  // face 2
-	  A.x, A.y, A.z, normal2.x, normal2.y, normal2.z,
-	  G.x, G.y, G.z, normal2.x, normal2.y, normal2.z,
-	  B.x, B.y, B.z, normal2.x, normal2.y, normal2.z,
-
-	  A.x, A.y, A.z, normal2.x, normal2.y, normal2.z,
-	  K.x, K.y, K.z, normal2.x, normal2.y, normal2.z,
-	  G.x, G.y, G.z, normal2.x, normal2.y, normal2.z,
-
-	  A.x, A.y, A.z, normal2.x, normal2.y, normal2.z,
-	  F.x, F.y, F.z, normal2.x, normal2.y, normal2.z,
-	  K.x, K.y, K.z, normal2.x, normal2.y, normal2.z,
-
-	  // face 3
-	  B.x, B.y, B.z, normal3.x, normal3.y, normal3.z,
-	  H.x, H.y, H.z, normal3.x, normal3.y, normal3.z,
-	  C.x, C.y, C.z, normal3.x, normal3.y, normal3.z,
-
-	  B.x, B.y, B.z, normal3.x, normal3.y, normal3.z,
-	  L.x, L.y, L.z, normal3.x, normal3.y, normal3.z,
-	  H.x, H.y, H.z, normal3.x, normal3.y, normal3.z,
-
-	  B.x, B.y, B.z, normal3.x, normal3.y, normal3.z,
-	  G.x, G.y, G.z, normal3.x, normal3.y, normal3.z,
-	  L.x, L.y, L.z, normal3.x, normal3.y, normal3.z,
-
-	  // face 4
-	  C.x, C.y, C.z, normal4.x, normal4.y, normal4.z,
-	  I.x, I.y, I.z, normal4.x, normal4.y, normal4.z,
-	  D.x, D.y, D.z, normal4.x, normal4.y, normal4.z,
-
-	  C.x, C.y, C.z, normal4.x, normal4.y, normal4.z,
-	  M.x, M.y, M.z, normal4.x, normal4.y, normal4.z,
-	  I.x, I.y, I.z, normal4.x, normal4.y, normal4.z,
-
-	  C.x, C.y, C.z, normal4.x, normal4.y, normal4.z,
-	  H.x, H.y, H.z, normal4.x, normal4.y, normal4.z,
-	  M.x, M.y, M.z, normal4.x, normal4.y, normal4.z,
-
-	  // face 5
-	  D.x, D.y, D.z, normal5.x, normal5.y, normal5.z,
-	  J.x, J.y, J.z, normal5.x, normal5.y, normal5.z,
-	  E.x, E.y, E.z, normal5.x, normal5.y, normal5.z,
-
-	  D.x, D.y, D.z, normal5.x, normal5.y, normal5.z,
-	  N.x, N.y, N.z, normal5.x, normal5.y, normal5.z,
-	  J.x, J.y, J.z, normal5.x, normal5.y, normal5.z,
-
-	  D.x, D.y, D.z, normal5.x, normal5.y, normal5.z,
-	  I.x, I.y, I.z, normal5.x, normal5.y, normal5.z,
-	  N.x, N.y, N.z, normal5.x, normal5.y, normal5.z,
-
-	  // face 6
-	  E.x, E.y, E.z, normal6.x, normal6.y, normal6.z,
-	  F.x, F.y, F.z, normal6.x, normal6.y, normal6.z,
-	  A.x, A.y, A.z, normal6.x, normal6.y, normal6.z,
-
-	  E.x, E.y, E.z, normal6.x, normal6.y, normal6.z,
-	  O.x, O.y, O.z, normal6.x, normal6.y, normal6.z,
-	  F.x, F.y, F.z, normal6.x, normal6.y, normal6.z,
-
-	  E.x, E.y, E.z, normal6.x, normal6.y, normal6.z,
-	  J.x, J.y, J.z, normal6.x, normal6.y, normal6.z,
-	  O.x, O.y, O.z, normal6.x, normal6.y, normal6.z,
-
-	  // face 7
-	  P.x, P.y, P.z, normal7.x, normal7.y, normal7.z,
-	  L.x, L.y, L.z, normal7.x, normal7.y, normal7.z,
-	  Q.x, Q.y, Q.z, normal7.x, normal7.y, normal7.z,
-
-	  P.x, P.y, P.z, normal7.x, normal7.y, normal7.z,
-	  G.x, G.y, G.z, normal7.x, normal7.y, normal7.z,
-	  L.x, L.y, L.z, normal7.x, normal7.y, normal7.z,
-
-	  P.x, P.y, P.z, normal7.x, normal7.y, normal7.z,
-	  K.x, K.y, K.z, normal7.x, normal7.y, normal7.z,
-	  G.x, G.y, G.z, normal7.x, normal7.y, normal7.z,
-
-	  // face 8
-	  Q.x, Q.y, Q.z, normal8.x, normal8.y, normal8.z,
-	  M.x, M.y, M.z, normal8.x, normal8.y, normal8.z,
-	  R.x, R.y, R.z, normal8.x, normal8.y, normal8.z,
-
-	  Q.x, Q.y, Q.z, normal8.x, normal8.y, normal8.z,
-	  H.x, H.y, H.z, normal8.x, normal8.y, normal8.z,
-	  M.x, M.y, M.z, normal8.x, normal8.y, normal8.z,
-
-	  Q.x, Q.y, Q.z, normal8.x, normal8.y, normal8.z,
-	  L.x, L.y, L.z, normal8.x, normal8.y, normal8.z,
-	  H.x, H.y, H.z, normal8.x, normal8.y, normal8.z,
-
-	  // face 9
-	  R.x, R.y, R.z, normal9.x, normal9.y, normal9.z,
-	  N.x, N.y, N.z, normal9.x, normal9.y, normal9.z,
-	  S.x, S.y, S.z, normal9.x, normal9.y, normal9.z,
-
-	  R.x, R.y, R.z, normal9.x, normal9.y, normal9.z,
-	  I.x, I.y, I.z, normal9.x, normal9.y, normal9.z,
-	  N.x, N.y, N.z, normal9.x, normal9.y, normal9.z,
-
-	  R.x, R.y, R.z, normal9.x, normal9.y, normal9.z,
-	  M.x, M.y, M.z, normal9.x, normal9.y, normal9.z,
-	  I.x, I.y, I.z, normal9.x, normal9.y, normal9.z,
-
-	  // face 10
-	  S.x, S.y, S.z, normal10.x, normal10.y, normal10.z,
-	  O.x, O.y, O.z, normal10.x, normal10.y, normal10.z,
-	  T.x, T.y, T.z, normal10.x, normal10.y, normal10.z,
-
-	  S.x, S.y, S.z, normal10.x, normal10.y, normal10.z,
-	  J.x, J.y, J.z, normal10.x, normal10.y, normal10.z,
-	  O.x, O.y, O.z, normal10.x, normal10.y, normal10.z,
-
-	  S.x, S.y, S.z, normal10.x, normal10.y, normal10.z,
-	  N.x, N.y, N.z, normal10.x, normal10.y, normal10.z,
-	  J.x, J.y, J.z, normal10.x, normal10.y, normal10.z,
-
-	  // face 11
-	  T.x, T.y, T.z, normal11.x, normal11.y, normal11.z,
-	  K.x, K.y, K.z, normal11.x, normal11.y, normal11.z,
-	  P.x, P.y, P.z, normal11.x, normal11.y, normal11.z,
-
-	  T.x, T.y, T.z, normal11.x, normal11.y, normal11.z,
-	  F.x, F.y, F.z, normal11.x, normal11.y, normal11.z,
-	  K.x, K.y, K.z, normal11.x, normal11.y, normal11.z,
-
-	  T.x, T.y, T.z, normal11.x, normal11.y, normal11.z,
-	  O.x, O.y, O.z, normal11.x, normal11.y, normal11.z,
-	  F.x, F.y, F.z, normal11.x, normal11.y, normal11.z,
-
-	  // face 12
-	  P.x, P.y, P.z, normal12.x, normal12.y, normal12.z,
-	  R.x, R.y, R.z, normal12.x, normal12.y, normal12.z,
-	  Q.x, Q.y, Q.z, normal12.x, normal12.y, normal12.z,
-
-	  P.x, P.y, P.z, normal12.x, normal12.y, normal12.z,
-	  S.x, S.y, S.z, normal12.x, normal12.y, normal12.z,
-	  R.x, R.y, R.z, normal12.x, normal12.y, normal12.z,
-
-	  P.x, P.y, P.z, normal12.x, normal12.y, normal12.z,
-	  T.x, T.y, T.z, normal12.x, normal12.y, normal12.z,
-	  S.x, S.y, S.z, normal12.x, normal12.y, normal12.z,
+	static const Vector3f vertex[] = 
+	{
+		Vector3f( 0.607f,  0.000f,  0.795f),
+		Vector3f( 0.188f,  0.577f,  0.795f),
+		Vector3f(-0.491f,  0.357f,  0.795f),
+		Vector3f(-0.491f, -0.357f,  0.795f),
+		Vector3f( 0.188f, -0.577f,  0.795f),
+		Vector3f( 0.982f,  0.000f,  0.188f),
+		Vector3f( 0.304f,  0.934f,  0.188f),
+		Vector3f(-0.795f,  0.577f,  0.188f),
+		Vector3f(-0.795f, -0.577f,  0.188f),
+		Vector3f( 0.304f, -0.934f,  0.188f),
+		Vector3f( 0.795f,  0.577f, -0.188f),
+		Vector3f(-0.304f,  0.934f, -0.188f),
+		Vector3f(-0.982f,  0.000f, -0.188f),
+		Vector3f(-0.304f, -0.934f, -0.188f),
+		Vector3f( 0.795f, -0.577f, -0.188f),
+		Vector3f( 0.491f,  0.375f, -0.795f),
+		Vector3f(-0.188f,  0.577f, -0.795f),
+		Vector3f(-0.607f,  0.000f, -0.795f),
+		Vector3f(-0.188f, -0.577f, -0.795f),
+		Vector3f( 0.491f, -0.357f, -0.795f)
 	};
+
+	static const int index[][5] = 
+	{
+		{  0,  1,  2,  3,  4 },
+		{  5, 10,  6,  1,  0 },
+		{  6, 11,  7,  2,  1 },
+		{  7, 12,  8,  3,  2 },
+		{  8, 13,  9,  4,  3 },
+		{  9, 14,  5,  0,  4 },
+		{ 15, 16, 11,  6, 10 },
+		{ 16, 17, 12,  7, 11 },
+		{ 17, 18, 13,  8, 12 },
+		{ 18, 19, 14,  9, 13 },
+		{ 19, 15, 10,  5, 14 },
+		{ 19, 18, 17, 16, 15 }
+	};
+
+	static const int num_faces = sizeof(index) / (sizeof(int) * 5);
+
+	GLfloat shape[row_width * num_faces*triangles_per_face*vertexes_per_triangle];
+	GLfloat* p = shape;
+	for (int i = 0; i < num_faces; ++i)
+	{
+		pentagon(vertex, index[i], p);
+	}
+
 	m_vertexCount = (sizeof(shape) / sizeof(GLfloat)) / row_width;
 
 	glGenBuffers(1, &m_vbo);
