@@ -45,6 +45,7 @@ no_dice_SOURCES = \
 	font.h             font.cpp \
 	gamestate.h        gamestate.cpp \
 	introstate.h       introstate.cpp \
+	maths,h \
 	object.h           object.cpp \
 	opengl.h           opengl.cpp \
 	playstate.h        playstate.cpp \
@@ -54,6 +55,7 @@ no_dice_SOURCES = \
 	$(vcontext_SOURCES)
 
 no_dice_CXXFLAGS = \
+	-I$(top_srcdir) \
 	-I$(top_srcdir)/include \
 	-DHAVE_GL_VERTEX_BUFFERS \
 	$(SDL_CFLAGS) \

@@ -21,7 +21,7 @@
 #define IntroState_H 1
 
 #include "nodice/gamestate.h"
-#include "vmmlib/vmmlib.h"
+#include "nodice/maths.h"
 
 
 namespace NoDice
@@ -59,11 +59,11 @@ namespace NoDice
 		void draw(Video& video);
 
 	private:
-		bool            m_isActive;
-		Font&           m_menuFont;
-		vmml::Vector2f  m_titlePos;
-		int             m_selected;
-		NextState       m_nextState;
+		bool       m_isActive;
+		Font&      m_menuFont;
+		Vector2f   m_titlePos;
+		int        m_selected;
+		NextState  m_nextState;
 	};
 
 } // namespace NoDice

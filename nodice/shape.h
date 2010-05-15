@@ -23,6 +23,7 @@
 #include "nodice/colour.h"
 #include <string>
 #include <tr1/memory>
+#include "nodice/maths.h"
 #include "nodice/video.h"
 
 
@@ -62,12 +63,12 @@ namespace NoDice
   ShapePtr chooseAShape();
 
   /** Generates a triangle. */
-  void triangle(const vmml::Vector3f vertexes[],
+  void triangle(const Vector3f vertexes[],
 	              const int indexes[3],
 	              GLfloat*& buffer);
 
   /** Generates a pentagon. */
-  void pentagon(const vmml::Vector3f vertexes[],
+  void pentagon(const Vector3f vertexes[],
                 const int indexes[5],
                 GLfloat*& buffer);
 } // namespace NoDice

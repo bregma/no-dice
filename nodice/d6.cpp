@@ -19,21 +19,22 @@
  */
 #include "nodice/d6.h"
 
-#include <cmath>
+#include "nodice/maths.h"
 
 
 namespace
 {
-	static const int row_width = 3*2;
+	static const int row_width = NoDice::coords_per_vertex
+	                           + NoDice::coords_per_normal;
 } // anonymous namespace
 
 NoDice::D6::
 D6()
 : Shape("d6", NoDice::Colour(1.0f, 0.0f, 0.1f, 0.40f))
 {
-	const GLfloat bevel = 0.05f;
-	const GLfloat size = 1.0f / std::sqrt(2.0f);
-	const GLfloat bsize = size - bevel;
+	static const GLfloat bevel = 0.05f;
+	static const GLfloat size = 1.0f / std::sqrt(2.0f);
+	static const GLfloat bsize = size - bevel;
 
 	/* vertex-3, normal-3 */
 	GLfloat cube[] = {
@@ -217,7 +218,7 @@ draw() const
 {
  	static const int stride = row_width * sizeof(GLfloat);
  	static const GLfloat* cube_verteces = 0;
-	static const GLfloat* cube_normals = cube_verteces + 3;
+	static const GLfloat* cube_normals = cube_verteces + coords_per_vertex;
 
 	glEnable(GL_NORMALIZE);
 	glDisable(GL_CULL_FACE); // for transparency -- move to object

@@ -25,6 +25,13 @@
 #include "nodice/video.h"
 
 
+namespace
+{
+	static const GLfloat near = -1.0f;
+	static const GLfloat far  =  1.0f;
+} // anonymous namespace
+
+
 NoDice::PlayState::
 PlayState(Config& config)
 : GameState(config)
@@ -58,9 +65,9 @@ draw(Video& video)
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 #ifdef HAVE_OPENGL_ES
-	glFrustumf(0.0f, 1.0f, 0.0f, 1.0f, -1.0f, 1.0f);
+	glFrustumf(0.0f, 1.0f, 0.0f, 1.0f, near, far);
 #else
-	glFrustum(0.0f, 1.0f, 0.0f, 1.0f, -1.0f, 1.0f);
+	glFrustum(0.0f, 1.0f, 0.0f, 1.0f, near, far);
 #endif
 	glDisable(GL_DEPTH_TEST);
 	glEnable(GL_LIGHTING);

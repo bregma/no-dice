@@ -94,11 +94,11 @@ chooseAShape()
  * The index must provide vertexes in the correct CCW winding order.
  */
 void NoDice::
-triangle(const vmml::Vector3f vertex[], const int index[3], GLfloat*& buffer)
+triangle(const NoDice::Vector3f vertex[], const int index[3], GLfloat*& buffer)
 {
-	vmml::Vector3f v1 = (vertex[index[1]] - vertex[index[0]]);
-	vmml::Vector3f v2 = (vertex[index[2]] - vertex[index[0]]);
-	vmml::Vector3f normal = v1.cross(v2);
+	Vector3f v1 = (vertex[index[1]] - vertex[index[0]]);
+	Vector3f v2 = (vertex[index[2]] - vertex[index[0]]);
+	Vector3f normal = v1.cross(v2);
 
 	buffer = std::copy(vertex[index[0]].begin(), vertex[index[0]].end(), buffer);
 	buffer = std::copy(normal.begin(), normal.end(), buffer);
@@ -117,11 +117,11 @@ triangle(const vmml::Vector3f vertex[], const int index[3], GLfloat*& buffer)
  * The index must provide vertexes in the correct CCW winding order.
  */
 void NoDice::
-pentagon(const vmml::Vector3f vertex[], const int index[5], GLfloat*& buffer)
+pentagon(const NoDice::Vector3f vertex[], const int index[5], GLfloat*& buffer)
 {
-	vmml::Vector3f v1 = (vertex[index[1]] - vertex[index[0]]);
-	vmml::Vector3f v2 = (vertex[index[2]] - vertex[index[0]]);
-	vmml::Vector3f normal = v1.cross(v2);
+	Vector3f v1 = (vertex[index[1]] - vertex[index[0]]);
+	Vector3f v2 = (vertex[index[2]] - vertex[index[0]]);
+	Vector3f normal = v1.cross(v2);
 
 	buffer = std::copy(vertex[index[0]].begin(), vertex[index[0]].end(), buffer);
 	buffer = std::copy(normal.begin(), normal.end(), buffer);

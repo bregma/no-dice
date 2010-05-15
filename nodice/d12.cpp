@@ -21,22 +21,20 @@
 
 #include <cmath>
 #include <iostream>
-#include "vmmlib/vmmlib.h"
+#include "nodice/maths.h"
 
 
 namespace
 {
-	static const int triangles_per_face    = 3;
-	static const int vertexes_per_triangle = 3;
-	static const int row_width             = 3 * 2;
+	static const int triangles_per_face = 3;
+	static const int row_width          = NoDice::coords_per_vertex
+	                                    + NoDice::coords_per_normal;
 } // anonymous namespace
 
 NoDice::D12::
 D12()
 : Shape("d12", NoDice::Colour(0.3f, 0.5f, 1.0f, 0.80))
 {
-	using vmml::Vector3f;
-
 	// Magic precomputed vertexes of the unit-sphere dodecahedron
 	static const Vector3f vertex[] = 
 	{
@@ -62,7 +60,11 @@ D12()
 		Vector3f( 0.491f, -0.357f, -0.795f)
 	};
 
-	static const int index[][5] = 
+	// List of vertexes making up a face.
+	typedef int FaceVertexIndex[5];
+
+	// Table of vertexes making up the faces of the dodecahedron.
+	static const FaceVertexIndex index[] = 
 	{
 		{  0,  1,  2,  3,  4 },
 		{  5, 10,  6,  1,  0 },
@@ -78,21 +80,24 @@ D12()
 		{ 19, 18, 17, 16, 15 }
 	};
 
-	static const int num_faces = sizeof(index) / (sizeof(int) * 5);
+	static const int num_faces = sizeof(index) / sizeof(FaceVertexIndex);
+	static const int vertex_count = num_faces * triangles_per_face
+	                                          * vertexes_per_triangle;
 
-	GLfloat shape[row_width * num_faces*triangles_per_face*vertexes_per_triangle];
+	// A temporary buffer with which the VBO will be initialized
+	GLfloat shape[row_width * vertex_count];
 	GLfloat* p = shape;
 	for (int i = 0; i < num_faces; ++i)
 	{
 		pentagon(vertex, index[i], p);
 	}
 
-	m_vertexCount = (sizeof(shape) / sizeof(GLfloat)) / row_width;
-
 	glGenBuffers(1, &m_vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(shape), shape, GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	m_vertexCount = vertex_count;
 } 
 
 
@@ -108,7 +113,7 @@ draw() const
 {
  	static const int stride = row_width * sizeof(GLfloat);
  	static const GLfloat* shape_verteces = 0;
-	static const GLfloat* shape_normals = shape_verteces + 3;
+	static const GLfloat* shape_normals = shape_verteces + coords_per_vertex;
 
 	glEnable(GL_NORMALIZE);
 	glDisable(GL_CULL_FACE); // for transparency -- move to object

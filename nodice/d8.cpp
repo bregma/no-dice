@@ -20,29 +20,25 @@
 #include "nodice/d8.h"
 
 #include <cmath>
-#include "vmmlib/vmmlib.h"
+#include "nodice/maths.h"
 
 
 namespace
 {
-	static const int triangles_per_face    = 1;
-	static const int vertexes_per_triangle = 3;
-	static const int row_width = 3*2;
+	static const int triangles_per_face = 1;
+	static const int row_width          = NoDice::coords_per_vertex
+	                                    + NoDice::coords_per_normal;
 } // anonymous namespace
+
 
 /**
  * Generates an octohedron in the unit spehere.
- *
- * Uh, this is wrong.  This gives a 6-sided polyhedron, we need an eight-sided
- * polyhedron.  Rethink this.
  */
 NoDice::D8::
 D8()
 : Shape("d8", NoDice::Colour(0.8f, 0.0f, 0.8f, 0.48f))
 {
-	using vmml::Vector3f;
-
-	// the octahedron is inscribed inside a sphere with this radius
+	// The octahedron is inscribed inside a sphere with this radius.
 	static const GLfloat r = 1.0f;
 	static const GLfloat z = 0.0f;
 
@@ -56,7 +52,11 @@ D8()
 		Vector3f( z, -r,  z)
 	};
 
-	static const int index[][3] =
+	// List of vertexes making up a face.
+	typedef int FaceVertexIndex[3];
+
+	// Table of vertexes making up the faces of the octohedron
+	static const FaceVertexIndex index[] =
 	{
 		 { 0, 1, 2 },
 		 { 2, 1, 3 },
@@ -65,23 +65,29 @@ D8()
 		 { 0, 5, 4 },
 		 { 4, 5, 3 },
 		 { 3, 5, 2 },
-		 { 2, 5, 0 },
+		 { 2, 5, 0 }
 	};
 
-	static const int num_faces = sizeof(index) / (sizeof(int) * 3);
-	GLfloat shape[row_width * num_faces*triangles_per_face*vertexes_per_triangle];
+	static const int num_faces = sizeof(index) / sizeof(FaceVertexIndex);
+	static const int vertex_count = num_faces * triangles_per_face
+	                                          * vertexes_per_triangle;
+
+	// A temporary buffer with which the VBO will be initialized
+	GLfloat shape[row_width * vertex_count];
 	GLfloat* p = shape;
 	for (int i = 0; i < num_faces; ++i)
 	{
 		triangle(vertex, index[i], p);
 	}
 
-	m_vertexCount = (sizeof(shape) / sizeof(GLfloat)) / row_width;
-
+	// Create the VBO.
 	glGenBuffers(1, &m_vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(shape), shape, GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	// Remember the size of the VBO.
+	m_vertexCount = vertex_count;
 } 
 
 
@@ -97,7 +103,7 @@ draw() const
 {
  	static const int stride = row_width * sizeof(GLfloat);
  	static const GLfloat* shape_verteces = 0;
-	static const GLfloat* shape_normals = shape_verteces + 3;
+	static const GLfloat* shape_normals = shape_verteces + coords_per_vertex;
 
 	glEnable(GL_NORMALIZE);
 	glDisable(GL_CULL_FACE); // for transparency -- move to object
