@@ -35,6 +35,7 @@ namespace
 NoDice::PlayState::
 PlayState(Config& config)
 : GameState(config)
+, m_state(state_idle)
 , m_gameboard(config)
 {
 }

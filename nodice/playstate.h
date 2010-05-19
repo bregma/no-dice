@@ -38,7 +38,19 @@ namespace NoDice
 		void draw(Video& video);
 
 	private:
-		Board m_gameboard;
+		enum SubState
+		{
+			state_idle,
+			state_swapping,
+			state_unswapping,
+			state_removing,
+			state_dropping,
+			state_rotating,
+			state_end
+		};
+
+		SubState m_state;
+		Board    m_gameboard;
 	};
 
 } // namespace noDice
