@@ -19,6 +19,7 @@
  */
 #include "nodice/playstate.h"
 
+#include <iostream>
 #include "nodice/colour.h"
 #include "nodice/object.h"
 #include "nodice/shape.h"
@@ -37,6 +38,7 @@ PlayState(Config& config)
 : GameState(config)
 , m_state(state_idle)
 , m_gameboard(config)
+, m_mouseIsDown(false)
 {
 }
 
@@ -44,6 +46,73 @@ PlayState(Config& config)
 NoDice::PlayState::
 ~PlayState()
 {
+}
+
+
+void NoDice::PlayState::
+pointerMove(int x, int y, int dx, int dy)
+{
+	if (m_mouseIsDown)
+	{
+		if (std::abs(dx) > std::abs(dy))
+		{
+			if (dx < 0)
+				std::cerr << "==smw> swapping horizontal left\n";
+			else
+				std::cerr << "==smw> swapping horizontal right\n";
+		}
+		else
+		{
+			if (dy < 0)
+				std::cerr << "==smw> swapping vertical up\n";
+			else
+				std::cerr << "==smw> swapping vertical down\n";
+		}
+		m_state = state_swapping;
+	}
+}
+
+
+void NoDice::PlayState::
+pointerClick(int x, int y, PointerAction action)
+{
+	if (action == pointerUp)
+	{
+		m_mouseIsDown = false;
+	}
+	else if (action == pointerDown)
+	{
+		float win_width = float(m_config.screenWidth()) / 2.0f;
+		float win_height = float(m_config.screenHeight()) / 2.0f;
+		float unit_x = float(x - win_width) / win_width;
+		float unit_y = float(y - win_height) / win_height;
+		std::cerr << "==smw> " << __FUNCTION__ << "(" << x << ", " << y << ")"
+		          << " unit_x=" << unit_x << " unit_y=" << unit_y
+		          << "\n";
+
+		glMatrixMode(GL_MODELVIEW);
+		glPushMatrix();
+		glLoadIdentity();
+		glScalef(0.1f, 0.1f, 0.1f);
+		glTranslatef(-5.5f, -7.5f, 0.0f);
+
+			vmml::Matrix4f projection;
+			glGetFloatv(GL_PROJECTION_MATRIX, projection.array);
+			vmml::Matrix4f modelview;
+			glGetFloatv(GL_MODELVIEW_MATRIX, modelview.array);
+			vmml::Matrix4f unprojection;
+			(projection * modelview).getInverse(unprojection);
+			std::cerr << unprojection;
+		glPopMatrix();
+
+		vmml::Vector4f ray(unit_x, unit_y, -1.0f, 1.0f);
+		vmml::Vector4f beam = unprojection * ray;
+		std::cerr << beam << "\n";
+		std::cerr << "==smw> index=(" << int(beam.x / 1.8f + 0.5f) << ", "
+		          << int(beam.y / 2.0f + 0.5f) << ")\n";
+
+		m_mouseIsDown = true;
+	}
 }
 
 
@@ -96,6 +165,7 @@ draw(Video& video)
 	glScalef(0.1f, 0.1f, 0.1f);
 	glTranslatef(-5.5f, -7.5f, 0.0f);
 	m_gameboard.draw();
+
 	glPopMatrix();
 }
 

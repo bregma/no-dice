@@ -34,6 +34,9 @@ namespace NoDice
 		PlayState(Config& config);
 		~PlayState();
 
+		void pointerMove(int x, int y, int dx, int dy);
+		void pointerClick(int x, int y, PointerAction action);
+
 		void update(App& app);
 		void draw(Video& video);
 
@@ -51,6 +54,7 @@ namespace NoDice
 
 		SubState m_state;
 		Board    m_gameboard;
+		bool     m_mouseIsDown;
 	};
 
 } // namespace noDice
