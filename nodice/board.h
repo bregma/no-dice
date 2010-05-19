@@ -41,6 +41,8 @@ namespace NoDice
 		void update();
 		void draw() const;
 
+		bool findWins();
+
 	private:
 		typedef std::vector<ObjectPtr> ObjectBag;
 

@@ -19,6 +19,7 @@
  */
 #include "nodice/board.h"
 
+#include <iostream>
 #include "nodice/object.h"
 #include "nodice/video.h"
 
@@ -49,6 +50,7 @@ update()
 	{
 		(*it)->update();
 	}
+	findWins();
 }
 
 
@@ -72,3 +74,41 @@ draw() const
 	glPopMatrix();
 }
 
+
+bool NoDice::Board::
+findWins()
+{
+	bool win_found = false;
+
+	// check for 3-in-a-row
+	for (int y = 0; y < 8; ++y)
+	{
+		for (int x = 0; x < 5; ++x)
+		{
+			const ObjectPtr& obj1 = at(x+0, y);
+			const ObjectPtr& obj2 = at(x+1, y);
+			const ObjectPtr& obj3 = at(x+2, y);
+			if (obj1->type() == obj2->type() && obj2->type() == obj3->type())
+			{
+				win_found = true;
+			}
+		}
+	}
+
+	// check for 3-in-a-column
+	for (int x = 0; x < 8; ++x)
+	{
+		for (int y = 0; y < 5; ++y)
+		{
+			const ObjectPtr& obj1 = at(x, y+0);
+			const ObjectPtr& obj2 = at(x, y+1);
+			const ObjectPtr& obj3 = at(x, y+2);
+			if (obj1->type() == obj2->type() && obj2->type() == obj3->type())
+			{
+				win_found = true;
+			}
+		}
+	}
+
+	return win_found;
+}
