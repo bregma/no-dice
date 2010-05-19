@@ -33,7 +33,7 @@ namespace NoDice
 	: public VideoContext
 	{
 	public:
-		VideoContextEGL(const Config& config);
+		VideoContextEGL(Config& config);
 
 		void swapBuffers();
 

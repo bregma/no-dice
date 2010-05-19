@@ -60,8 +60,11 @@ namespace
  */
 NoDice::Config::
 Config(int argc, char* argv[])
-: m_isDebugMode(false)
+: m_isDirty(false)
+, m_isDebugMode(false)
 , m_isFullscreen(false)
+, m_screenWidth(640)
+, m_screenHeight(480)
 {
 	for (int i = 0; i < argc; ++i)
 	{
@@ -118,3 +121,45 @@ isFullscreen() const
 	return m_isFullscreen;
 }
 
+
+int NoDice::Config::
+screenWidth() const
+{
+	return m_screenWidth;
+}
+
+
+void NoDice::Config::
+setScreenWidth(int w)
+{
+	if (m_screenWidth != w)
+	{
+		m_screenWidth = w;
+		setDirty();
+	}
+}
+
+
+int NoDice::Config::
+screenHeight() const
+{
+	return m_screenHeight;
+}
+
+
+void NoDice::Config::
+setScreenHeight(int h)
+{
+	if (m_screenHeight != h)
+	{
+		m_screenHeight = h;
+		setDirty();
+	}
+}
+
+
+void NoDice::Config::
+setDirty()
+{
+	m_isDirty = true;
+}

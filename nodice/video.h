@@ -32,19 +32,13 @@ namespace NoDice
   class Video
   {
   public:
-    Video(const Config& config);
+    Video(Config& config);
     ~Video();
 
     void update();
 
-    GLsizei screenWidth() const;
-    GLsizei screenHeight() const;
-
-
   private:
     std::auto_ptr<VideoContext> m_context;
-    GLsizei                     m_screenWidth;
-    GLsizei                     m_screenHeight;
   };
 } // namespace NoDice
 

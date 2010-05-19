@@ -53,8 +53,8 @@ NoDice::IntroState::
 IntroState(Config& config, const Video& video)
 : GameState(config)
 , m_isActive(true)
-, m_menuFont(getFont("spindle", video.screenHeight() / 18))
-, m_titlePos(0.25 * video.screenWidth(), 0.75 * video.screenHeight())
+, m_menuFont(getFont("spindle", config.screenHeight() / 18))
+, m_titlePos(0.25 * config.screenWidth(), 0.75 * config.screenHeight())
 , m_selected(0)
 , m_nextState(next_state_same)
 {

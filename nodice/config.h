@@ -40,9 +40,23 @@ namespace NoDice
 		/** Indicates if fullscreen mode is active. */
 		bool isFullscreen() const;
 
+		/** Gets the currently selected screen width (in pixels). */
+		int  screenWidth() const;
+		void setScreenWidth(int w);
+
+		/** Gets the currently selected screen height (in pixels). */
+		int  screenHeight() const;
+		void setScreenHeight(int h);
+
 	private:
+		void setDirty();
+
+	private:
+		bool  m_isDirty;
 		bool  m_isDebugMode;
 		bool  m_isFullscreen;
+		int   m_screenWidth;
+		int   m_screenHeight;
   };
 } // namespace NoDice
 

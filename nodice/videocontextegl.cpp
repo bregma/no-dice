@@ -26,7 +26,7 @@
 extern "C" void* updater_get_native_window();
 
 
-NoDice::VideoContextEGL::VideoContextEGL(const Config& config)
+NoDice::VideoContextEGL::VideoContextEGL(Config& config)
 {
 	m_eglDisplay = eglGetDisplay(EGL_DEFAULT_DISPLAY);
 	if (m_eglDisplay == EGL_NO_DISPLAY)

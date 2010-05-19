@@ -20,6 +20,7 @@
 #include "nodice/video.h"
 
 #include <iostream>
+#include "nodice/config.h"
 #ifdef HAVE_EGL
 # include "nodice/videocontextegl.h"
 #else
@@ -45,17 +46,16 @@ namespace
 	}
 }
 
-NoDice::Video::Video(const Config& config)
+NoDice::Video::
+Video(Config& config)
 #ifdef HAVE_EGL
 : m_context(new VideoContextEGL(config))
 #else
 : m_context(new VideoContextSDL(config))
 #endif
-, m_screenWidth(640)
-, m_screenHeight(480)
 {
 	initGL();
-	glViewport(0, 0, m_screenWidth, m_screenHeight);
+	glViewport(0, 0, config.screenWidth(), config.screenHeight());
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glMatrixMode(GL_MODELVIEW);
@@ -63,24 +63,14 @@ NoDice::Video::Video(const Config& config)
 }
 
 
-NoDice::Video::~Video()
+NoDice::Video::
+~Video()
 {
 }
 
 
-GLsizei NoDice::Video::screenWidth() const
-{
-	return m_screenWidth;
-}
-
-
-GLsizei NoDice::Video::screenHeight() const
-{
-	return m_screenHeight;
-}
-
-
-void NoDice::Video::update()
+void NoDice::Video::
+update()
 {
 	m_context->swapBuffers();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
