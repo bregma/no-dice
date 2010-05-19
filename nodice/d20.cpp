@@ -41,37 +41,22 @@ D20()
 	// t = (1+sqrt(5))/2, tau = t / sqrt(1 + t^2)
 	static const GLfloat tau = 0.8506508084f;
 	// 1 / sqrt(1 + t^2)
-	static const GLfloat one = 0.5257311121f;
+	static const GLfloat phi = 0.5257311121f;
 
 	static const Vector3f vertex[] = 
 	{
-#if 1
-		Vector3f( tau,  one, 0.0f),
-		Vector3f(-tau,  one, 0.0f),
-		Vector3f(-tau, -one, 0.0f),
-		Vector3f( tau, -one, 0.0f),
-		Vector3f( one, 0.0f,  tau),
-		Vector3f( one, 0.0f, -tau),
-		Vector3f(-one, 0.0f, -tau),
-		Vector3f(-one, 0.0f,  tau),
-		Vector3f(0.0f,  tau,  one),
-		Vector3f(0.0f, -tau,  one),
-		Vector3f(0.0f, -tau, -one),
-		Vector3f(0.0f,  tau, -one),
-#else
-		Vector3f( 0.000f,  0.000f,  1.000f),
-		Vector3f( 0.894f,  0.000f,  0.447f),
-		Vector3f( 0.276f,  0.851f,  0.447f),
-		Vector3f(-0.724f,  0.526f,  0.447f),
-		Vector3f(-0.724f, -0.526f,  0.447f),
-		Vector3f( 0.276f, -0.851f,  0.447f),
-		Vector3f(-0.724f,  0.526f, -0.447f),
-		Vector3f(-0.276f,  0.851f, -0.447f),
-		Vector3f(-0.894f,  0.000f, -0.447f),
-		Vector3f( 0.276f, -0.851f, -0.447f),
-		Vector3f( 0.724f, -0.526f, -0.447f),
-		Vector3f( 0.000f,  0.000f, -1.000f),
-#endif
+		Vector3f( tau,  phi, 0.0f),
+		Vector3f(-tau,  phi, 0.0f),
+		Vector3f(-tau, -phi, 0.0f),
+		Vector3f( tau, -phi, 0.0f),
+		Vector3f( phi, 0.0f,  tau),
+		Vector3f( phi, 0.0f, -tau),
+		Vector3f(-phi, 0.0f, -tau),
+		Vector3f(-phi, 0.0f,  tau),
+		Vector3f(0.0f,  tau,  phi),
+		Vector3f(0.0f, -tau,  phi),
+		Vector3f(0.0f, -tau, -phi),
+		Vector3f(0.0f,  tau, -phi),
 	};
 
 	// List of vertexes making up a face.
