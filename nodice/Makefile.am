@@ -42,6 +42,7 @@ no_dice_SOURCES = \
 	d6.h               d6.cpp \
 	d8.h               d8.cpp \
 	d12.h              d12.cpp \
+	d20.h              d20.cpp \
 	font.h             font.cpp \
 	gamestate.h        gamestate.cpp \
 	introstate.h       introstate.cpp \
