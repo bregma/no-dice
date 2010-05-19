@@ -50,10 +50,10 @@ D4()
 	// Table of vertexes making up the faces of the tetrahedron.
 	static const FaceVertexIndex index[] =
 	{
-		{ 0, 2, 1 },
-		{ 0, 3, 2 },
-		{ 1, 2, 3 },
-		{ 1, 3, 0 }
+		{ 1, 2, 0 },
+		{ 2, 3, 0 },
+		{ 3, 2, 1 },
+		{ 0, 3, 1 }
 	};
 
 	static const int num_faces = sizeof(index) / sizeof(FaceVertexIndex);
