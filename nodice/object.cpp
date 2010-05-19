@@ -19,14 +19,22 @@
  */
 #include "nodice/object.h"
 
+#include <cstdlib>
 #include "nodice/video.h"
+
+
+namespace
+{
+	static const int x_spin_speed = 1;
+	static const int y_spin_speed = 6;
+}
 
 
 NoDice::Object::
 Object(const ShapePtr shape)
 : m_shape(shape)
 , m_colour(m_shape->defaultColour())
-, m_xrot(0), m_yrot(0)
+, m_xrot(std::rand() % 180), m_yrot((std::rand()>>2) % 90)
 {
 }
 
@@ -54,8 +62,8 @@ type() const
 void NoDice::Object::
 update() 
 {
-	m_xrot = (m_xrot + 1) % 360;
-	m_yrot = (m_yrot + 6) % 360;
+	m_xrot = (m_xrot + x_spin_speed) % 360;
+	m_yrot = (m_yrot + y_spin_speed) % 360;
 }
 
 
