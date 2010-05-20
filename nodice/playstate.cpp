@@ -30,6 +30,7 @@ namespace
 {
 	static const GLfloat near = -1.0f;
 	static const GLfloat far  =  1.0f;
+	static const NoDice::Vector3f board_pos(-5.5f, -7.5f, 0.0f);
 } // anonymous namespace
 
 
@@ -52,7 +53,7 @@ NoDice::PlayState::
 void NoDice::PlayState::
 pointerMove(int x, int y, int dx, int dy)
 {
-	if (m_mouseIsDown)
+	if (m_mouseIsDown && m_state != state_swapping)
 	{
 		if (std::abs(dx) > std::abs(dy))
 		{
@@ -85,31 +86,34 @@ pointerClick(int x, int y, PointerAction action)
 		float win_width = float(m_config.screenWidth()) / 2.0f;
 		float win_height = float(m_config.screenHeight()) / 2.0f;
 		float unit_x = float(x - win_width) / win_width;
-		float unit_y = float(y - win_height) / win_height;
-		std::cerr << "==smw> " << __FUNCTION__ << "(" << x << ", " << y << ")"
-		          << " unit_x=" << unit_x << " unit_y=" << unit_y
-		          << "\n";
+		float unit_y = -float(y - win_height) / win_height;
 
 		glMatrixMode(GL_MODELVIEW);
 		glPushMatrix();
 		glLoadIdentity();
 		glScalef(0.1f, 0.1f, 0.1f);
-		glTranslatef(-5.5f, -7.5f, 0.0f);
-
-			vmml::Matrix4f projection;
+		glTranslatef(board_pos.x, board_pos.y, board_pos.z);
+			Matrix4f projection;
 			glGetFloatv(GL_PROJECTION_MATRIX, projection.array);
-			vmml::Matrix4f modelview;
+			Matrix4f modelview;
 			glGetFloatv(GL_MODELVIEW_MATRIX, modelview.array);
-			vmml::Matrix4f unprojection;
+			Matrix4f unprojection;
 			(projection * modelview).getInverse(unprojection);
-			std::cerr << unprojection;
 		glPopMatrix();
 
-		vmml::Vector4f ray(unit_x, unit_y, -1.0f, 1.0f);
-		vmml::Vector4f beam = unprojection * ray;
+		Vector4f ray(unit_x, unit_y, 0.0f, 1.0f);
+		Vector4f beam = unprojection * ray;
 		std::cerr << beam << "\n";
-		std::cerr << "==smw> index=(" << int(beam.x / 1.8f + 0.5f) << ", "
-		          << int(beam.y / 2.0f + 0.5f) << ")\n";
+		int px = int(beam.x / 2.0f + 0.50f);
+		int py = int(beam.y / 2.0f + 0.50f);
+		std::cerr << "==smw> index=(" << px << ", " << py << ")\n";
+		if (px >= m_config.boardSize() || px < 0)
+			return;
+		if (py >= m_config.boardSize() || py < 0)
+			return;
+
+		ObjectPtr obj = m_gameboard.at(px, py);
+		obj->setHighlight(true);
 
 		m_mouseIsDown = true;
 	}
@@ -163,7 +167,7 @@ draw(Video& video)
 	glPushMatrix();
 	glLoadIdentity();
 	glScalef(0.1f, 0.1f, 0.1f);
-	glTranslatef(-5.5f, -7.5f, 0.0f);
+	glTranslatef(board_pos.x, board_pos.y, board_pos.z);
 	m_gameboard.draw();
 
 	glPopMatrix();

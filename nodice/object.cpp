@@ -34,6 +34,8 @@ NoDice::Object::
 Object(const ShapePtr shape)
 : m_shape(shape)
 , m_colour(m_shape->defaultColour())
+, m_normalColour(m_colour)
+, m_highlightColour(1.0f, 0.8f, 0.2f, 0.5f)
 , m_xrot(std::rand() % 180), m_yrot((std::rand()>>2) % 90)
 {
 }
@@ -56,6 +58,16 @@ const std::string& NoDice::Object::
 type() const
 {
 	return m_shape->name();
+}
+
+
+void NoDice::Object::
+setHighlight(bool toggle)
+{
+	if (toggle)
+		m_colour = m_highlightColour;
+	else
+		m_colour = m_normalColour;
 }
 
 

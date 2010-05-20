@@ -48,6 +48,9 @@ namespace NoDice
 		int  screenHeight() const;
 		void setScreenHeight(int h);
 
+		int boardSize() const;
+		void setBoardSize(int size);
+
 	private:
 		void setDirty();
 
@@ -57,6 +60,7 @@ namespace NoDice
 		bool  m_isFullscreen;
 		int   m_screenWidth;
 		int   m_screenHeight;
+		int   m_boardSize;
   };
 } // namespace NoDice
 

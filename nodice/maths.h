@@ -31,6 +31,8 @@ namespace NoDice
 {
 	using vmml::Vector2f;
 	using vmml::Vector3f;
+	using vmml::Vector4f;
+	using vmml::Matrix4f;
 
 	/** Number of Cartesian coordinates in a 3D vertex. */
 	const int coords_per_vertex = 3;

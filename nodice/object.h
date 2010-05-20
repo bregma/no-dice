@@ -47,6 +47,9 @@ namespace NoDice
     /** Gets the name of the type of the object. */
     virtual const std::string& type() const;
 
+    /** Turns on highlight mode. */
+		void setHighlight(bool toggle);
+
     /** Performs a one-tick update of the object. */
     virtual void update();
 
@@ -60,6 +63,8 @@ namespace NoDice
   protected:
     const ShapePtr m_shape;
     Colour         m_colour;
+    Colour         m_normalColour;
+    Colour         m_highlightColour;
     int            m_xrot, m_yrot; // temp for testing
   };
 

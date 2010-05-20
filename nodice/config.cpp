@@ -65,6 +65,7 @@ Config(int argc, char* argv[])
 , m_isFullscreen(false)
 , m_screenWidth(640)
 , m_screenHeight(480)
+, m_boardSize(8)
 {
 	for (int i = 0; i < argc; ++i)
 	{
@@ -153,6 +154,22 @@ setScreenHeight(int h)
 	if (m_screenHeight != h)
 	{
 		m_screenHeight = h;
+		setDirty();
+	}
+}
+
+
+int NoDice::Config::
+boardSize() const
+{ return m_boardSize; }
+
+
+void NoDice::Config::
+setBoardSize(int size)
+{
+	if (m_boardSize != size)
+	{
+		m_boardSize = size;
 		setDirty();
 	}
 }
