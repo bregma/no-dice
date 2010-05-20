@@ -20,16 +20,27 @@
 #include "nodice/board.h"
 
 #include <iostream>
+#include "nodice/config.h"
 #include "nodice/object.h"
-#include "nodice/video.h"
+
+namespace
+{
+	static float swap_factor = 10.0f;
+} // anonymous namespace
 
 
 NoDice::Board::
 Board(const NoDice::Config& config)
+: m_config(config)
+, m_state(state_idle)
 {
-	for (int i = 0; i < 64; ++i)
+	for (int y = 0; y < m_config.boardSize(); ++y)
 	{
-		m_objects.push_back(ObjectPtr(new Object(NoDice::chooseAShape())));
+		for (int x = 0; x < m_config.boardSize(); ++x)
+		{
+			m_objects.push_back(ObjectPtr(new Object(NoDice::chooseAShape(),
+																		 Vector3f(x * 2.0f, y * 2.0f, 0.0f))));
+		}
 	}
 }
 
@@ -37,7 +48,7 @@ Board(const NoDice::Config& config)
 const NoDice::ObjectPtr&  NoDice::Board::
 at(int x, int y) const
 {
-	return m_objects[8*x + y];
+	return m_objects[x + y * m_config.boardSize()];
 }
 
 
@@ -50,7 +61,20 @@ update()
 	{
 		(*it)->update();
 	}
-	findWins();
+	if (m_state == state_swapping)
+	{
+		m_swapStep += 0.5f;
+		if (m_swapStep > swap_factor)
+		{
+			for (ObjectBag::iterator it = m_objects.begin();
+			     it != m_objects.end();
+			     ++it)
+			{
+				(*it)->setVelocity(Vector3f(0.0f, 0.0f, 0.0f));
+			}
+			m_state = state_idle;
+		}
+	}
 }
 
 
@@ -59,19 +83,34 @@ draw() const
 {
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
-
-	for (int y = 0; y < 8; ++y)
+	for (int y = 0; y < m_config.boardSize(); ++y)
 	{
-		glPushMatrix();
-		for (int x = 0; x < 8; ++x)
+		for (int x = 0; x < m_config.boardSize(); ++x)
 		{
 			at(x, y)->draw();
-			glTranslatef(2.0f, 0.0f, 0.0f);
 		}
-		glPopMatrix();
-		glTranslatef(0.0f, 2.0f, 0.0f);
 	}
 	glPopMatrix();
+}
+
+
+void NoDice::Board::
+startSwap(int x1, int y1, int x2, int y2)
+{
+	ObjectPtr obj1 = at(x1, y1);
+	ObjectPtr obj2 = at(x2, y2);
+	Vector3f v1(float(x2-x1) / swap_factor, float(y2-y1) / swap_factor, 0.0f);
+	Vector3f v2(float(x1-x2) / swap_factor, float(y1-y2) / swap_factor, 0.0f);
+	obj1->setVelocity(v1);
+	obj2->setVelocity(v2);
+	m_swapStep = 0.0f;
+	m_state = state_swapping;
+}
+
+bool NoDice::Board::
+isSwapping() const
+{
+	return m_state == state_swapping;
 }
 
 
@@ -93,6 +132,9 @@ findWins()
 			const ObjectPtr& obj3 = at(x+2, y);
 			if (obj1->type() == obj2->type() && obj2->type() == obj3->type())
 			{
+				obj1->startDisappearing();
+				obj2->startDisappearing();
+				obj3->startDisappearing();
 				++number_of_wins;
 			}
 		}
@@ -108,6 +150,9 @@ findWins()
 			const ObjectPtr& obj3 = at(x, y+2);
 			if (obj1->type() == obj2->type() && obj2->type() == obj3->type())
 			{
+				obj1->startDisappearing();
+				obj2->startDisappearing();
+				obj3->startDisappearing();
 				++number_of_wins;
 			}
 		}

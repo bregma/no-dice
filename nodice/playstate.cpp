@@ -56,21 +56,28 @@ pointerMove(int x, int y, int dx, int dy)
 {
 	if (m_mouseIsDown && m_state != state_swapping)
 	{
+		int x2 = m_selectedX;
+		int y2 = m_selectedY;
 		if (std::abs(dx) > std::abs(dy))
 		{
-			if (dx < 0)
-				std::cerr << "==smw> swapping horizontal left\n";
+			if (dx < 0 && m_selectedX >= 0)
+					--x2;
+			else if (m_selectedX < m_config.boardSize())
+					++x2;
 			else
-				std::cerr << "==smw> swapping horizontal right\n";
+				return;
 		}
 		else
 		{
-			if (dy < 0)
-				std::cerr << "==smw> swapping vertical up\n";
+			if (dy < 0 && m_selectedY >= 0)
+					--y2;
+			else if (m_selectedY < m_config.boardSize())
+					++y2;
 			else
-				std::cerr << "==smw> swapping vertical down\n";
+				return;
 		}
 		m_state = state_swapping;
+		m_gameboard.startSwap(m_selectedX, m_selectedY, x2, y2);
 	}
 }
 
@@ -104,17 +111,15 @@ pointerClick(int x, int y, PointerAction action)
 
 		Vector4f ray(unit_x, unit_y, 0.0f, 1.0f);
 		Vector4f beam = unprojection * ray;
-		std::cerr << beam << "\n";
-		int px = int(beam.x / 2.0f + 0.50f);
-		int py = int(beam.y / 2.0f + 0.50f);
-		if (px >= m_config.boardSize() || px < 0)
+		m_selectedX = int(beam.x / 2.0f + 0.50f);
+		m_selectedY = int(beam.y / 2.0f + 0.50f);
+		if (m_selectedX >= m_config.boardSize() || m_selectedX < 0)
 			return;
-		if (py >= m_config.boardSize() || py < 0)
+		if (m_selectedY >= m_config.boardSize() || m_selectedY < 0)
 			return;
 
-		ObjectPtr obj = m_gameboard.at(px, py);
+		ObjectPtr obj = m_gameboard.at(m_selectedX, m_selectedY);
 		obj->setHighlight(true);
-//		obj->startDisappearing();
 
 		m_mouseIsDown = true;
 	}
@@ -125,6 +130,16 @@ void NoDice::PlayState::
 update(App& app)
 {
 	m_gameboard.update();
+	if (m_state == state_swapping)
+	{
+		if (!m_gameboard.isSwapping())
+		{
+			if (m_gameboard.findWins())
+			{
+			}
+			m_state = state_idle;
+		}
+	}
 }
 
 

@@ -20,6 +20,7 @@
 #ifndef NODICE_BOARD_H
 #define NODICE_BOARD_H 1
 
+#include "nodice/config.h"
 #include "nodice/object.h"
 #include <vector>
 
@@ -41,12 +42,24 @@ namespace NoDice
 		void update();
 		void draw() const;
 
+		void startSwap(int x1, int y1, int x2, int y2);
+		bool isSwapping() const;
+
 		bool findWins();
 
 	private:
 		typedef std::vector<ObjectPtr> ObjectBag;
+		enum State
+		{
+			state_idle,
+			state_swapping,
+			state_falling
+		};
 
+		Config    m_config;
 		ObjectBag m_objects;
+		State     m_state;
+		float     m_swapStep;
 	};
 } // namespace NoDice
 

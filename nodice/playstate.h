@@ -55,6 +55,8 @@ namespace NoDice
 		SubState m_state;
 		Board    m_gameboard;
 		bool     m_mouseIsDown;
+		int      m_selectedX;
+		int      m_selectedY;
 	};
 
 } // namespace noDice

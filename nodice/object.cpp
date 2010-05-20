@@ -32,11 +32,13 @@ namespace
 
 
 NoDice::Object::
-Object(const ShapePtr shape)
+Object(const ShapePtr shape, const Vector3f& initialPosition)
 : m_shape(shape)
 , m_colour(m_shape->defaultColour())
 , m_normalColour(m_colour)
 , m_highlightColour(1.0f, 0.8f, 0.2f, 0.5f)
+, m_position(initialPosition)
+, m_velocity(0.0f, 0.0f, 0.0f)
 , m_isDisappearing(false)
 , m_fadeFactor(0.0f)
 , m_xrot(std::rand() % 180), m_yrot((std::rand()>>2) % 90)
@@ -59,9 +61,7 @@ NoDice::Object::
  */
 const std::string& NoDice::Object::
 type() const
-{
-	return m_shape->name();
-}
+{ return m_shape->name(); }
 
 
 void NoDice::Object::
@@ -86,6 +86,7 @@ update()
 		m_xrot = (m_xrot + x_spin_speed) % 360;
 		m_yrot = (m_yrot + y_spin_speed) % 360;
 	}
+	m_position += m_velocity;
 }
 
 
@@ -95,6 +96,7 @@ draw() const
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
 
+	glTranslatef(m_position.x, m_position.y, m_position.z);
 	glRotatef(float(m_xrot), 1.0f, 0.0f, 0.0f);
 	glRotatef(float(m_yrot), 0.0f, 1.0f, 0.0f);
 
@@ -105,11 +107,14 @@ draw() const
 }
 
 
+void NoDice::Object::
+setVelocity(const Vector3f& velocity)
+{ m_velocity = velocity; }
+	
+
 bool NoDice::Object::
 hasDisappeared() const
-{
-	return m_isDisappearing && m_colour.a <= 0.0f;
-}
+{ return m_isDisappearing && m_colour.a <= 0.0f; }
 
 
 void NoDice::Object::

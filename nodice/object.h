@@ -21,6 +21,7 @@
 #define NODICE_OBJECT_H 1
 
 #include "nodice/colour.h"
+#include "nodice/maths.h"
 #include "nodice/shape.h"
 #include <tr1/memory>
 
@@ -39,7 +40,7 @@ namespace NoDice
   {
   public:
     /** Constructs the object with a given shape. */
-    Object(const ShapePtr shape);
+    Object(const ShapePtr shape, const Vector3f& initialPosition);
 
     /** Destroys the object. */
     virtual ~Object();
@@ -55,6 +56,8 @@ namespace NoDice
 
 		/** Renders the object on the current drawing surface. */
     virtual void draw() const;
+
+    void setVelocity(const Vector3f& velocity);
 
     /**
      * @name Disappearance
@@ -78,6 +81,8 @@ namespace NoDice
     Colour         m_colour;
     Colour         m_normalColour;
     Colour         m_highlightColour;
+    Vector3f       m_position;
+    Vector3f       m_velocity;
     bool           m_isDisappearing;
     float          m_fadeFactor;
     int            m_xrot, m_yrot; // temp for testing
