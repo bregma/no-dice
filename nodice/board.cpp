@@ -69,16 +69,19 @@ draw() const
 			glTranslatef(2.0f, 0.0f, 0.0f);
 		}
 		glPopMatrix();
-		glTranslatef(0.0f, 2.25f, 0.0f);
+		glTranslatef(0.0f, 2.0f, 0.0f);
 	}
 	glPopMatrix();
 }
 
 
+/**
+ * Looks for 3 (or more) matching objects in a row, horizontal or vertical.
+ */
 bool NoDice::Board::
 findWins()
 {
-	bool win_found = false;
+	int number_of_wins = 0;
 
 	// check for 3-in-a-row
 	for (int y = 0; y < 8; ++y)
@@ -90,7 +93,7 @@ findWins()
 			const ObjectPtr& obj3 = at(x+2, y);
 			if (obj1->type() == obj2->type() && obj2->type() == obj3->type())
 			{
-				win_found = true;
+				++number_of_wins;
 			}
 		}
 	}
@@ -105,10 +108,10 @@ findWins()
 			const ObjectPtr& obj3 = at(x, y+2);
 			if (obj1->type() == obj2->type() && obj2->type() == obj3->type())
 			{
-				win_found = true;
+				++number_of_wins;
 			}
 		}
 	}
 
-	return win_found;
+	return number_of_wins > 0;
 }

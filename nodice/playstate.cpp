@@ -28,9 +28,10 @@
 
 namespace
 {
-	static const GLfloat near = -1.0f;
-	static const GLfloat far  =  1.0f;
-	static const NoDice::Vector3f board_pos(-5.5f, -7.5f, 0.0f);
+	static const GLfloat near =  0.0f;
+	static const GLfloat far  = 10.0f;
+	static const NoDice::Vector3f board_scale(1.0f/12.0f, 1.0f/12.0f, 1.0f/12.0f);
+	static const NoDice::Vector3f board_pos(-4.0f, -6.0f, -2.0f);
 } // anonymous namespace
 
 
@@ -91,7 +92,7 @@ pointerClick(int x, int y, PointerAction action)
 		glMatrixMode(GL_MODELVIEW);
 		glPushMatrix();
 		glLoadIdentity();
-		glScalef(0.1f, 0.1f, 0.1f);
+		glScalef(board_scale.x, board_scale.y, board_scale.z);
 		glTranslatef(board_pos.x, board_pos.y, board_pos.z);
 			Matrix4f projection;
 			glGetFloatv(GL_PROJECTION_MATRIX, projection.array);
@@ -106,7 +107,6 @@ pointerClick(int x, int y, PointerAction action)
 		std::cerr << beam << "\n";
 		int px = int(beam.x / 2.0f + 0.50f);
 		int py = int(beam.y / 2.0f + 0.50f);
-		std::cerr << "==smw> index=(" << px << ", " << py << ")\n";
 		if (px >= m_config.boardSize() || px < 0)
 			return;
 		if (py >= m_config.boardSize() || py < 0)
@@ -114,6 +114,7 @@ pointerClick(int x, int y, PointerAction action)
 
 		ObjectPtr obj = m_gameboard.at(px, py);
 		obj->setHighlight(true);
+//		obj->startDisappearing();
 
 		m_mouseIsDown = true;
 	}
@@ -138,10 +139,20 @@ draw(Video& video)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
+
+	// Adjust projection to take aspect ratio into account.
+	int w = m_config.screenWidth();
+	int h = m_config.screenHeight();
+	float right = 1.0f;
+	float top   = 1.0f;
+	if (h < w)
+		top = float(h) / float(w);
+	else
+		right = float(w) / float(h);
 #ifdef HAVE_OPENGL_ES
-	glFrustumf(0.0f, 1.0f, 0.0f, 1.0f, near, far);
+	glFrustumf(-right, right, -top, top, near, far);
 #else
-	glFrustum(0.0f, 1.0f, 0.0f, 1.0f, near, far);
+	glOrtho(-right, right, -top, top, near, far);
 #endif
 	glDisable(GL_DEPTH_TEST);
 	glEnable(GL_LIGHTING);
@@ -166,7 +177,7 @@ draw(Video& video)
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
 	glLoadIdentity();
-	glScalef(0.1f, 0.1f, 0.1f);
+	glScalef(board_scale.x, board_scale.y, board_scale.z);
 	glTranslatef(board_pos.x, board_pos.y, board_pos.z);
 	m_gameboard.draw();
 

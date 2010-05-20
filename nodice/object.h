@@ -56,6 +56,19 @@ namespace NoDice
 		/** Renders the object on the current drawing surface. */
     virtual void draw() const;
 
+    /**
+     * @name Disappearance
+     * Member functions used to animate fading of an object.
+     */
+    /*@{*/
+
+    /** Indicates if the object has completely disappeared. */
+    bool hasDisappeared() const;
+
+    /** Starts the object disappearing. */
+    void startDisappearing();
+    /*@}*/
+
   private:
     Object(const Object&);
     Object& operator=(const Object&);
@@ -65,6 +78,8 @@ namespace NoDice
     Colour         m_colour;
     Colour         m_normalColour;
     Colour         m_highlightColour;
+    bool           m_isDisappearing;
+    float          m_fadeFactor;
     int            m_xrot, m_yrot; // temp for testing
   };
 
