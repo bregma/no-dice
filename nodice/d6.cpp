@@ -33,7 +33,7 @@ D6()
 : Shape("d6", NoDice::Colour(1.0f, 0.0f, 0.1f, 0.40f))
 {
 	static const GLfloat bevel = 0.05f;
-	static const GLfloat size = 1.0f / std::sqrt(2.0f);
+	static const GLfloat size = 1.0f / std::sqrt(3.0f);
 	static const GLfloat bsize = size - bevel;
 
 	/* vertex-3, normal-3 */
