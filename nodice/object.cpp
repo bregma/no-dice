@@ -27,7 +27,8 @@ namespace
 {
 	static const int x_spin_speed = 1;
 	static const int y_spin_speed = 6;
-	static const float fade_rate = 20.0;
+	static const float fade_rate = 20.0f;
+	static const float move_rate = 10.0f;
 }
 
 
@@ -39,6 +40,7 @@ Object(const ShapePtr shape, const Vector3f& initialPosition)
 , m_highlightColour(1.0f, 0.8f, 0.2f, 0.5f)
 , m_position(initialPosition)
 , m_velocity(0.0f, 0.0f, 0.0f)
+, m_isMoving(false)
 , m_isDisappearing(false)
 , m_fadeFactor(0.0f)
 , m_xrot(std::rand() % 180), m_yrot((std::rand()>>2) % 90)
@@ -80,11 +82,24 @@ update()
 	if (m_isDisappearing)
 	{
 		m_colour.a -= m_fadeFactor;
+		if (this->hasDisappeared())
+		{
+			m_isDisappearing = false;
+			m_fadeFactor = 0.0f;
+		}
 	}
 	else
 	{
 		m_xrot = (m_xrot + x_spin_speed) % 360;
 		m_yrot = (m_yrot + y_spin_speed) % 360;
+	}
+	if (m_isMoving)
+	{
+		if (!isFalling())
+		{
+			m_isMoving = false;
+			m_velocity.set(0.0f, 0.0f, 0.0f);
+		}
 	}
 	m_position += m_velocity;
 }
@@ -114,7 +129,7 @@ setVelocity(const Vector3f& velocity)
 
 bool NoDice::Object::
 hasDisappeared() const
-{ return m_isDisappearing && m_colour.a <= 0.0f; }
+{ return m_colour.a <= 0.0f; }
 
 
 void NoDice::Object::
@@ -122,5 +137,21 @@ startDisappearing()
 {
 	m_isDisappearing = true;
 	m_fadeFactor = m_colour.a / fade_rate;
+}
+
+
+bool NoDice::Object::
+isFalling() const
+{
+	return m_position.distanceSquared(m_newPosition) > 0.01;
+}
+
+
+void NoDice::Object::
+startFalling(const Vector3f& newPosition)
+{
+	m_isMoving = true;
+	m_newPosition = newPosition;
+	m_velocity = (m_newPosition - m_position) / move_rate;
 }
 

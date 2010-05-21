@@ -43,12 +43,16 @@ Board(const NoDice::Config& config)
 																		 Vector3f(x * 2.0f, y * 2.0f, 0.0f))));
 		}
 	}
+	if (findWins() > 0)
+	{
+		m_state = state_removing;
+	}
 }
 
 
 NoDice::ObjectPtr&  NoDice::Board::
-at(int x, int y)
-{ return m_objects[x + y * m_config.boardSize()]; }
+at(const NoDice::Vector2i& p)
+{ return m_objects[p.x + p.y * m_config.boardSize()]; }
 
 
 const NoDice::ObjectPtr&  NoDice::Board::
@@ -66,19 +70,96 @@ update()
 		(*it)->update();
 	}
 
-	if (m_state == state_swapping)
+	switch (m_state)
 	{
-		m_swapStep += swap_step;
-		if (m_swapStep > swap_factor)
+		case state_swapping:
 		{
-			at(m_swapObj[0].x, m_swapObj[0].y).swap(at(m_swapObj[1].x, m_swapObj[1].y));
-			for (ObjectBag::iterator it = m_objects.begin();
-			     it != m_objects.end();
-			     ++it)
+			m_swapStep += swap_step;
+			if (m_swapStep > swap_factor)
 			{
-				(*it)->setVelocity(Vector3f(0.0f, 0.0f, 0.0f));
+				at(m_swapObj[0]).swap(at(m_swapObj[1]));
+				for (ObjectBag::iterator it = m_objects.begin();
+						 it != m_objects.end();
+						 ++it)
+				{
+					(*it)->setVelocity(Vector3f(0.0f, 0.0f, 0.0f));
+				}
+				m_state = state_idle;
 			}
+			break;
+		}
+
+		case state_removing:
+		{
+			// Wait until all disappearing is finished.
+			for (RemovalQueue::iterator it = m_removalQueue.begin();
+					 it != m_removalQueue.end();
+					 ++it)
+			{
+				if (!at(*it)->hasDisappeared())
+					return;
+			}
+
+			m_state = state_falling;
+			for (int x = 0; x < m_config.boardSize(); ++x)
+			{
+				int drop = 0;
+				for (int y = 0; y < m_config.boardSize(); ++y)
+				{
+					if (at(x, y)->hasDisappeared())
+					{
+						++drop;
+					}
+					else if (drop > 0)
+					{
+						at(x, y)->startFalling(Vector3f(2.0f * x, 2.0f * (y - drop), 0.0f));
+						m_fallingQueue.push_back(std::make_pair(Vector2i(x, y),
+																										Vector2i(x, y - drop)));
+					}
+				}
+				for (int y = 0; y < drop; ++y)
+				{
+					int new_y = m_config.boardSize() - y - 1;
+					m_createQueue.push_back(Vector2i(x, new_y));
+				}
+			}
+			m_removalQueue.clear();
+			break;
+		}
+
+		case state_falling:
+		{
+			// Wait until all falling is finished.
+			for (FallingQueue::iterator it = m_fallingQueue.begin();
+					 it != m_fallingQueue.end();
+					 ++it)
+			{
+				if (at((*it).first)->isFalling())
+					return;
+			}
+
+			// Percolate removed jobbies out
+			for (FallingQueue::iterator it = m_fallingQueue.begin();
+					 it != m_fallingQueue.end();
+					 ++it)
+			{
+				at((*it).first).swap(at((*it).second));
+				ObjectPtr().swap(at((*it).first));
+			}
+			m_fallingQueue.clear();
+
+			// Fill in the blanks.
+			for (CreateQueue::iterator it = m_createQueue.begin();
+					 it != m_createQueue.end();
+					 ++it)
+			{
+				at(*it) = ObjectPtr(new Object(NoDice::chooseAShape(),
+														Vector3f((*it).x * 2.0f, (*it).y * 2.0f, 0.0f)));
+			}
+			m_createQueue.clear();
+
 			m_state = state_idle;
+			break;
 		}
 	}
 }
@@ -132,10 +213,17 @@ isSwapping() const
 }
 
 
+bool NoDice::Board::
+isReplacing() const
+{
+	return m_state == state_removing || m_state == state_falling;
+}
+
+
 /**
  * Looks for 3 (or more) matching objects in a row, horizontal or vertical.
  */
-bool NoDice::Board::
+int NoDice::Board::
 findWins()
 {
 	int number_of_wins = 0;
@@ -145,14 +233,17 @@ findWins()
 	{
 		for (int x = 0; x < 5; ++x)
 		{
-			const ObjectPtr& obj1 = at(x+0, y);
-			const ObjectPtr& obj2 = at(x+1, y);
-			const ObjectPtr& obj3 = at(x+2, y);
+			const Vector2i p1(x+0, y);
+			const Vector2i p2(x+1, y);
+			const Vector2i p3(x+2, y);
+			const ObjectPtr& obj1 = at(p1);
+			const ObjectPtr& obj2 = at(p2);
+			const ObjectPtr& obj3 = at(p3);
 			if (obj1->type() == obj2->type() && obj2->type() == obj3->type())
 			{
-				obj1->startDisappearing();
-				obj2->startDisappearing();
-				obj3->startDisappearing();
+				m_removalQueue.push_back(p1); obj1->startDisappearing();
+				m_removalQueue.push_back(p2); obj2->startDisappearing();
+				m_removalQueue.push_back(p3); obj3->startDisappearing();
 				++number_of_wins;
 			}
 		}
@@ -163,18 +254,24 @@ findWins()
 	{
 		for (int y = 0; y < 5; ++y)
 		{
-			const ObjectPtr& obj1 = at(x, y+0);
-			const ObjectPtr& obj2 = at(x, y+1);
-			const ObjectPtr& obj3 = at(x, y+2);
+			const Vector2i p1(x, y+0);
+			const Vector2i p2(x, y+1);
+			const Vector2i p3(x, y+2);
+			const ObjectPtr& obj1 = at(p1);
+			const ObjectPtr& obj2 = at(p2);
+			const ObjectPtr& obj3 = at(p3);
 			if (obj1->type() == obj2->type() && obj2->type() == obj3->type())
 			{
-				obj1->startDisappearing();
-				obj2->startDisappearing();
-				obj3->startDisappearing();
+				m_removalQueue.push_back(p1); obj1->startDisappearing();
+				m_removalQueue.push_back(p2); obj2->startDisappearing();
+				m_removalQueue.push_back(p3); obj3->startDisappearing();
 				++number_of_wins;
 			}
 		}
 	}
 
-	return number_of_wins > 0;
+	if (number_of_wins > 0)
+		m_state = state_removing;
+
+	return number_of_wins;
 }

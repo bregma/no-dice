@@ -72,6 +72,19 @@ namespace NoDice
     void startDisappearing();
     /*@}*/
 
+    /**
+     * @name Falling
+     * Member functions used to animate an object falling.
+     */
+    /*@{*/
+
+    /** Indicates if an object is still falling. */
+    bool isFalling() const;
+
+    /** Starts the object falling. */
+    void startFalling(const Vector3f& newPosition);
+    /*@}*/
+
   private:
     Object(const Object&);
     Object& operator=(const Object&);
@@ -83,6 +96,8 @@ namespace NoDice
     Colour         m_highlightColour;
     Vector3f       m_position;
     Vector3f       m_velocity;
+    Vector3f       m_newPosition;
+    bool           m_isMoving;
     bool           m_isDisappearing;
     float          m_fadeFactor;
     int            m_xrot, m_yrot; // temp for testing

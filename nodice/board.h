@@ -23,6 +23,7 @@
 #include "nodice/config.h"
 #include "nodice/maths.h"
 #include "nodice/object.h"
+#include <utility>
 #include <vector>
 
 
@@ -38,7 +39,6 @@ namespace NoDice
 	public:
 		Board(const Config& config);
 
-		ObjectPtr& at(int x, int y);
 		const ObjectPtr& at(int x, int y) const;
 
 		void update();
@@ -47,11 +47,20 @@ namespace NoDice
 		void startSwap(Vector2i objPos1, Vector2i objPos2);
 		void unSwap();
 		bool isSwapping() const;
+		bool isReplacing() const;
 
-		bool findWins();
+		int findWins();
 
 	private:
-		typedef std::vector<ObjectPtr> ObjectBag;
+		ObjectPtr& at(const Vector2i& point);
+
+	private:
+		typedef std::vector<ObjectPtr>        ObjectBag;
+		typedef std::vector<Vector2i>         RemovalQueue;
+		typedef std::pair<Vector2i, Vector2i> MovePair;
+		typedef std::vector<MovePair>         FallingQueue;
+		typedef std::vector<Vector2i>         CreateQueue;
+
 		enum State
 		{
 			state_idle,
@@ -60,11 +69,14 @@ namespace NoDice
 			state_falling
 		};
 
-		Config    m_config;
-		ObjectBag m_objects;
-		State     m_state;
-		float     m_swapStep;
-		Vector2i  m_swapObj[2];
+		Config       m_config;
+		ObjectBag    m_objects;
+		State        m_state;
+		float        m_swapStep;
+		Vector2i     m_swapObj[2];
+		RemovalQueue m_removalQueue;
+		FallingQueue m_fallingQueue;
+		CreateQueue  m_createQueue;
 	};
 } // namespace NoDice
 

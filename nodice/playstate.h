@@ -47,8 +47,7 @@ namespace NoDice
 			state_idle,
 			state_swapping,
 			state_unswapping,
-			state_removing,
-			state_dropping,
+			state_replacing,
 			state_rotating,
 			state_end
 		};
@@ -58,6 +57,7 @@ namespace NoDice
 		bool     m_mouseIsDown;
 		Vector2i m_mouseDownPos;
 		Vector2i m_selectedPos;
+		int      m_curWins;
 	};
 
 } // namespace noDice

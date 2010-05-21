@@ -46,6 +46,7 @@ PlayState(Config& config)
 , m_state(state_idle)
 , m_gameboard(config)
 , m_mouseIsDown(false)
+, m_curWins(0)
 {
 }
 
@@ -146,9 +147,10 @@ update(App& app)
 		{
 			if (!m_gameboard.isSwapping())
 			{
-				if (m_gameboard.findWins())
+				m_curWins = m_gameboard.findWins();
+				if (m_curWins)
 				{
-					m_state = state_removing;
+					m_state = state_replacing;
 				}
 				else
 				{
@@ -168,15 +170,22 @@ update(App& app)
 			break;
 		}
 
-		case state_removing:
+		case state_replacing:
 		{
-			m_state = state_dropping; // temp. for now
-			break;
-		}
-
-		case state_dropping:
-		{
-			m_state = state_idle; // temp. for now
+			if (!m_gameboard.isReplacing())
+			{
+				int wins = m_gameboard.findWins();
+				if (wins)
+				{
+					m_curWins += wins;
+					m_state = state_replacing;
+				}
+				else
+				{
+					m_curWins = 0;
+					m_state = state_idle;
+				}
+			}
 			break;
 		}
 	}
