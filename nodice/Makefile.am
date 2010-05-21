@@ -46,7 +46,7 @@ no_dice_SOURCES = \
 	font.h             font.cpp \
 	gamestate.h        gamestate.cpp \
 	introstate.h       introstate.cpp \
-	maths,h \
+	maths.h \
 	object.h           object.cpp \
 	opengl.h           opengl.cpp \
 	playstate.h        playstate.cpp \
