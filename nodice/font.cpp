@@ -277,8 +277,6 @@ void NoDice::Font::print(GLfloat x, GLfloat y, GLfloat scale, const std::string&
 NoDice::Font& NoDice::
 getFont(const std::string& typefaceName, unsigned int pointSize)
 {
-	std::cerr << __PRETTY_FUNCTION__ << "("
-		        << typefaceName << ", " << pointSize << ")\n";
 	typedef std::map<std::string, Font> FontCache;
 	static FontCache s_fontCache;
 
