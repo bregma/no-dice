@@ -23,6 +23,7 @@
 #include "nodice/gamestate.h"
 
 #include "nodice/board.h"
+#include "nodice/maths.h"
 
 namespace NoDice
 {
@@ -55,8 +56,8 @@ namespace NoDice
 		SubState m_state;
 		Board    m_gameboard;
 		bool     m_mouseIsDown;
-		int      m_selectedX;
-		int      m_selectedY;
+		Vector2i m_mouseDownPos;
+		Vector2i m_selectedPos;
 	};
 
 } // namespace noDice

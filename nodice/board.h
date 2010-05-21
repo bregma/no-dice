@@ -42,7 +42,7 @@ namespace NoDice
 		void update();
 		void draw() const;
 
-		void startSwap(int x1, int y1, int x2, int y2);
+		void startSwap(Vector2i objPos1, Vector2i objPos2);
 		bool isSwapping() const;
 
 		bool findWins();

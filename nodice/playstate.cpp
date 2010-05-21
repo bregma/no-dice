@@ -32,6 +32,11 @@ namespace
 	static const GLfloat far  = 10.0f;
 	static const NoDice::Vector3f board_scale(1.0f/12.0f, 1.0f/12.0f, 1.0f/12.0f);
 	static const NoDice::Vector3f board_pos(-4.0f, -6.0f, -2.0f);
+	static const NoDice::Vector4f lightAmbient(0.2f, 0.2f, 0.2f, 1.0f);
+	static const NoDice::Vector4f lightDiffuse(0.8f, 0.8f, 0.8f, 1.0f);
+	static const NoDice::Vector4f lightPosition(2.0f, 2.0f, 3.0f, 0.0f);
+	static const NoDice::Vector3f lightDirection(-2.0f, -2.0f, -3.0f);
+	static const int mouseMoveThreshold = 20;
 } // anonymous namespace
 
 
@@ -56,28 +61,31 @@ pointerMove(int x, int y, int dx, int dy)
 {
 	if (m_mouseIsDown && m_state != state_swapping)
 	{
-		int x2 = m_selectedX;
-		int y2 = m_selectedY;
+		Vector2i d = m_mouseDownPos - Vector2i(x, y);
+		if (d.lengthSquared() < mouseMoveThreshold * mouseMoveThreshold)
+			return;
+
+		Vector2i pos2 = m_selectedPos;
 		if (std::abs(dx) > std::abs(dy))
 		{
-			if (dx < 0 && m_selectedX >= 0)
-					--x2;
-			else if (m_selectedX < m_config.boardSize())
-					++x2;
+			if (dx < 0 && m_selectedPos.x > 0)
+					--pos2.x;
+			else if (m_selectedPos.x < m_config.boardSize()-1)
+					++pos2.x;
 			else
 				return;
 		}
 		else
 		{
-			if (dy < 0 && m_selectedY >= 0)
-					--y2;
-			else if (m_selectedY < m_config.boardSize())
-					++y2;
+			if (dy > 0 && m_selectedPos.y > 0)
+					--pos2.y;
+			else if (m_selectedPos.y < m_config.boardSize()-1)
+					++pos2.y;
 			else
 				return;
 		}
 		m_state = state_swapping;
-		m_gameboard.startSwap(m_selectedX, m_selectedY, x2, y2);
+		m_gameboard.startSwap(m_selectedPos, pos2);
 	}
 }
 
@@ -88,9 +96,11 @@ pointerClick(int x, int y, PointerAction action)
 	if (action == pointerUp)
 	{
 		m_mouseIsDown = false;
+		m_mouseDownPos.set(0, 0);
 	}
 	else if (action == pointerDown)
 	{
+		m_mouseDownPos.set(x, y);
 		float win_width = float(m_config.screenWidth()) / 2.0f;
 		float win_height = float(m_config.screenHeight()) / 2.0f;
 		float unit_x = float(x - win_width) / win_width;
@@ -111,14 +121,14 @@ pointerClick(int x, int y, PointerAction action)
 
 		Vector4f ray(unit_x, unit_y, 0.0f, 1.0f);
 		Vector4f beam = unprojection * ray;
-		m_selectedX = int(beam.x / 2.0f + 0.50f);
-		m_selectedY = int(beam.y / 2.0f + 0.50f);
-		if (m_selectedX >= m_config.boardSize() || m_selectedX < 0)
+		m_selectedPos.x = int(beam.x / 2.0f + 0.50f);
+		m_selectedPos.y = int(beam.y / 2.0f + 0.50f);
+		if (m_selectedPos.x >= m_config.boardSize() || m_selectedPos.x < 0)
 			return;
-		if (m_selectedY >= m_config.boardSize() || m_selectedY < 0)
+		if (m_selectedPos.y >= m_config.boardSize() || m_selectedPos.y < 0)
 			return;
 
-		ObjectPtr obj = m_gameboard.at(m_selectedX, m_selectedY);
+		ObjectPtr obj = m_gameboard.at(m_selectedPos.x, m_selectedPos.y);
 		obj->setHighlight(true);
 
 		m_mouseIsDown = true;
@@ -142,11 +152,6 @@ update(App& app)
 	}
 }
 
-
-GLfloat lightAmbient[] = { 0.2f, 0.2f, 0.2f, 1.0f };
-GLfloat lightDiffuse[] = { 0.8f, 0.8f, 0.8f, 1.0f };
-GLfloat lightPosition[] = { 2.0f, 2.0f, 3.0f, 0.0f };
-GLfloat lightDirection[] = { -2.0f, -2.0f, -3.0f };
 
 void NoDice::PlayState::
 draw(Video& video) 
@@ -181,11 +186,11 @@ draw(Video& video)
 
 	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, white.rgba);
 	glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 20.0f);
-	glLightfv(GL_LIGHT0, GL_AMBIENT, lightAmbient);
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, lightDiffuse);
+	glLightfv(GL_LIGHT0, GL_AMBIENT, lightAmbient.rgba);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, lightDiffuse.rgba);
 	glLightfv(GL_LIGHT0, GL_SPECULAR, white.rgba);
-	glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
-	glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, lightDirection);
+	glLightfv(GL_LIGHT0, GL_POSITION, lightPosition.xyzw);
+	glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, lightDirection.xyz);
 	glLightf(GL_LIGHT0, GL_SPOT_CUTOFF, 1.2f);
 	glLightf(GL_LIGHT0, GL_SPOT_EXPONENT, 20.0f);
 

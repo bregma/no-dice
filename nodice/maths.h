@@ -30,6 +30,7 @@
 namespace NoDice
 {
 	using vmml::Vector2f;
+	using vmml::Vector2i;
 	using vmml::Vector3f;
 	using vmml::Vector4f;
 	using vmml::Matrix4f;

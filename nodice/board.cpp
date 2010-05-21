@@ -95,14 +95,16 @@ draw() const
 
 
 void NoDice::Board::
-startSwap(int x1, int y1, int x2, int y2)
+startSwap(NoDice::Vector2i pos1, NoDice::Vector2i pos2)
 {
-	ObjectPtr obj1 = at(x1, y1);
-	ObjectPtr obj2 = at(x2, y2);
-	Vector3f v1(float(x2-x1) / swap_factor, float(y2-y1) / swap_factor, 0.0f);
-	Vector3f v2(float(x1-x2) / swap_factor, float(y1-y2) / swap_factor, 0.0f);
-	obj1->setVelocity(v1);
-	obj2->setVelocity(v2);
+	ObjectPtr obj1 = at(pos1.x, pos1.y);
+	ObjectPtr obj2 = at(pos2.x, pos2.y);
+	obj1->setVelocity(Vector3f(float(pos2.x-pos1.x) / swap_factor,
+	                           float(pos2.y-pos1.y) / swap_factor,
+	                           0.0f));
+	obj2->setVelocity(Vector3f(float(pos1.x-pos2.x) / swap_factor,
+	                           float(pos1.y-pos2.y) / swap_factor,
+	                           0.0f));
 	m_swapStep = 0.0f;
 	m_state = state_swapping;
 }
