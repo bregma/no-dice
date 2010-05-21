@@ -25,7 +25,8 @@
 
 namespace
 {
-	static float swap_factor = 10.0f;
+	static const float swap_factor = 10.0f;
+	static const float swap_step = 0.5f;
 } // anonymous namespace
 
 
@@ -45,11 +46,14 @@ Board(const NoDice::Config& config)
 }
 
 
+NoDice::ObjectPtr&  NoDice::Board::
+at(int x, int y)
+{ return m_objects[x + y * m_config.boardSize()]; }
+
+
 const NoDice::ObjectPtr&  NoDice::Board::
 at(int x, int y) const
-{
-	return m_objects[x + y * m_config.boardSize()];
-}
+{ return m_objects[x + y * m_config.boardSize()]; }
 
 
 void NoDice::Board::
@@ -61,11 +65,13 @@ update()
 	{
 		(*it)->update();
 	}
+
 	if (m_state == state_swapping)
 	{
-		m_swapStep += 0.5f;
+		m_swapStep += swap_step;
 		if (m_swapStep > swap_factor)
 		{
+			at(m_swapObj[0].x, m_swapObj[0].y).swap(at(m_swapObj[1].x, m_swapObj[1].y));
 			for (ObjectBag::iterator it = m_objects.begin();
 			     it != m_objects.end();
 			     ++it)
@@ -97,6 +103,8 @@ draw() const
 void NoDice::Board::
 startSwap(NoDice::Vector2i pos1, NoDice::Vector2i pos2)
 {
+	m_swapObj[0] = pos1;
+	m_swapObj[1] = pos2;
 	ObjectPtr obj1 = at(pos1.x, pos1.y);
 	ObjectPtr obj2 = at(pos2.x, pos2.y);
 	obj1->setVelocity(Vector3f(float(pos2.x-pos1.x) / swap_factor,
@@ -108,6 +116,14 @@ startSwap(NoDice::Vector2i pos1, NoDice::Vector2i pos2)
 	m_swapStep = 0.0f;
 	m_state = state_swapping;
 }
+
+
+void NoDice::Board::
+unSwap()
+{
+	startSwap(m_swapObj[1], m_swapObj[0]);
+}
+
 
 bool NoDice::Board::
 isSwapping() const

@@ -140,14 +140,44 @@ void NoDice::PlayState::
 update(App& app)
 {
 	m_gameboard.update();
-	if (m_state == state_swapping)
+	switch (m_state)
 	{
-		if (!m_gameboard.isSwapping())
+		case state_swapping:
 		{
-			if (m_gameboard.findWins())
+			if (!m_gameboard.isSwapping())
 			{
+				if (m_gameboard.findWins())
+				{
+					m_state = state_removing;
+				}
+				else
+				{
+					m_gameboard.unSwap();
+					m_state = state_unswapping;
+				}
 			}
-			m_state = state_idle;
+			break;
+		}
+
+		case state_unswapping:
+		{
+			if (!m_gameboard.isSwapping())
+			{
+				m_state = state_idle; // temp. for now
+			}
+			break;
+		}
+
+		case state_removing:
+		{
+			m_state = state_dropping; // temp. for now
+			break;
+		}
+
+		case state_dropping:
+		{
+			m_state = state_idle; // temp. for now
+			break;
 		}
 	}
 }

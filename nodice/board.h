@@ -21,6 +21,7 @@
 #define NODICE_BOARD_H 1
 
 #include "nodice/config.h"
+#include "nodice/maths.h"
 #include "nodice/object.h"
 #include <vector>
 
@@ -37,12 +38,14 @@ namespace NoDice
 	public:
 		Board(const Config& config);
 
+		ObjectPtr& at(int x, int y);
 		const ObjectPtr& at(int x, int y) const;
 
 		void update();
 		void draw() const;
 
 		void startSwap(Vector2i objPos1, Vector2i objPos2);
+		void unSwap();
 		bool isSwapping() const;
 
 		bool findWins();
@@ -53,6 +56,7 @@ namespace NoDice
 		{
 			state_idle,
 			state_swapping,
+			state_removing,
 			state_falling
 		};
 
@@ -60,6 +64,7 @@ namespace NoDice
 		ObjectBag m_objects;
 		State     m_state;
 		float     m_swapStep;
+		Vector2i  m_swapObj[2];
 	};
 } // namespace NoDice
 
