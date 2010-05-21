@@ -222,6 +222,12 @@ void NoDice::Font::print(GLfloat x, GLfloat y, GLfloat scale, const std::string&
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
+	static const int coords_per_vertex = 2;
+	static const int coords_per_texture = 2;
+	static const int row_width = coords_per_vertex + coords_per_texture;
+
+	// Two coords per vertex, two coords per texture, three vertexes for first
+	// triangle, one for second triangle = (2 + 2) * (3 + 1) = 16.
 	GLfloat varray[16];
 	for (std::string::const_iterator it = text.begin(); it != text.end(); ++it)
 	{
@@ -244,8 +250,10 @@ void NoDice::Font::print(GLfloat x, GLfloat y, GLfloat scale, const std::string&
 		varray[14] = m_glyph[c].s + m_glyph[c].w;
 		varray[15] = m_glyph[c].t;
 
-		glVertexPointer(2, GL_FLOAT, 4*sizeof(GLfloat), varray);
-		glTexCoordPointer(2, GL_FLOAT, 4*sizeof(GLfloat), ((char*)varray) + 2*sizeof(GLfloat));
+		static const int stride = row_width * sizeof(varray[0]);
+
+		glVertexPointer(coords_per_vertex, GL_FLOAT, stride, varray);
+		glTexCoordPointer(coords_per_texture, GL_FLOAT, stride, ((char*)varray) + 2*sizeof(GLfloat));
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 		check_gl_error("glDrawArrays");
 

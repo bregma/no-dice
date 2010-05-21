@@ -98,7 +98,7 @@ draw() const
 	glEnableClientState(GL_NORMAL_ARRAY);
 	glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
 	glNormalPointer(GL_FLOAT, stride, shape_normals);
-	glVertexPointer(3, GL_FLOAT, stride, shape_verteces);
+	glVertexPointer(coords_per_vertex, GL_FLOAT, stride, shape_verteces);
 	glDrawArrays(GL_TRIANGLES, 0, m_vertexCount);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glDisableClientState(GL_NORMAL_ARRAY);
