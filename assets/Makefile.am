@@ -18,7 +18,7 @@
 ## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 ##
 
-data_DATA = \
+dist_data_DATA = \
 	FreeSans.ttf \
 	spindle.ttf
 
