@@ -27,6 +27,7 @@
 
 namespace NoDice
 {
+	class Font;
 
 	class PlayState
 	: public GameState
@@ -54,10 +55,13 @@ namespace NoDice
 
 		SubState m_state;
 		Board    m_gameboard;
+		Font&    m_scoreFont;
 		bool     m_mouseIsDown;
 		Vector2i m_mouseDownPos;
 		Vector2i m_selectedPos;
 		int      m_curWins;
+		int      m_score;
+
 	};
 
 } // namespace noDice

@@ -19,8 +19,11 @@
  */
 #include "nodice/playstate.h"
 
+#include <iomanip>
 #include <iostream>
+#include <sstream>
 #include "nodice/colour.h"
+#include "nodice/font.h"
 #include "nodice/object.h"
 #include "nodice/shape.h"
 #include "nodice/video.h"
@@ -45,8 +48,10 @@ PlayState(Config& config)
 : GameState(config)
 , m_state(state_idle)
 , m_gameboard(config)
+, m_scoreFont(getFont("FreeSans", config.screenHeight() / 18))
 , m_mouseIsDown(false)
 , m_curWins(0)
+, m_score(0)
 {
 }
 
@@ -177,11 +182,13 @@ update(App& app)
 				int wins = m_gameboard.findWins();
 				if (wins)
 				{
+					m_score += m_curWins;
 					m_curWins += wins;
 					m_state = state_replacing;
 				}
 				else
 				{
+					m_score += m_curWins;
 					m_curWins = 0;
 					m_state = state_idle;
 				}
@@ -241,6 +248,11 @@ draw(Video& video)
 	m_gameboard.draw();
 
 	glPopMatrix();
+
+	std::ostringstream ostr;
+	ostr << std::setw(5) << std::setfill('0') << m_score;
+	m_scoreFont.print(10.0f, 300.0f, 1.0f, ostr.str());
+	check_gl_error("playstate END");
 }
 
 
