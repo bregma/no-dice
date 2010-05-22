@@ -297,7 +297,7 @@ getFont(const std::string& typefaceName, unsigned int pointSize)
 		return  it->second;
 	}
 	ostr.str("");
-	ostr << DATA_DIR << "assets/spindle.ttf";
+	ostr << DATA_DIR << "assets/" << typefaceName << ".ttf";
 	std::string fileName = ostr.str();
 	std::pair<FontCache::iterator,bool> p = s_fontCache.insert(
 											std::make_pair(fontKey, Font(fileName, pointSize)));
