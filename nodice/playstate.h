@@ -61,7 +61,7 @@ namespace NoDice
 		Vector2i m_selectedPos;
 		int      m_curWins;
 		int      m_score;
-
+		Matrix4f m_unproject;
 	};
 
 } // namespace noDice

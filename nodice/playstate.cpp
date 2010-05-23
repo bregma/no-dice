@@ -53,6 +53,34 @@ PlayState(Config& config)
 , m_curWins(0)
 , m_score(0)
 {
+	// generate unproject matrix
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	int w = m_config.screenWidth();
+	int h = m_config.screenHeight();
+	float right = 1.0f;
+	float top   = 1.0f;
+	if (h < w)
+		top = float(h) / float(w);
+	else
+		right = float(w) / float(h);
+#ifdef HAVE_OPENGL_ES
+	glFrustumf(-right, right, -top, top, near, far);
+#else
+	glOrtho(-right, right, -top, top, near, far);
+#endif
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
+	glLoadIdentity();
+	glScalef(board_scale.x, board_scale.y, board_scale.z);
+	glTranslatef(board_pos.x, board_pos.y, board_pos.z);
+	Matrix4f projection;
+	glGetFloatv(GL_PROJECTION_MATRIX, projection.array);
+	Matrix4f modelview;
+	glGetFloatv(GL_MODELVIEW_MATRIX, modelview.array);
+	(projection * modelview).getInverse(m_unproject);
+	glPopMatrix();
+	glPopMatrix();
 }
 
 
@@ -112,21 +140,8 @@ pointerClick(int x, int y, PointerAction action)
 		float unit_x = float(x - win_width) / win_width;
 		float unit_y = -float(y - win_height) / win_height;
 
-		glMatrixMode(GL_MODELVIEW);
-		glPushMatrix();
-		glLoadIdentity();
-		glScalef(board_scale.x, board_scale.y, board_scale.z);
-		glTranslatef(board_pos.x, board_pos.y, board_pos.z);
-			Matrix4f projection;
-			glGetFloatv(GL_PROJECTION_MATRIX, projection.array);
-			Matrix4f modelview;
-			glGetFloatv(GL_MODELVIEW_MATRIX, modelview.array);
-			Matrix4f unprojection;
-			(projection * modelview).getInverse(unprojection);
-		glPopMatrix();
-
 		Vector4f ray(unit_x, unit_y, 0.0f, 1.0f);
-		Vector4f beam = unprojection * ray;
+		Vector4f beam = m_unproject * ray;
 		m_selectedPos.x = int(beam.x / 2.0f + 0.50f);
 		m_selectedPos.y = int(beam.y / 2.0f + 0.50f);
 		if (m_selectedPos.x >= m_config.boardSize() || m_selectedPos.x < 0)
