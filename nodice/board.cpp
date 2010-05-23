@@ -229,9 +229,9 @@ findWins()
 	int number_of_wins = 0;
 
 	// check for 3-in-a-row
-	for (int y = 0; y < 8; ++y)
+	for (int y = 0; y < m_config.boardSize(); ++y)
 	{
-		for (int x = 0; x < 5; ++x)
+		for (int x = 0; x < m_config.boardSize()-2; ++x)
 		{
 			const Vector2i p1(x+0, y);
 			const Vector2i p2(x+1, y);
@@ -250,9 +250,9 @@ findWins()
 	}
 
 	// check for 3-in-a-column
-	for (int x = 0; x < 8; ++x)
+	for (int x = 0; x < m_config.boardSize(); ++x)
 	{
-		for (int y = 0; y < 5; ++y)
+		for (int y = 0; y < m_config.boardSize()-2; ++y)
 		{
 			const Vector2i p1(x, y+0);
 			const Vector2i p2(x, y+1);
