@@ -266,6 +266,7 @@ draw(Video& video)
 
 	std::ostringstream ostr;
 	ostr << std::setw(5) << std::setfill('0') << m_score;
+	glColor4fv(white.rgba);
 	m_scoreFont.print(10.0f, 300.0f, 1.0f, ostr.str());
 	check_gl_error("playstate END");
 }
