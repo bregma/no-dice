@@ -62,8 +62,8 @@ VideoContextSDL(Config& config)
 		exit(1);
 	}
 
-	int width = config.screenWidth();
-	int height = config.screenHeight();
+	int width = config.isFullscreen() ? videoInfo->current_w : config.screenWidth();
+	int height = config.isFullscreen() ? videoInfo->current_h : config.screenHeight();
 	if (modes == (SDL_Rect **)-1)
 	{
 		std::cerr << "==smw> all video resolutions available.\n";
