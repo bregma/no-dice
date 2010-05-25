@@ -1,0 +1,35 @@
+#!/usr/bin/make -f
+#
+# DEB packaging rules
+#
+# Copyright 2010 Stephen M. Webb  <stephen.webb@bregmasoft.ca>
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of Version 2 of the GNU General Public License as
+# published by the Free Software Foundation.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#
+
+# Follow DEB packaging policy as much as possible.
+%:
+	dh $@
+
+# Override the default bindir and datarootdir to comply with FHS.
+override_dh_auto_configure:
+	./bootstrap
+	dh_auto_configure -- \
+		-bindir=\$${prefix}/games \
+		-datarootdir=\$${prefix}/share/games
+
+# Override the default strip to provide a separate dbg symbol package.
+override_dh_strip:
+	dh_strip --dbg-package=no-dice-dbg
+

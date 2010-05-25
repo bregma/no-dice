@@ -354,11 +354,15 @@ getFont(const std::string& typefaceName, unsigned int pointSize)
 	{
 		return  it->second;
 	}
-	ostr.str("");
-	ostr << DATA_DIR << "assets/" << typefaceName << ".ttf";
-	std::string fileName = ostr.str();
+
+	// allow in-build-directory to take precedence
+	std::string filename = "./assets/" + typefaceName + ".ttf";
+	if (access(filename.c_str(), R_OK) != 0)
+	{
+		filename = DATA_DIR + std::string("/") + typefaceName + ".ttf";
+	}
 	std::pair<FontCache::iterator,bool> p = s_fontCache.insert(
-											std::make_pair(fontKey, Font(fileName, pointSize)));
+											std::make_pair(fontKey, Font(filename, pointSize)));
 	return p.first->second;
 }
 

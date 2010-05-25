@@ -20,10 +20,6 @@
 
 AM_CXXFLAGS = -W -Wall -Wextra 
 
-bindir = /usr/games
-datadir = /usr/share/games/no-dice/data
-
-
 bin_PROGRAMS = no-dice
 
 if HAVE_EGL
@@ -59,6 +55,7 @@ no_dice_CXXFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/include \
 	-DHAVE_GL_VERTEX_BUFFERS \
+	-DDATA_DIR=\"${pkgdatadir}\" \
 	$(SDL_CFLAGS) \
 	$(FREETYPE_CFLAGS) \
 	$(GL_CFLAGS)

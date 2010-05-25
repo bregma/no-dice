@@ -5,7 +5,7 @@
 #
 AC_PREREQ(2.61)
 AC_COPYRIGHT([Copyright 2010 Stephen M. Webb  <stephen.webb@bregmasoft.com>])
-AC_INIT(no-dice, 0.1, stephen.webb@bregmasoft.com)
+AC_INIT(no-dice, 0.2, stephen.webb@bregmasoft.com)
 AC_CONFIG_AUX_DIR(config)
 AC_CONFIG_MACRO_DIR(config)
 AC_CANONICAL_TARGET
