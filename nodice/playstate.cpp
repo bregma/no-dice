@@ -34,7 +34,7 @@ namespace
 	static const GLfloat near =  0.0f;
 	static const GLfloat far  = 10.0f;
 	static const NoDice::Vector3f board_scale(1.0f/12.0f, 1.0f/12.0f, 1.0f/12.0f);
-	static const NoDice::Vector3f board_pos(-4.0f, -6.0f, -2.0f);
+	static const NoDice::Vector3f board_pos(-0.3f, -0.5f, -1.0f);
 	static const NoDice::Vector4f lightAmbient(0.2f, 0.2f, 0.2f, 1.0f);
 	static const NoDice::Vector4f lightDiffuse(0.8f, 0.8f, 0.8f, 1.0f);
 	static const NoDice::Vector4f lightPosition(2.0f, 2.0f, 3.0f, 0.0f);
@@ -72,8 +72,8 @@ PlayState(Config& config)
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
 	glLoadIdentity();
-	glScalef(board_scale.x, board_scale.y, board_scale.z);
 	glTranslatef(board_pos.x, board_pos.y, board_pos.z);
+	glScalef(board_scale.x, board_scale.y, board_scale.z);
 	Matrix4f projection;
 	glGetFloatv(GL_PROJECTION_MATRIX, projection.array);
 	Matrix4f modelview;
@@ -246,7 +246,7 @@ draw(Video& video)
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 
 	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, white.rgba);
-	glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 20.0f);
+	glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 60.0f);
 	glLightfv(GL_LIGHT0, GL_AMBIENT, lightAmbient.rgba);
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, lightDiffuse.rgba);
 	glLightfv(GL_LIGHT0, GL_SPECULAR, white.rgba);
@@ -258,8 +258,8 @@ draw(Video& video)
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
 	glLoadIdentity();
-	glScalef(board_scale.x, board_scale.y, board_scale.z);
 	glTranslatef(board_pos.x, board_pos.y, board_pos.z);
+	glScalef(board_scale.x, board_scale.y, board_scale.z);
 	m_gameboard.draw();
 
 	glPopMatrix();
