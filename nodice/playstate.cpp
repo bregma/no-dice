@@ -55,6 +55,7 @@ PlayState(Config& config)
 {
 	// generate unproject matrix
 	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();
 	glLoadIdentity();
 	int w = m_config.screenWidth();
 	int h = m_config.screenHeight();
@@ -80,6 +81,7 @@ PlayState(Config& config)
 	glGetFloatv(GL_MODELVIEW_MATRIX, modelview.array);
 	(projection * modelview).getInverse(m_unproject);
 	glPopMatrix();
+	glMatrixMode(GL_PROJECTION);
 	glPopMatrix();
 }
 
@@ -219,6 +221,7 @@ draw(Video& video)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();
 	glLoadIdentity();
 
 	// Adjust projection to take aspect ratio into account.
@@ -261,7 +264,9 @@ draw(Video& video)
 	glTranslatef(board_pos.x, board_pos.y, board_pos.z);
 	glScalef(board_scale.x, board_scale.y, board_scale.z);
 	m_gameboard.draw();
+	glPopMatrix();
 
+	glMatrixMode(GL_PROJECTION);
 	glPopMatrix();
 
 	std::ostringstream ostr;

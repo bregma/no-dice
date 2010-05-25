@@ -265,6 +265,10 @@ print(GLfloat x, GLfloat y, GLfloat scale, const std::string& text)
 	glOrtho(viewport[0], viewport[2], viewport[1], viewport[3], -1.0f, 1.0f);
 #endif
 
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
+	glLoadIdentity();
+
 	glDisable(GL_DEPTH_TEST);
 	glBindTexture(GL_TEXTURE_2D, m_texture);
 	glEnable(GL_BLEND);
@@ -318,6 +322,8 @@ print(GLfloat x, GLfloat y, GLfloat scale, const std::string& text)
 	glDisable(GL_TEXTURE_2D);
 	glEnable(GL_DEPTH_TEST);
 
+	glMatrixMode(GL_MODELVIEW);
+	glPopMatrix();
 	glMatrixMode(GL_PROJECTION);
 	glPopMatrix();
 }
