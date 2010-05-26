@@ -1,6 +1,6 @@
 Source: no-dice
-Section: libs
-Priority: optional
+Section: games
+Priority: extra
 Maintainer: Stephen M. Webb <stephen.webb@bregasoft.ca>
 Build-Depends: debhelper (>= 7), autoconf (>= 2.61), automake (>= 1.9), pkg-config (>= 0.22), libsdl1.2-dev (>= 1.2.13), libgl1-mesa-dev, libfreetype6-dev (>= 2.3)
 Standards-Version: 3.7.2
