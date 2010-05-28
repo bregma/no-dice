@@ -93,8 +93,16 @@ VideoContextSDL(Config& config)
 			if (config.isDebugMode())
 				std::cerr << ".. mode " << width << "x" << height
 				          << "not found, falling back to default.\n";
-			width = modes[0]->w;
-			height = modes[0]->h;
+			if (config.isSmallWindow())
+			{
+				width = 640;
+				height = 480;
+			}
+			else
+			{
+				width = modes[0]->w;
+				height = modes[0]->h;
+			}
 		}
 	}
 	if (config.isDebugMode())

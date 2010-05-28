@@ -63,6 +63,7 @@ Config(int argc, char* argv[])
 : m_isDirty(false)
 , m_isDebugMode(false)
 , m_isFullscreen(false)
+, m_isSmallWindow(false)
 , m_screenWidth(640)
 , m_screenHeight(480)
 , m_boardSize(8)
@@ -83,6 +84,12 @@ Config(int argc, char* argv[])
 				case 'f':
 				{
 					m_isFullscreen = true;
+					break;
+				}
+
+				case 'w':
+				{
+					m_isSmallWindow = true;
 					break;
 				}
 
@@ -120,6 +127,13 @@ bool NoDice::Config::
 isFullscreen() const
 {
 	return m_isFullscreen;
+}
+
+
+bool NoDice::Config::
+isSmallWindow() const
+{
+	return m_isSmallWindow;
 }
 
 

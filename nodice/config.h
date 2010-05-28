@@ -40,6 +40,9 @@ namespace NoDice
 		/** Indicates if fullscreen mode is active. */
 		bool isFullscreen() const;
 
+		/** Indicates if (text mode) small window mode is set. */
+		bool isSmallWindow() const;
+
 		/** Gets the currently selected screen width (in pixels). */
 		int  screenWidth() const;
 		void setScreenWidth(int w);
@@ -58,6 +61,7 @@ namespace NoDice
 		bool  m_isDirty;
 		bool  m_isDebugMode;
 		bool  m_isFullscreen;
+		bool  m_isSmallWindow;
 		int   m_screenWidth;
 		int   m_screenHeight;
 		int   m_boardSize;
