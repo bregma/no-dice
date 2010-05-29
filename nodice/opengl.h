@@ -66,7 +66,6 @@ PFNGLBUFFERDATAPROC    glBufferData;
 void initGlVboExtension(void);
 
 #ifndef _NDEBUG
-# include <iostream>
 # include <string>
 
 void check_gl_error(const std::string& msg);
