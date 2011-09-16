@@ -1,16 +1,22 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 #
-# Copyright 2009, 2010 Stephen M. Webb  <stephen.webb@bregmasoft.com>
+# Copyright 2009, 2010, 2011 Stephen M. Webb  <stephen.webb@bregmasoft.com>
 #
-AC_PREREQ(2.61)
-AC_COPYRIGHT([Copyright 2010 Stephen M. Webb  <stephen.webb@bregmasoft.com>])
-AC_INIT(no-dice, 0.2, stephen.webb@bregmasoft.com)
-AC_CONFIG_AUX_DIR(config)
-AC_CONFIG_MACRO_DIR(config)
-AC_CANONICAL_TARGET
-AM_INIT_AUTOMAKE([gnu 1.9 -Wno-syntax -Wall])
+AC_PREREQ(2.65)
+AC_COPYRIGHT([
+  Copyright 2010, 2011 Stephen M. Webb  <stephen.webb@bregmasoft.com>
+  ])
+AC_INIT([no-dice],
+        [0.2],
+        [stephen.webb@bregmasoft.com])
+AC_CONFIG_AUX_DIR(config.aux)
+AC_CONFIG_MACRO_DIR(config.m4)
+
 AC_CONFIG_HEADER([nodice_config.h])
+
+AM_INIT_AUTOMAKE([gnu 1.11 -Wno-syntax -Wall])
+AM_SILENT_RULES([yes])
 
 # Checks for tools.
 AC_PROG_CXX
