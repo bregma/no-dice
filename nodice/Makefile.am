@@ -20,7 +20,9 @@
 
 AM_CXXFLAGS = -W -Wall -Wextra 
 
-bin_PROGRAMS = no-dice
+gamedir = ${prefix}/games
+
+game_PROGRAMS = no-dice
 
 if HAVE_EGL
 vcontext_SOURCES = videocontextegl.h videocontextegl.cpp
