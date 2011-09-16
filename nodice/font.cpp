@@ -343,26 +343,30 @@ print(GLfloat x, GLfloat y, GLfloat scale, const std::string& text)
 NoDice::Font& NoDice::
 getFont(const std::string& typefaceName, unsigned int pointSize)
 {
-	typedef std::map<std::string, Font> FontCache;
-	static FontCache s_fontCache;
+  typedef std::map<std::string, Font> FontCache;
+  static FontCache s_fontCache;
 
-	std::ostringstream ostr;
-	ostr << typefaceName << '_' << pointSize;
-	std::string fontKey = ostr.str();
-	FontCache::iterator it = s_fontCache.find(fontKey);
-	if (it != s_fontCache.end())
-	{
-		return  it->second;
-	}
+  std::ostringstream ostr;
+  ostr << typefaceName << '_' << pointSize;
+  std::string fontKey = ostr.str();
+  FontCache::iterator it = s_fontCache.find(fontKey);
+  if (it != s_fontCache.end())
+  {
+    return  it->second;
+  }
 
-	// allow in-build-directory to take precedence
-	std::string filename = "./assets/" + typefaceName + ".ttf";
-	if (access(filename.c_str(), R_OK) != 0)
-	{
-		filename = DATA_DIR + std::string("/") + typefaceName + ".ttf";
-	}
-	std::pair<FontCache::iterator,bool> p = s_fontCache.insert(
-											std::make_pair(fontKey, Font(filename, pointSize)));
-	return p.first->second;
+  // allow in-build-directory to take precedence
+  std::string filename = "./assets/" + typefaceName + ".ttf";
+  if (!access(filename.c_str(), R_OK))
+  {
+    filename = DATA_DIR + std::string("/") + typefaceName + ".ttf";
+    if (!access(filename.c_str(), R_OK))
+    {
+      filename = typefaceName;
+    }
+  }
+  std::pair<FontCache::iterator,bool> p = s_fontCache.insert(
+                std::make_pair(fontKey, Font(filename, pointSize)));
+  return p.first->second;
 }
 
