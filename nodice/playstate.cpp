@@ -28,6 +28,8 @@
 #include "nodice/shape.h"
 #include "nodice/video.h"
 
+#define SCORE_FONT "FreeSans"
+
 
 namespace
 {
@@ -48,7 +50,7 @@ PlayState(Config& config)
 : GameState(config)
 , m_state(state_idle)
 , m_gameboard(config)
-, m_scoreFont(getFont("FreeSans", config.screenHeight() / 18))
+, m_scoreFont(getFont(SCORE_FONT, config.screenHeight() / 18))
 , m_mouseIsDown(false)
 , m_curWins(0)
 , m_score(0)

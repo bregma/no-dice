@@ -24,6 +24,9 @@
 #include "nodice/playstate.h"
 #include "nodice/video.h"
 
+#define MENU_FONT "spindle"
+
+
 namespace 
 {
 	struct MenuEntry
@@ -53,7 +56,7 @@ NoDice::IntroState::
 IntroState(Config& config, const Video& video)
 : GameState(config)
 , m_isActive(true)
-, m_menuFont(getFont("spindle", config.screenHeight() / 18))
+, m_menuFont(getFont(MENU_FONT, config.screenHeight() / 18))
 , m_titlePos(0.25 * config.screenWidth(), 0.75 * config.screenHeight())
 , m_selected(0)
 , m_nextState(next_state_same)
