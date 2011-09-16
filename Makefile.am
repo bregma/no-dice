@@ -20,6 +20,7 @@
 ##
 
 SUBDIRS = nodice assets
+EXTRA_DIST = include
 
 DISTCLEANFILES = \
 	config.h.in~ \
