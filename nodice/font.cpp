@@ -357,10 +357,10 @@ getFont(const std::string& typefaceName, unsigned int pointSize)
 
   // allow in-build-directory to take precedence
   std::string filename = "./assets/" + typefaceName + ".ttf";
-  if (!access(filename.c_str(), R_OK))
+  if (0 != access(filename.c_str(), R_OK))
   {
     filename = DATA_DIR + std::string("/") + typefaceName + ".ttf";
-    if (!access(filename.c_str(), R_OK))
+    if (0 != access(filename.c_str(), R_OK))
     {
       filename = typefaceName;
     }
