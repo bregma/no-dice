@@ -45,7 +45,7 @@ template< typename T >
 class Matrix3
 {
 public:
-    union
+    __extension__ union
     {
         /** This is a mathematical representation of the matrix; 
             this means the naming scheme is the same as in to most 

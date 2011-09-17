@@ -21,14 +21,14 @@ namespace stringUtils
 inline long toInt( const std::string& source )
 {
     return atol( source.c_str() );
-};
+}
 
 
 
 inline double toDouble( const std::string& source )
 {
     return atof( source.c_str() );
-};
+}
 
 
 /* 
@@ -49,7 +49,7 @@ inline bool toString( T source, std::string& target )
     ss << source;
 	target = ss.str();
 	return ( ss.rdstate() & std::stringstream::failbit ) == 0;
-};
+}
 
 
 
@@ -68,7 +68,7 @@ inline bool fromString( const std::string& source, T& target )
     ss << source;
     ss >> target;
 	return ( ss.rdstate() & std::stringstream::failbit ) == 0;
-};
+}
 
 
 

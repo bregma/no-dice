@@ -38,7 +38,7 @@ template< typename T >
 class Vector3
 {
 public:
-    union
+    __extension__ union
     {
         struct
         {

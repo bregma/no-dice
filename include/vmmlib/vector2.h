@@ -30,7 +30,7 @@ template< typename T >
 class Vector2
 {
 public:
-    union
+    __extension__ union
     {
         struct
         {

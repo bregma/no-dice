@@ -17,6 +17,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+#include "nodice_config.h"
 #include "nodice/playstate.h"
 
 #include <iomanip>
@@ -162,7 +163,7 @@ pointerClick(int x, int y, PointerAction action)
 
 
 void NoDice::PlayState::
-update(App& app)
+update(App& app NODICE_UNUSED)
 {
 	m_gameboard.update();
 	switch (m_state)
@@ -214,12 +215,15 @@ update(App& app)
 			}
 			break;
 		}
+
+                default:
+                  break;
 	}
 }
 
 
 void NoDice::PlayState::
-draw(Video& video) 
+draw(Video& video NODICE_UNUSED) 
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glMatrixMode(GL_PROJECTION);

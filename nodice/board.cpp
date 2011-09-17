@@ -161,6 +161,9 @@ update()
 			m_state = state_idle;
 			break;
 		}
+
+                default:
+                  break;
 	}
 }
 

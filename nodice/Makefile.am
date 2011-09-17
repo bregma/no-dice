@@ -18,8 +18,6 @@
 ## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 ##
 
-AM_CXXFLAGS = -W -Wall -Wextra 
-
 gamedir = ${prefix}/games
 
 game_PROGRAMS = no-dice
@@ -53,7 +51,7 @@ no_dice_SOURCES = \
 	videocontext.h \
 	$(vcontext_SOURCES)
 
-no_dice_CXXFLAGS = \
+no_dice_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/include \
 	-DHAVE_GL_VERTEX_BUFFERS \

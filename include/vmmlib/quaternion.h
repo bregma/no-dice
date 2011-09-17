@@ -33,7 +33,7 @@ template < typename T >
 class Quaternion
 {
 public:
-	union
+	__extension__ union
 	{
 		struct
 		{

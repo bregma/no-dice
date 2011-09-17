@@ -37,7 +37,7 @@ template< typename T >
 class Vector4
 {
 public:
-    union
+    __extension__ union
     {
         struct // for homogeneous coordinates
         {

@@ -17,6 +17,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+#include "nodice_config.h"
 #include "nodice/introstate.h"
 
 #include "nodice/app.h"
@@ -53,7 +54,8 @@ namespace
 
 
 NoDice::IntroState::
-IntroState(Config& config, const Video& video)
+IntroState(Config& config,
+           const Video& video NODICE_UNUSED)
 : GameState(config)
 , m_isActive(true)
 , m_menuFont(getFont(MENU_FONT, config.screenHeight() / 18))
@@ -63,7 +65,7 @@ IntroState(Config& config, const Video& video)
 {
 	const float vspacing = -2.0f * m_menuFont.height();
 	entry[0].pos.set(m_titlePos.x, m_titlePos.y + vspacing);
-	for (int i = 1; i < menuCount; ++i)
+	for (std::size_t i = 1; i < menuCount; ++i)
 	{
 		entry[i].pos.set(entry[i-1].pos.x, entry[i-1].pos.y + vspacing);
 	}
@@ -101,7 +103,7 @@ key(SDL_keysym keysym)
 
 		case SDLK_DOWN:
 			++m_selected;
-			if (m_selected >= menuCount)
+			if (std::size_t(m_selected) >= menuCount)
 				m_selected = menuCount-1;
 			break;
 
@@ -121,18 +123,26 @@ key(SDL_keysym keysym)
 		case SDLK_q:
 			m_nextState = next_state_quit;
 			break;
+
+	        default:
+	                break;
 	}
 }
 
 
 void NoDice::IntroState::
-pointerMove(int x, int y, int dx, int dy)
+pointerMove(int x NODICE_UNUSED,
+            int y NODICE_UNUSED,
+            int dx NODICE_UNUSED, 
+            int dy NODICE_UNUSED)
 {
 }
 
 
 void NoDice::IntroState::
-pointerClick(int x, int y, PointerAction action)
+pointerClick(int x NODICE_UNUSED,
+             int y NODICE_UNUSED,
+             PointerAction action NODICE_UNUSED)
 {
 }
 
@@ -157,14 +167,14 @@ update(App& app)
 
 
 void NoDice::IntroState::
-draw(Video& video)
+draw(Video& video NODICE_UNUSED)
 {
 	glColor4fv(titleColour);
 	m_menuFont.print(m_titlePos.x, m_titlePos.y, 1.0f, "No Dice!");
 
-	for (int i = 0; i < menuCount; ++i)
+	for (std::size_t i = 0; i < menuCount; ++i)
 	{
-		if (i == m_selected)
+		if (i == std::size_t(m_selected))
 			glColor4fv(selectedColour);
 		else
 			glColor4fv(unselectedColour);

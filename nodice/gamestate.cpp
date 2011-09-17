@@ -17,6 +17,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+#include "nodice_config.h"
 #include "gamestate.h"
 
 #include <iostream>
@@ -50,21 +51,26 @@ resume()
 
 
 void NoDice::GameState::
-key(SDL_keysym keysym)
+key(SDL_keysym keysym NODICE_UNUSED)
 {
 	std::cerr << __PRETTY_FUNCTION__ << "\n";
 }
 
 
 void NoDice::GameState::
-pointerMove(int x, int y, int dx, int dy)
+pointerMove(int x NODICE_UNUSED,
+            int y NODICE_UNUSED,
+            int dx NODICE_UNUSED,
+            int dy NODICE_UNUSED)
 {
 	std::cerr << __PRETTY_FUNCTION__ << "\n";
 }
 
 
 void NoDice::GameState::
-pointerClick(int x, int y, PointerAction action)
+pointerClick(int x NODICE_UNUSED,
+             int y NODICE_UNUSED,
+             PointerAction action NODICE_UNUSED)
 {
 	std::cerr << __PRETTY_FUNCTION__ << "\n";
 }

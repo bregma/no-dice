@@ -20,7 +20,7 @@ template< class T >
 class Frustum
 {
 public:
-    union
+    __extension__ union
     {
         struct
         {

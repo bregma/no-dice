@@ -47,7 +47,7 @@ template< typename T >
 class Matrix4
 {
 public:
-    union
+    __extension__ union
     {
         struct
         {

@@ -51,7 +51,10 @@ AC_SUBST([GL_CFLAGS])
 AC_SUBST([GL_LIBS])
 
 # Crank the warnings level up to 11
-AC_SUBST([AM_CFLAGS], [-Wall -Wextra -Werror -pedantic -D_GNU_SOURCE=1])
+AC_SUBST([AM_CXXFLAGS],
+         ["-Wall -Wextra -Werror -pedantic -std=c++0x -D_GNU_SOURCE=1"])
+AC_DEFINE([NODICE_UNUSED],
+          [__attribute__((unused))],[symbol is unused])
 
 AC_CONFIG_FILES(Makefile)
 AC_CONFIG_FILES(nodice/Makefile)
