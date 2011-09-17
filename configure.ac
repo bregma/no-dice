@@ -50,6 +50,9 @@ AM_CONDITIONAL([HAVE_EGL], [test "x$nd_wm" = "xegl"])
 AC_SUBST([GL_CFLAGS])
 AC_SUBST([GL_LIBS])
 
+# Crank the warnings level up to 11
+AC_SUBST([AM_CFLAGS], [-Wall -Wextra -Werror -pedantic -D_GNU_SOURCE=1])
+
 AC_CONFIG_FILES(Makefile)
 AC_CONFIG_FILES(nodice/Makefile)
 AC_CONFIG_FILES(assets/Makefile)
