@@ -2,7 +2,7 @@
  * @file nodice/playstate.h
  * @brief Public interface of the nodice/playstate module.
  *
- * Copyright 2010 Stephen M. Webb  <stephen.webb@bregmasoft.ca>
+ * Copyright 2010, 2011 Stephen M. Webb  <stephen.webb@bregmasoft.ca>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of Version 2 of the GNU General Public License as
@@ -27,42 +27,43 @@
 
 namespace NoDice
 {
-	class Font;
+  class Font;
 
-	class PlayState
-	: public GameState
-	{
-	public:
-		PlayState(Config& config);
-		~PlayState();
+  class PlayState
+  : public GameState
+  {
+  public:
+    PlayState(Config& config);
+    ~PlayState();
 
-		void pointerMove(int x, int y, int dx, int dy);
-		void pointerClick(int x, int y, PointerAction action);
+    void pointerMove(int x, int y, int dx, int dy);
+    void pointerClick(int x, int y, PointerAction action);
 
-		void update(App& app);
-		void draw(Video& video);
+    void update(App& app);
+    void draw(Video& video);
 
-	private:
-		enum SubState
-		{
-			state_idle,
-			state_swapping,
-			state_unswapping,
-			state_replacing,
-			state_rotating,
-			state_end
-		};
+  private:
+    enum SubState
+    {
+      state_idle,
+      state_swapping,
+      state_unswapping,
+      state_replacing,
+      state_rotating,
+      state_end
+    };
 
-		SubState m_state;
-		Board    m_gameboard;
-		Font&    m_scoreFont;
-		bool     m_mouseIsDown;
-		Vector2i m_mouseDownPos;
-		Vector2i m_selectedPos;
-		int      m_curWins;
-		int      m_score;
-		Matrix4f m_unproject;
-	};
+    SubState m_state;
+    Board    m_gameboard;
+    Font&    m_scoreFont;
+    bool     m_mouseIsDown;
+    Vector2i m_mouseDownPos;
+    Vector2i m_selectedPos;
+    int      m_curWins;
+    int      m_multiplier;
+    int      m_score;
+    Matrix4f m_unproject;
+  };
 
 } // namespace noDice
 

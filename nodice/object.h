@@ -2,7 +2,7 @@
  * @file nodice/object.h
  * @brief Public interface of the nodice/object module.
  *
- * Copyright 2009, 2010 Stephen M. Webb  <stephen.webb@bregmasoft.ca>
+ * Copyright 2009, 2010, 2011 Stephen M. Webb  <stephen.webb@bregmasoft.ca>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of Version 2 of the GNU General Public License as
@@ -23,7 +23,8 @@
 #include "nodice/colour.h"
 #include "nodice/maths.h"
 #include "nodice/shape.h"
-#include <tr1/memory>
+#include <memory>
+#include <vector>
 
 
 namespace NoDice
@@ -49,12 +50,12 @@ namespace NoDice
     virtual const std::string& type() const;
 
     /** Turns on highlight mode. */
-		void setHighlight(bool toggle);
+    void setHighlight(bool toggle);
 
     /** Performs a one-tick update of the object. */
     virtual void update();
 
-		/** Renders the object on the current drawing surface. */
+    /** Renders the object on the current drawing surface. */
     virtual void draw() const;
 
     void setVelocity(const Vector3f& velocity);
@@ -103,8 +104,15 @@ namespace NoDice
     int            m_xrot, m_yrot; // temp for testing
   };
 
-	/** Points to an object. */
-	typedef std::tr1::shared_ptr<Object> ObjectPtr;
+  /** Points to an object. */
+  typedef std::shared_ptr<Object> ObjectPtr;
+
+  /** A collection of object pointers. */
+  typedef std::vector<ObjectPtr> ObjectBag;
+
+  /** A collection of object bags. */
+  typedef std::vector<ObjectBag> ObjectBrace;
+
 } // namespace NoDice
 
 #endif // NODICE_OBJECT_H
