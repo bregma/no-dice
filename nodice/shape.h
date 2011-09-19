@@ -2,7 +2,7 @@
  * @file nodice/shape.h
  * @brief Public interface of the nodice/shape module.
  *
- * Copyright 2009, 2010 Stephen M. Webb  <stephen.webb@bregmasoft.ca>
+ * Copyright 2009, 2010, 2011 Stephen M. Webb  <stephen.webb@bregmasoft.ca>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of Version 2 of the GNU General Public License as
@@ -22,7 +22,7 @@
 
 #include "nodice/colour.h"
 #include <string>
-#include <tr1/memory>
+#include <memory>
 #include "nodice/maths.h"
 #include "nodice/video.h"
 
@@ -48,6 +48,9 @@ namespace NoDice
     /** Gets the default colour for the shape. */
     const Colour& defaultColour() const;
 
+    /** Gives the base score for the shape. */
+    virtual int score();
+
     /** Renders the shape. */
     virtual void draw() const = 0;
 
@@ -57,7 +60,7 @@ namespace NoDice
   };
 
   /** Points to a shape. */
-  typedef std::tr1::shared_ptr<Shape> ShapePtr;
+  typedef std::shared_ptr<Shape> ShapePtr;
 
   /** Randomly chooses a shape from its bag. */
   ShapePtr chooseAShape();

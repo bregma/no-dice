@@ -55,6 +55,9 @@ namespace NoDice
     /** Performs a one-tick update of the object. */
     virtual void update();
 
+    /** Gets the current base score of the object. */
+    virtual int score();
+
     /** Renders the object on the current drawing surface. */
     virtual void draw() const;
 

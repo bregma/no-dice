@@ -2,7 +2,7 @@
  * @file nodice/d20.h
  * @brief Public interface of the no-dice d20 module.
  *
- * Copyright 2010 Stephen M. Webb  <stephen.webb@bregmasoft.ca>
+ * Copyright 2010, 2011 Stephen M. Webb  <stephen.webb@bregmasoft.ca>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of Version 2 of the GNU General Public License as
@@ -27,21 +27,22 @@
 namespace NoDice
 {
 
-	/**
-	 * A 20-sided (icosahedron) polyhedral die.
-	 */
-	class D20
-	: public Shape
-	{
-	public:
-		D20();
-		~D20();
-		void draw() const;
+  /**
+   * A 20-sided (icosahedron) polyhedral die.
+   */
+  class D20
+  : public Shape
+  {
+  public:
+    D20();
+    ~D20();
+    int score();
+    void draw() const;
 
-	private:
-		GLuint  m_vbo;
-		GLsizei m_vertexCount;
-	};
+  private:
+    GLuint  m_vbo;
+    GLsizei m_vertexCount;
+  };
 } // namespace noDice
 
 #endif // NODICE_D20_H

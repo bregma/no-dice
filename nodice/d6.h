@@ -2,7 +2,7 @@
  * @file nodice/d6.h
  * @brief Public interface of the nodice/d6 module.
  *
- * Copyright 2010 Stephen M. Webb  <stephen.webb@bregmasoft.ca>
+ * Copyright 2010, 2011 Stephen M. Webb  <stephen.webb@bregmasoft.ca>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of Version 2 of the GNU General Public License as
@@ -27,18 +27,19 @@
 namespace NoDice
 {
 
-	class D6
-	: public Shape
-	{
-	public:
-		D6();
-		~D6();
-		void draw() const;
+  class D6
+  : public Shape
+  {
+  public:
+    D6();
+    ~D6();
+    int score();
+    void draw() const;
 
-	private:
-		GLuint  m_vbo;
-		GLsizei m_vertexCount;
-	};
+  private:
+    GLuint  m_vbo;
+    GLsizei m_vertexCount;
+  };
 } // namespace noDice
 
 #endif // NODICE_D6_H

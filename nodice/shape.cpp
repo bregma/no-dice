@@ -2,7 +2,7 @@
  * @file nodice/shape.cpp
  * @brief Implemntation of the nodice/shape module.
  *
- * Copyright 2009, 2010 Stephen M. Webb  <stephen.webb@bregmasoft.ca>
+ * Copyright 2009, 2010, 2011 Stephen M. Webb  <stephen.webb@bregmasoft.ca>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of Version 2 of the GNU General Public License as
@@ -75,6 +75,13 @@ const NoDice::Colour& NoDice::Shape::
 defaultColour() const
 {
   return m_defaultColour;
+}
+
+
+int NoDice::Shape::
+score()
+{
+  return 0;
 }
 
 

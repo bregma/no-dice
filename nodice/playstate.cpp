@@ -53,7 +53,6 @@ PlayState(Config& config)
 , m_gameboard(config)
 , m_scoreFont(getFont(SCORE_FONT, config.screenHeight() / 18))
 , m_mouseIsDown(false)
-, m_curWins(0)
 , m_multiplier(0)
 , m_score(0)
 {
@@ -174,15 +173,23 @@ update(App& app NODICE_UNUSED)
       if (!m_gameboard.isSwapping())
       {
         ObjectBrace matches(m_gameboard.findWins());
-        m_curWins = matches.size();
-        if (m_curWins)
+        if (matches.size())
         {
-          m_state = state_replacing;
-          ++m_multiplier;
           for (auto it = matches.begin(); it != matches.end(); ++it)
           {
-            std::cerr << it->size() << it->at(0)->type() << "\n";
+            int match_score = 0;
+            std::cerr << it->size() << it->at(0)->type() << " (";
+            for (auto obj = it->begin(); obj != it->end(); ++obj)
+            {
+              int score = (*obj)->score();
+              std::cerr << " " << score;
+              match_score += score;
+            }
+            std::cerr << " ) total=" << match_score << "\n";
+            m_score += match_score;
           }
+          m_state = state_replacing;
+          ++m_multiplier;
         }
         else
         {
@@ -212,19 +219,24 @@ update(App& app NODICE_UNUSED)
         {
           for (auto it = matches.begin(); it != matches.end(); ++it)
           {
+            int match_score = m_multiplier;
             std::cerr << it->size() << it->at(0)->type()
-                      << "+" << m_multiplier << "\n";
+                      << "+" << m_multiplier << " (";
+            for (auto obj = it->begin(); obj != it->end(); ++obj)
+            {
+              int score = (*obj)->score();
+              std::cerr << " " << score;
+              match_score += score;
+            }
+            std::cerr << " ) total=" << match_score << "\n";
+            m_score += match_score;
           }
-          m_score += m_curWins;
-          m_curWins += matches.size();
           m_state = state_replacing;
           ++m_multiplier;
         }
         else
         {
           std::cerr << __FUNCTION__ << " has no wins\n";
-          m_score += m_curWins;
-          m_curWins = 0;
           m_state = state_idle;
           m_multiplier = 0;
         }
