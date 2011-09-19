@@ -24,6 +24,9 @@
 
 #include "nodice/board.h"
 #include "nodice/maths.h"
+#include <string>
+#include <vector>
+
 
 namespace NoDice
 {
@@ -43,6 +46,9 @@ namespace NoDice
     void draw(Video& video);
 
   private:
+    void calculateScore(const ObjectBrace& matches);
+
+  private:
     enum SubState
     {
       state_idle,
@@ -53,16 +59,17 @@ namespace NoDice
       state_end
     };
 
-    SubState m_state;
-    Board    m_gameboard;
-    Font&    m_scoreFont;
-    bool     m_mouseIsDown;
-    Vector2i m_mouseDownPos;
-    Vector2i m_selectedPos;
-    int      m_curWins;
-    int      m_multiplier;
-    int      m_score;
-    Matrix4f m_unproject;
+    SubState                  m_state;
+    Board                     m_gameboard;
+    Font&                     m_scoreFont;
+    bool                      m_mouseIsDown;
+    Vector2i                  m_mouseDownPos;
+    Vector2i                  m_selectedPos;
+    int                       m_curWins;
+    int                       m_multiplier;
+    int                       m_score;
+    std::vector<std::string>  m_winMessages;
+    Matrix4f                  m_unproject;
   };
 
 } // namespace noDice

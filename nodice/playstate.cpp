@@ -163,6 +163,34 @@ pointerClick(int x, int y, PointerAction action)
 
 
 void NoDice::PlayState::
+calculateScore(const ObjectBrace& matches)
+{
+  for (auto it = matches.begin(); it != matches.end(); ++it)
+  {
+    int match_score = m_multiplier;
+    std::ostringstream ostr;
+    ostr << it->size() << it->at(0)->type();
+    if (m_multiplier)
+    {
+      ostr << "+" << m_multiplier;
+    }
+    std::cerr << ostr.str() << "(";
+    for (auto obj = it->begin(); obj != it->end(); ++obj)
+    {
+      int score = (*obj)->score();
+      std::cerr << " " << score;
+      match_score += score;
+    }
+    std::cerr << " ) total=" << match_score << "\n";
+    m_score += match_score;
+    m_winMessages.push_back(ostr.str());
+  }
+  m_state = state_replacing;
+  ++m_multiplier;
+}
+
+
+void NoDice::PlayState::
 update(App& app NODICE_UNUSED)
 {
   m_gameboard.update();
@@ -175,21 +203,7 @@ update(App& app NODICE_UNUSED)
         ObjectBrace matches(m_gameboard.findWins());
         if (matches.size())
         {
-          for (auto it = matches.begin(); it != matches.end(); ++it)
-          {
-            int match_score = 0;
-            std::cerr << it->size() << it->at(0)->type() << " (";
-            for (auto obj = it->begin(); obj != it->end(); ++obj)
-            {
-              int score = (*obj)->score();
-              std::cerr << " " << score;
-              match_score += score;
-            }
-            std::cerr << " ) total=" << match_score << "\n";
-            m_score += match_score;
-          }
-          m_state = state_replacing;
-          ++m_multiplier;
+          calculateScore(matches);
         }
         else
         {
@@ -217,28 +231,14 @@ update(App& app NODICE_UNUSED)
         ObjectBrace matches(m_gameboard.findWins());
         if (matches.size() > 0)
         {
-          for (auto it = matches.begin(); it != matches.end(); ++it)
-          {
-            int match_score = m_multiplier;
-            std::cerr << it->size() << it->at(0)->type()
-                      << "+" << m_multiplier << " (";
-            for (auto obj = it->begin(); obj != it->end(); ++obj)
-            {
-              int score = (*obj)->score();
-              std::cerr << " " << score;
-              match_score += score;
-            }
-            std::cerr << " ) total=" << match_score << "\n";
-            m_score += match_score;
-          }
-          m_state = state_replacing;
-          ++m_multiplier;
+          calculateScore(matches);
         }
         else
         {
           std::cerr << __FUNCTION__ << " has no wins\n";
           m_state = state_idle;
           m_multiplier = 0;
+          m_winMessages.clear();
         }
       }
       break;
@@ -303,10 +303,17 @@ draw(Video& video NODICE_UNUSED)
   glMatrixMode(GL_PROJECTION);
   glPopMatrix();
 
+  float y = 300.0f;
   std::ostringstream ostr;
   ostr << std::setw(5) << std::setfill('0') << m_score;
   glColor4fv(white.rgba);
-  m_scoreFont.print(10.0f, 300.0f, 1.0f, ostr.str());
+  m_scoreFont.print(10.0f, y, 1.0f, ostr.str());
+
+  for (auto it = m_winMessages.begin(); it != m_winMessages.end(); ++it)
+  {
+    y -= 30;
+    m_scoreFont.print(10.0f, y, 0.8f, *it);
+  }
   check_gl_error("playstate END");
 }
 
