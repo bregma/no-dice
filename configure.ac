@@ -8,7 +8,7 @@ AC_COPYRIGHT([
   Copyright 2010, 2011 Stephen M. Webb  <stephen.webb@bregmasoft.com>
   ])
 AC_INIT([no-dice],
-        [0.2],
+        [0.3.0],
         [stephen.webb@bregmasoft.com])
 AC_CONFIG_AUX_DIR(config.aux)
 AC_CONFIG_MACRO_DIR(config.m4)
