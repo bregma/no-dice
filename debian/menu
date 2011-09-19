@@ -1,6 +1,0 @@
-?package(no-dice):needs="X11|wm" \
-  section="Games/Arcade" \
-  title="No Dice" \
-	icon="none" \
-	command="/usr/games/no-dice"
-
