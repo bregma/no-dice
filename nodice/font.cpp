@@ -2,7 +2,7 @@
  * @file nodice/font.cpp
  * @brief Implemntation of the nodice/font module.
  *
- * Copyright 2009, 2010 Stephen M. Webb  <stephen.webb@bregmasoft.ca>
+ * Copyright 2009-2013 Stephen M. Webb  <stephen.webb@bregmasoft.ca>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of Version 2 of the GNU General Public License as
@@ -27,6 +27,7 @@
 #include <map>
 #include <sstream>
 #include <stdexcept>
+#include <unistd.h>
 
 
 namespace
