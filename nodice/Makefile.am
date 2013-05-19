@@ -56,6 +56,7 @@ no_dice_CPPFLAGS = \
 	-I$(top_srcdir)/include \
 	-DHAVE_GL_VERTEX_BUFFERS \
 	-DDATA_DIR=\"${pkgdatadir}\" \
+	-DNODICE_SRC_DIR=\"${abs_top_srcdir}\" \
 	$(SDL_CFLAGS) \
 	$(FREETYPE_CFLAGS) \
 	$(GL_CFLAGS)

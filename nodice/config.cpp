@@ -22,8 +22,13 @@
  */
 #include "nodice/config.h"
 
+#include <cstdlib>
 #include <cstring>
 #include <iostream>
+
+#ifndef NODICE_SRC_DIR
+# define NODICE_SRC_DIR "./"
+#endif
 
 
 namespace
@@ -48,6 +53,45 @@ namespace
     }
     return NULL;
   }
+
+
+  static std::vector<std::string>
+  split_path_on_colon(std::string const& path)
+  {
+    std::vector<std::string> v;
+    std::string::size_type p = 0;
+    std::string::size_type q = path.find(':', p);
+    while (true)
+    {
+      std::string s = path.substr(p, q - p);
+      if (s.length() > 0)
+        v.push_back(s);
+      if (q == std::string::npos)
+        break;
+      p = q+1;
+      q = path.find(':', p);
+    }
+    return v;
+  }
+
+  static std::vector<std::string>
+  get_asset_search_path()
+  {
+    std::vector<std::string> search_path = {
+      NODICE_SRC_DIR "/assets"
+    };
+
+    char* env = getenv("NODICE_ASSET_PATH");
+    if (env)
+    {
+      for (auto const& p: split_path_on_colon(env))
+      {
+        search_path.push_back(p);
+      }
+    }
+
+    return search_path;
+  }
 }
 
 
@@ -70,6 +114,7 @@ Config(int argc, char* argv[])
 , screenWidth_(640)
 , screenHeight_(480)
 , boardSize_(8)
+, asset_search_path_(get_asset_search_path())
 {
   for (int i = 0; i < argc; ++i)
   {
@@ -189,6 +234,13 @@ setBoardSize(int size)
     boardSize_ = size;
     setDirty();
   }
+}
+
+
+std::vector<std::string> const& NoDice::Config::
+asset_search_path() const
+{
+  return asset_search_path_;
 }
 
 

@@ -77,18 +77,23 @@ namespace NoDice
     void
     setBoardSize(int size);
 
+    /** Gets the search path for assets. */
+    std::vector<std::string> const&
+    asset_search_path() const;
+
   private:
     void
     setDirty();
 
   private:
-    bool  isDirty_;
-    bool  isDebugMode_;
-    bool  isFullscreen_;
-    bool  isSmallWindow_;
-    int   screenWidth_;
-    int   screenHeight_;
-    int   boardSize_;
+    bool                     isDirty_;
+    bool                     isDebugMode_;
+    bool                     isFullscreen_;
+    bool                     isSmallWindow_;
+    int                      screenWidth_;
+    int                      screenHeight_;
+    int                      boardSize_;
+    std::vector<std::string> asset_search_path_;
   };
 } // namespace NoDice
 
