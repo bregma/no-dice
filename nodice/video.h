@@ -38,7 +38,7 @@ namespace NoDice
     void update();
 
   private:
-    std::auto_ptr<VideoContext> m_context;
+    std::unique_ptr<VideoContext> m_context;
   };
 } // namespace NoDice
 
