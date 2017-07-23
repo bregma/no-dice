@@ -1,0 +1,48 @@
+sudo: false
+dist: trusty
+language: generic
+
+branches:
+  only:
+  - master
+
+matrix:
+  include:
+    - compiler: gcc
+      env: COMPILER=g++-5
+    - compiler: clang
+      env: COMPILER=clang++-4.0
+
+addons:
+  apt:
+    sources:
+    - ubuntu-toolchain-r-test
+    - llvm-toolchain-trusty-4.0
+    packages:
+    - autoconf
+    - automake
+    - clang-4.0
+    - g++-5
+    - libfreetype6-dev
+    - libgl1-mesa-dev
+    - libsdl1.2-dev
+    - pkg-config
+
+before_script:
+  - mkdir build
+  - cd build
+  - ../bootstrap CXX=$COMPILER --disable-silent-rules
+
+script:
+  - make && make check
+
+notifications:
+  email:
+    - bregma@users.noreply.github.com
+  irc:
+    channels:
+      - "chat.freeode.net#legacy2345"
+    template:
+      - "%{repository_slug}/%{branch} (%{commit} : %{build_url}) %{message}"
+    use_notice: true
+    skip_join: true
