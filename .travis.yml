@@ -9,29 +9,20 @@ branches:
 matrix:
   include:
     - compiler: gcc
-      addons:
-        apt:
-          sources:
-          - ubuntu-toolchain-r-test
-          packages:
-          - g++-5
       env: COMPILER=g++-5
     - compiler: clang
-      addons:
-        apt:
-          sources:
-          - ubuntu-toolchain-r-test
-          - llvm-toolchain-trusty-4.0
-          packages:
-          - g++-5
-          - clang-4.0
       env: COMPILER=clang++-4.0
 
 addons:
   apt:
+    sources:
+    - ubuntu-toolchain-r-test
+    - llvm-toolchain-trusty-4.0
     packages:
     - autoconf
     - automake
+    - clang-4.0
+    - g++-5
     - libfreetype6-dev
     - libgl1-msa-dev
     - libsdl1.2-dev
