@@ -24,7 +24,7 @@ addons:
     - clang-4.0
     - g++-5
     - libfreetype6-dev
-    - libgl1-msa-dev
+    - libgl1-mesa-dev
     - libsdl1.2-dev
     - pkg-config
 
