@@ -65,7 +65,6 @@ namespace NoDice
     bool                      m_mouseIsDown;
     Vector2i                  m_mouseDownPos;
     Vector2i                  m_selectedPos;
-    int                       m_curWins;
     int                       m_multiplier;
     int                       m_score;
     std::vector<std::string>  m_winMessages;
