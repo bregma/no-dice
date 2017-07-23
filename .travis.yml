@@ -12,35 +12,36 @@ matrix:
       addons:
         apt:
           sources:
-            - ubuntu-toolchain-r-test
+          - ubuntu-toolchain-r-test
           packages:
-            - g++-5
+          - g++-5
       env: COMPILER=g++-5
     - compiler: clang
       addons:
         apt:
           sources:
-            - ubuntu-toolchain-r-test
-            - llvm-toolchain-trusty-4.0
+          - ubuntu-toolchain-r-test
+          - llvm-toolchain-trusty-4.0
           packages:
-            - g++-5
-            - clang-4.0
+          - g++-5
+          - clang-4.0
       env: COMPILER=clang++-4.0
 
 addons:
   apt:
     packages:
-      - autoconf
-      - automake
-      - libfreetype6-dev
-      - libgl1-msa-dev
-      - libsdl1.2-dev
-      - pkg-config
+    - autoconf
+    - automake
+    - libfreetype6-dev
+    - libgl1-msa-dev
+    - libsdl1.2-dev
+    - pkg-config
 
 before_script:
   - mkdir build
   - cd build
-  - ../autogen.sh CXX=$COMPILER --disable-silent-rules
+  - ../bootstrap CXX=$COMPILER --disable-silent-rules
+
 script:
   - make && make check
 
@@ -53,4 +54,4 @@ notifications:
     template:
       - "%{repository_slug}/%{branch} (%{commit} : %{build_url}) %{message}"
     use_notice: true
-    skip_jpin: true
+    skip_join: true
