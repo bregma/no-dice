@@ -15,7 +15,7 @@ AC_CONFIG_MACRO_DIR(config.m4)
 
 AC_CONFIG_HEADER([nodice_config.h])
 
-AM_INIT_AUTOMAKE([gnu 1.11 -Wno-syntax -Wall])
+AM_INIT_AUTOMAKE([foreign 1.11 -Wno-syntax -Wall])
 AM_SILENT_RULES([yes])
 
 # Checks for tools.
