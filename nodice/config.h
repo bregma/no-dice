@@ -3,7 +3,7 @@
  * @brief Public interface of the nodice/config module.
  */
 /*
- * Copyright 2009-2013 Stephen M. Webb  <stephen.webb@bregmasoft.ca>
+ * Copyright 2009,2013,2017 Stephen M. Webb  <stephen.webb@bregmasoft.ca>
  *
  * This file is part of no-dice.
  *
