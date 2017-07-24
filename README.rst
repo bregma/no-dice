@@ -1,3 +1,11 @@
+No Dice
+=======
+
+Match three polyhedral dice for the win.
+
+License
+-------
+
 The source for this program is copyrighted by Stephen M. Webb
 <stephen.webb@bregmasoft.com> and the source and program files are distributed
 under the Free Software Foundation's General Public License (GPL), version 2.
