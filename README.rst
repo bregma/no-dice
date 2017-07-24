@@ -3,6 +3,8 @@ No Dice
 
 Match three polyhedral dice for the win.
 
+|buildStatus|_ |license|_
+
 License
 -------
 
@@ -23,3 +25,7 @@ for details on copyright and distribution.
 Building this projects requires the freetype2 library, available from
 <http://www.freetype.org/> .
 
+.. |buildStatus| image:: https://api.travis-ci.org/bregma/no-dice.svg?branch=master
+.. _buildStatus: https://travis-ci.org/bregma/no-dice
+.. |license| image:: https://img.shields.io/badge/license-GPLv3-7DB3C5.svg
+.. _license: https://github.com/bregma/no-dice/blob/master/COPYING
