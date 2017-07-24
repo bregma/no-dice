@@ -28,8 +28,9 @@ else
 vcontext_SOURCES = videocontextsdl.h videocontextsdl.cpp
 endif
 
-no_dice_SOURCES = \
-	main.cpp \
+noinst_LTLIBRARIES = libnodice.la
+
+libnodice_la_SOURCES = \
 	app.h              app.cpp \
 	board.h            board.cpp \
 	colour.h           colour.cpp \
@@ -51,7 +52,7 @@ no_dice_SOURCES = \
 	videocontext.h \
 	$(vcontext_SOURCES)
 
-no_dice_CPPFLAGS = \
+libnodice_la_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/include \
 	-DHAVE_GL_VERTEX_BUFFERS \
@@ -61,7 +62,13 @@ no_dice_CPPFLAGS = \
 	$(FREETYPE_CFLAGS) \
 	$(GL_CFLAGS)
 
+no_dice_SOURCES = \
+	main.cpp
+
+no_dice_CPPFLAGS = $(libnodice_la_CPPFLAGS)
+
 no_dice_LDADD = \
+	libnodice.la \
 	$(SDL_LIBS) \
 	$(FREETYPE_LIBS) \
 	$(GL_LIBS)

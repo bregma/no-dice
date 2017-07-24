@@ -20,7 +20,7 @@
 ##
 AM_MAKEFLAGS = --no-print-directory
 
-SUBDIRS = nodice assets
+SUBDIRS = nodice assets tests
 EXTRA_DIST = include
 
 DISTCLEANFILES = \
