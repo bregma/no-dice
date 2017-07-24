@@ -7,6 +7,7 @@ autom4te.cache
 config
 config.aux
 config.log
+config.m4
 config.status
 configure
 Makefile

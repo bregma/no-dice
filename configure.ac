@@ -10,8 +10,9 @@ AC_COPYRIGHT([
 AC_INIT([no-dice],
         [0.3.0],
         [stephen.webb@bregmasoft.com])
-AC_CONFIG_AUX_DIR(config.aux)
 AC_CONFIG_MACRO_DIR(config.m4)
+AC_CONFIG_AUX_DIR(config.aux)
+AC_REQUIRE_AUX_FILE([tap-driver.sh])
 
 AC_CONFIG_HEADER([nodice_config.h])
 
@@ -19,8 +20,12 @@ AM_INIT_AUTOMAKE([foreign 1.11 -Wno-syntax -Wall])
 AM_SILENT_RULES([yes])
 
 # Checks for tools.
+AC_PROG_AWK
 AC_PROG_CXX
-AC_LANG(C++)
+AC_LANG([C++])
+AM_PROG_AR
+LT_PREREQ([2.4.2])
+LT_INIT
 
 # Checks for libraries.
 
@@ -59,4 +64,5 @@ AC_DEFINE([NODICE_UNUSED],
 AC_CONFIG_FILES(Makefile)
 AC_CONFIG_FILES(nodice/Makefile)
 AC_CONFIG_FILES(assets/Makefile)
+AC_CONFIG_FILES(tests/Makefile)
 AC_OUTPUT
