@@ -1,21 +1,24 @@
 /**
  * @file nodice/app.cpp
  * @brief Implemntation of the no-dice app module.
+ */
+/*
+ * Copyright 2009,2010,2017 Stephen M. Webb  <stephen.webb@bregmasoft.ca>
  *
- * Copyright 2009, 2010 Stephen M. Webb  <stephen.webb@bregmasoft.ca>
+ * This file is part of no-dice.
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of Version 2 of the GNU General Public License as
- * published by the Free Software Foundation.
+ * No-dice is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
+ * No-dice is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with no-dice.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "nodice/app.h"
 
@@ -25,6 +28,7 @@
 #include <iostream>
 #include "nodice/config.h"
 #include "nodice/introstate.h"
+#include "nodice/video.h"
 #include <SDL/SDL.h>
 
 
@@ -61,13 +65,13 @@ NoDice::App::SdlInit::
  * The App object takes care of initializing the even system.
  */
 NoDice::App::
-App(const NoDice::Config& config)
-: m_config(config)
-, m_sdlInit()
-, m_video(m_config)
+App(NoDice::Config const* config)
+: config_(config)
+, sdl_init_()
+, video_(config)
 {
 	std::srand(std::time(NULL));
-	pushGameState(GameStatePtr(new IntroState(m_config, m_video)));
+	pushGameState(GameStatePtr(new IntroState(config_, video_)));
 }
 
 
@@ -94,33 +98,33 @@ run()
 				isActive = (event.active.gain != 0);
 				if (isActive)
 				{
-					m_stateStack.top()->resume();
+					state_stack_.top()->resume();
 				}
 				else
 				{
-					m_stateStack.top()->pause();
+					state_stack_.top()->pause();
 				}
 				break;
 
 			case SDL_MOUSEMOTION:
-				m_stateStack.top()->pointerMove(event.motion.x, event.motion.y,
+				state_stack_.top()->pointerMove(event.motion.x, event.motion.y,
 										                    event.motion.xrel, event.motion.yrel);
 				break;
 
 			case SDL_MOUSEBUTTONDOWN:
 				if (event.button.button == SDL_BUTTON_LEFT)
-					m_stateStack.top()->pointerClick(event.button.x, event.button.y,
+					state_stack_.top()->pointerClick(event.button.x, event.button.y,
 																					GameState::pointerDown);
 				break;
 
 			case SDL_MOUSEBUTTONUP:
 				if (event.button.button == SDL_BUTTON_LEFT)
-					m_stateStack.top()->pointerClick(event.button.x, event.button.y,
+					state_stack_.top()->pointerClick(event.button.x, event.button.y,
 																					GameState::pointerUp);
 				break;
 
 			case SDL_KEYDOWN:
-				if (m_config.isDebugMode())
+				if (config_->is_debug_mode())
 					std::cerr << "==smw> SDL_KEYDOWN event type received:"
 					          << " keysym.scancode=" << (int)event.key.keysym.scancode
 					          << " keysym.sym=" << event.key.keysym.sym
@@ -130,17 +134,17 @@ run()
 				if (event.key.keysym.sym == 27) // esc
 					done = true;
 				else
-					m_stateStack.top()->key(event.key.keysym);
+					state_stack_.top()->key(event.key.keysym);
 				break;
 
 			case SDL_QUIT:
-				if (m_config.isDebugMode())
+				if (config_->is_debug_mode())
 					std::cerr << "==smw> SDL_QUIT event type received.\n";
 				done = true;
 				break;
 
 			default:
-				if (m_config.isDebugMode())
+				if (config_->is_debug_mode())
 					std::cerr << "==smw> event type " << static_cast<int>(event.type) << " received.\n";
 				break;
 			}
@@ -150,8 +154,8 @@ run()
 		Uint32 deltaTics = currentTics - epochTics;
 		if (deltaTics > UPDATE_TICKS)
 		{
-			m_stateStack.top()->update(*this);
-			if (m_stateStack.empty())
+			state_stack_.top()->update(*this);
+			if (state_stack_.empty())
 			{
 				done = true;
 				break;
@@ -159,8 +163,8 @@ run()
 
 			epochTics = currentTics;
 		}
-		m_stateStack.top()->draw(m_video);
-		m_video.update();
+		state_stack_.top()->draw(video_);
+		video_.update();
 
 		SDL_Delay(isActive ? ACTIVE_FRAME_DELAY : INACTIVE_FRAME_DELAY);
 	}
@@ -171,14 +175,14 @@ run()
 void NoDice::App::
 pushGameState(GameStatePtr state)
 {
-	m_stateStack.push(state);
+	state_stack_.push(state);
 }
 
 
 void NoDice::App::
 popGameState()
 {
-	m_stateStack.pop();
+	state_stack_.pop();
 }
 
 

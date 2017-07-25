@@ -43,39 +43,39 @@ namespace NoDice
 
     /** Indicates if debug mode is enabled. */
     bool
-    isDebugMode() const;
+    is_debug_mode() const;
 
     /** Indicates if fullscreen mode is active. */
     bool
-    isFullscreen() const;
+    is_fullscreen() const;
 
     /** Indicates if (text mode) small window mode is set. */
     bool
-    isSmallWindow() const;
+    is_small_window() const;
 
     /** Gets the currently selected screen width (in pixels). */
     int
-    screenWidth() const;
+    screen_width() const;
 
     /** Sets the current screen width (in pixels). */
     void
-    setScreenWidth(int w);
+    set_screen_width(int w);
 
     /** Gets the currently selected screen height (in pixels). */
     int
-    screenHeight() const;
+    screen_height() const;
 
     /** Sets the current screen height. */
     void
-    setScreenHeight(int h);
+    set_screen_height(int h);
 
     /** Gets the board size (boards are always square). */
     int
-    boardSize() const;
+    board_size() const;
 
     /** Sets the board size. */
     void
-    setBoardSize(int size);
+    set_board_size(int size);
 
     /** Gets the search path for assets. */
     std::vector<std::string> const&
@@ -83,16 +83,16 @@ namespace NoDice
 
   private:
     void
-    setDirty();
+    set_dirty();
 
   private:
-    bool                     isDirty_;
-    bool                     isDebugMode_;
-    bool                     isFullscreen_;
-    bool                     isSmallWindow_;
-    int                      screenWidth_;
-    int                      screenHeight_;
-    int                      boardSize_;
+    bool                     is_dirty_;
+    bool                     is_debug_mode_;
+    bool                     is_fullscreen_;
+    bool                     is_small_window_;
+    int                      screen_width_;
+    int                      screen_height_;
+    int                      board_size_;
     std::vector<std::string> asset_search_path_;
   };
 } // namespace NoDice

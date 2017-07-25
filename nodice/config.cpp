@@ -107,13 +107,13 @@ namespace
  */
 NoDice::Config::
 Config(int argc, char* argv[])
-: isDirty_(false)
-, isDebugMode_(false)
-, isFullscreen_(false)
-, isSmallWindow_(false)
-, screenWidth_(640)
-, screenHeight_(480)
-, boardSize_(8)
+: is_dirty_(false)
+, is_debug_mode_(false)
+, is_fullscreen_(false)
+, is_small_window_(false)
+, screen_width_(640)
+, screen_height_(480)
+, board_size_(8)
 , asset_search_path_(get_asset_search_path())
 {
   for (int i = 0; i < argc; ++i)
@@ -125,19 +125,19 @@ Config(int argc, char* argv[])
       {
         case 'd':
         {
-          isDebugMode_ = true;
+          is_debug_mode_ = true;
           break;
         }
 
         case 'f':
         {
-          isFullscreen_ = true;
+          is_fullscreen_ = true;
           break;
         }
 
         case 'w':
         {
-          isSmallWindow_ = true;
+          is_small_window_ = true;
           break;
         }
 
@@ -165,74 +165,74 @@ NoDice::Config::
 
 
 bool NoDice::Config::
-isDebugMode() const
+is_debug_mode() const
 {
-  return isDebugMode_;
+  return is_debug_mode_;
 }
 
 
 bool NoDice::Config::
-isFullscreen() const
+is_fullscreen() const
 {
-  return isFullscreen_;
+  return is_fullscreen_;
 }
 
 
 bool NoDice::Config::
-isSmallWindow() const
+is_small_window() const
 {
-  return isSmallWindow_;
+  return is_small_window_;
 }
 
 
 int NoDice::Config::
-screenWidth() const
+screen_width() const
 {
-  return screenWidth_;
+  return screen_width_;
 }
 
 
 void NoDice::Config::
-setScreenWidth(int w)
+set_screen_width(int w)
 {
-  if (screenWidth_ != w)
+  if (screen_width_ != w)
   {
-    screenWidth_ = w;
-    setDirty();
+    screen_width_ = w;
+    set_dirty();
   }
 }
 
 
 int NoDice::Config::
-screenHeight() const
+screen_height() const
 {
-  return screenHeight_;
+  return screen_height_;
 }
 
 
 void NoDice::Config::
-setScreenHeight(int h)
+set_screen_height(int h)
 {
-  if (screenHeight_ != h)
+  if (screen_height_ != h)
   {
-    screenHeight_ = h;
-    setDirty();
+    screen_height_ = h;
+    set_dirty();
   }
 }
 
 
 int NoDice::Config::
-boardSize() const
-{ return boardSize_; }
+board_size() const
+{ return board_size_; }
 
 
 void NoDice::Config::
-setBoardSize(int size)
+set_board_size(int size)
 {
-  if (boardSize_ != size)
+  if (board_size_ != size)
   {
-    boardSize_ = size;
-    setDirty();
+    board_size_ = size;
+    set_dirty();
   }
 }
 
@@ -245,7 +245,7 @@ asset_search_path() const
 
 
 void NoDice::Config::
-setDirty()
+set_dirty()
 {
-  isDirty_ = true;
+  is_dirty_ = true;
 }

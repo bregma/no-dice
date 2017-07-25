@@ -1,21 +1,24 @@
 /**
  * @file nodice/playstate.cpp
  * @brief Implemntation of the nodice/playstate module.
+ */
+/*
+ * Copyright 2010,2011,2017 Stephen M. Webb  <stephen.webb@bregmasoft.ca>
  *
- * Copyright 2010, 2011 Stephen M. Webb  <stephen.webb@bregmasoft.ca>
+ * This file is part of no-dice.
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of Version 2 of the GNU General Public License as
- * published by the Free Software Foundation.
+ * No-dice is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
+ * No-dice is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with no-dice.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "nodice_config.h"
 #include "nodice/playstate.h"
@@ -47,21 +50,21 @@ namespace
 
 
 NoDice::PlayState::
-PlayState(Config& config)
+PlayState(Config const* config)
 : GameState(config)
-, m_state(state_idle)
-, m_gameboard(config)
-, m_scoreFont(getFont(SCORE_FONT, config.screenHeight() / 18))
-, m_mouseIsDown(false)
-, m_multiplier(0)
-, m_score(0)
+, state_(state_idle)
+, gameboard_(config)
+, score_font_(getFont(SCORE_FONT, config->screen_height() / 18))
+, mouse_is_down_(false)
+, multiplier_(0)
+, score_(0)
 {
   // generate unproject matrix
   glMatrixMode(GL_PROJECTION);
   glPushMatrix();
   glLoadIdentity();
-  int w = m_config.screenWidth();
-  int h = m_config.screenHeight();
+  int w = config->screen_width();
+  int h = config->screen_height();
   float right = 1.0f;
   float top   = 1.0f;
   if (h < w)
@@ -82,7 +85,7 @@ PlayState(Config& config)
   glGetFloatv(GL_PROJECTION_MATRIX, projection.array);
   Matrix4f modelview;
   glGetFloatv(GL_MODELVIEW_MATRIX, modelview.array);
-  (projection * modelview).getInverse(m_unproject);
+  (projection * modelview).getInverse(unproject_);
   glPopMatrix();
   glMatrixMode(GL_PROJECTION);
   glPopMatrix();
@@ -98,33 +101,33 @@ NoDice::PlayState::
 void NoDice::PlayState::
 pointerMove(int x, int y, int dx, int dy)
 {
-  if (m_mouseIsDown && m_state != state_swapping)
+  if (mouse_is_down_ && state_ != state_swapping)
   {
-    Vector2i d = m_mouseDownPos - Vector2i(x, y);
+    Vector2i d = mouse_down_pos_ - Vector2i(x, y);
     if (d.lengthSquared() < mouseMoveThreshold * mouseMoveThreshold)
       return;
 
-    Vector2i pos2 = m_selectedPos;
+    Vector2i pos2 = selected_pos_;
     if (std::abs(dx) > std::abs(dy))
     {
-      if (dx < 0 && m_selectedPos.x > 0)
+      if (dx < 0 && selected_pos_.x > 0)
           --pos2.x;
-      else if (m_selectedPos.x < m_config.boardSize()-1)
+      else if (selected_pos_.x < config_->board_size()-1)
           ++pos2.x;
       else
         return;
     }
     else
     {
-      if (dy > 0 && m_selectedPos.y > 0)
+      if (dy > 0 && selected_pos_.y > 0)
           --pos2.y;
-      else if (m_selectedPos.y < m_config.boardSize()-1)
+      else if (selected_pos_.y < config_->board_size()-1)
           ++pos2.y;
       else
         return;
     }
-    m_state = state_swapping;
-    m_gameboard.startSwap(m_selectedPos, pos2);
+    state_ = state_swapping;
+    gameboard_.start_swap(selected_pos_, pos2);
   }
 }
 
@@ -134,30 +137,30 @@ pointerClick(int x, int y, PointerAction action)
 {
   if (action == pointerUp)
   {
-    m_mouseIsDown = false;
-    m_mouseDownPos.set(0, 0);
+    mouse_is_down_ = false;
+    mouse_down_pos_.set(0, 0);
   }
   else if (action == pointerDown)
   {
-    m_mouseDownPos.set(x, y);
-    float win_width = float(m_config.screenWidth()) / 2.0f;
-    float win_height = float(m_config.screenHeight()) / 2.0f;
+    mouse_down_pos_.set(x, y);
+    float win_width = float(config_->screen_width()) / 2.0f;
+    float win_height = float(config_->screen_height()) / 2.0f;
     float unit_x = float(x - win_width) / win_width;
     float unit_y = -float(y - win_height) / win_height;
 
     Vector4f ray(unit_x, unit_y, 0.0f, 1.0f);
-    Vector4f beam = m_unproject * ray;
-    m_selectedPos.x = int(beam.x / 2.0f + 0.50f);
-    m_selectedPos.y = int(beam.y / 2.0f + 0.50f);
-    if (m_selectedPos.x >= m_config.boardSize() || m_selectedPos.x < 0)
+    Vector4f beam = unproject_ * ray;
+    selected_pos_.x = int(beam.x / 2.0f + 0.50f);
+    selected_pos_.y = int(beam.y / 2.0f + 0.50f);
+    if (selected_pos_.x >= config_->board_size() || selected_pos_.x < 0)
       return;
-    if (m_selectedPos.y >= m_config.boardSize() || m_selectedPos.y < 0)
+    if (selected_pos_.y >= config_->board_size() || selected_pos_.y < 0)
       return;
 
-    ObjectPtr obj = m_gameboard.at(m_selectedPos.x, m_selectedPos.y);
+    ObjectPtr obj = gameboard_.at(selected_pos_.x, selected_pos_.y);
     obj->setHighlight(true);
 
-    m_mouseIsDown = true;
+    mouse_is_down_ = true;
   }
 }
 
@@ -167,12 +170,12 @@ calculateScore(const ObjectBrace& matches)
 {
   for (auto it = matches.begin(); it != matches.end(); ++it)
   {
-    int match_score = m_multiplier;
+    int match_score = multiplier_;
     std::ostringstream ostr;
     ostr << it->size() << it->at(0)->type();
-    if (m_multiplier)
+    if (multiplier_)
     {
-      ostr << "+" << m_multiplier;
+      ostr << "+" << multiplier_;
     }
     std::cerr << ostr.str() << "(";
     for (auto obj = it->begin(); obj != it->end(); ++obj)
@@ -182,34 +185,34 @@ calculateScore(const ObjectBrace& matches)
       match_score += score;
     }
     std::cerr << " ) total=" << match_score << "\n";
-    m_score += match_score;
-    m_winMessages.push_back(ostr.str());
+    score_ += match_score;
+    win_messages_.push_back(ostr.str());
   }
-  m_state = state_replacing;
-  ++m_multiplier;
+  state_ = state_replacing;
+  ++multiplier_;
 }
 
 
 void NoDice::PlayState::
 update(App& app NODICE_UNUSED)
 {
-  m_gameboard.update();
-  switch (m_state)
+  gameboard_.update();
+  switch (state_)
   {
     case state_swapping:
     {
-      if (!m_gameboard.isSwapping())
+      if (!gameboard_.is_swapping())
       {
-        ObjectBrace matches(m_gameboard.findWins());
+        ObjectBrace matches(gameboard_.find_wins());
         if (matches.size())
         {
           calculateScore(matches);
         }
         else
         {
-          m_gameboard.unSwap();
-          m_state = state_unswapping;
-          m_multiplier = 0;
+          gameboard_.un_swap();
+          state_ = state_unswapping;
+          multiplier_ = 0;
         }
       }
       break;
@@ -217,18 +220,18 @@ update(App& app NODICE_UNUSED)
 
     case state_unswapping:
     {
-      if (!m_gameboard.isSwapping())
+      if (!gameboard_.is_swapping())
       {
-        m_state = state_idle; // temp. for now
+        state_ = state_idle; // temp. for now
       }
       break;
     }
 
     case state_replacing:
     {
-      if (!m_gameboard.isReplacing())
+      if (!gameboard_.is_replacing())
       {
-        ObjectBrace matches(m_gameboard.findWins());
+        ObjectBrace matches(gameboard_.find_wins());
         if (matches.size() > 0)
         {
           calculateScore(matches);
@@ -236,9 +239,9 @@ update(App& app NODICE_UNUSED)
         else
         {
           std::cerr << __FUNCTION__ << " has no wins\n";
-          m_state = state_idle;
-          m_multiplier = 0;
-          m_winMessages.clear();
+          state_ = state_idle;
+          multiplier_ = 0;
+          win_messages_.clear();
         }
       }
       break;
@@ -259,8 +262,8 @@ draw(Video& video NODICE_UNUSED)
   glLoadIdentity();
 
   // Adjust projection to take aspect ratio into account.
-  int w = m_config.screenWidth();
-  int h = m_config.screenHeight();
+  int w = config_->screen_width();
+  int h = config_->screen_height();
   float right = 1.0f;
   float top   = 1.0f;
   if (h < w)
@@ -297,7 +300,7 @@ draw(Video& video NODICE_UNUSED)
   glLoadIdentity();
   glTranslatef(board_pos.x, board_pos.y, board_pos.z);
   glScalef(board_scale.x, board_scale.y, board_scale.z);
-  m_gameboard.draw();
+  gameboard_.draw();
   glPopMatrix();
 
   glMatrixMode(GL_PROJECTION);
@@ -305,14 +308,14 @@ draw(Video& video NODICE_UNUSED)
 
   float y = 300.0f;
   std::ostringstream ostr;
-  ostr << std::setw(5) << std::setfill('0') << m_score;
+  ostr << std::setw(5) << std::setfill('0') << score_;
   glColor4fv(white.rgba);
-  m_scoreFont.print(10.0f, y, 1.0f, ostr.str());
+  score_font_.print(10.0f, y, 1.0f, ostr.str());
 
-  for (auto it = m_winMessages.begin(); it != m_winMessages.end(); ++it)
+  for (auto it = win_messages_.begin(); it != win_messages_.end(); ++it)
   {
     y -= 30;
-    m_scoreFont.print(10.0f, y, 0.8f, *it);
+    score_font_.print(10.0f, y, 0.8f, *it);
   }
   check_gl_error("playstate END");
 }

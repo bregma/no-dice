@@ -73,7 +73,7 @@ int main(int argc, char* argv[])
 	{
 		std::cerr << PACKAGE_STRING << "\n";
 		Config config(argc, argv);
-		return NoDice::App(config).run();
+		return NoDice::App(&config).run();
 
 	}
 	catch (std::exception& ex)
