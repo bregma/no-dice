@@ -59,3 +59,19 @@ SCENARIO("basic command line options handling")
   }
 }
 
+
+SCENARIO("asset searching")
+{
+  GIVEN("a default-constructed Config")
+  {
+    char* argv[] = { (char*)"no-dice" };
+    int argc = sizeof(argv) / sizeof(char*);
+    NoDice::Config config(argc, argv);
+
+    THEN("the asset search path containts at least one item")
+    {
+      REQUIRE(config.asset_search_path().size() > 0);
+    }
+  }
+}
+
