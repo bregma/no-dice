@@ -22,7 +22,7 @@ addons:
     - autoconf
     - automake
     - clang-4.0
-    - g++-5
+    - g++-7
     - libfreetype6-dev
     - libgl1-mesa-dev
     - libsdl1.2-dev
