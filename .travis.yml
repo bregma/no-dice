@@ -9,7 +9,7 @@ branches:
 matrix:
   include:
     - compiler: gcc
-      env: COMPILER=g++-5
+      env: COMPILER=g++-7
     - compiler: clang
       env: COMPILER=clang++-4.0
 
