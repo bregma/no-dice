@@ -66,9 +66,6 @@ namespace NoDice
 		GLsizei            m_textureHeight;
 		GLuint             m_texture;
 	};
-
-	/** Gets a font through the font loader/cache. */
-	Font& getFont(const std::string& fontName, unsigned int pointSize);
 } // namespace NoDice
 
 #endif // NODICE_FONT_H

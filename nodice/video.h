@@ -32,7 +32,7 @@ namespace NoDice
   class Video
   {
   public:
-    Video(Config& config);
+    Video(Config const* config);
     ~Video();
 
     void update();

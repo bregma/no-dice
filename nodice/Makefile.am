@@ -41,6 +41,7 @@ libnodice_la_SOURCES = \
 	d12.h              d12.cpp \
 	d20.h              d20.cpp \
 	font.h             font.cpp \
+	fontcache.h        fontcache.cpp \
 	gamestate.h        gamestate.cpp \
 	introstate.h       introstate.cpp \
 	maths.h \
@@ -57,9 +58,15 @@ libnodice_la_CPPFLAGS = \
 	-I$(top_srcdir)/include \
 	-DHAVE_GL_VERTEX_BUFFERS \
 	-DDATA_DIR=\"${pkgdatadir}\" \
+	-DNODICE_SRC_DIR=\"${abs_top_srcdir}\" \
 	$(SDL_CFLAGS) \
 	$(FREETYPE_CFLAGS) \
 	$(GL_CFLAGS)
+
+libnodice_la_LIBADD = \
+	$(SDL_LIBS) \
+	$(FREETYPE_LIBS) \
+	$(GL_LIBS)
 
 no_dice_SOURCES = \
 	main.cpp
@@ -67,9 +74,6 @@ no_dice_SOURCES = \
 no_dice_CPPFLAGS = $(libnodice_la_CPPFLAGS)
 
 no_dice_LDADD = \
-	libnodice.la \
-	$(SDL_LIBS) \
-	$(FREETYPE_LIBS) \
-	$(GL_LIBS)
+	libnodice.la
 
 

@@ -30,9 +30,9 @@ SCENARIO("basic command line options handling")
     NoDice::Config config(argc, argv);
     THEN("sensible defaults are set")
     {
-      REQUIRE(config.isDebugMode() == false);
-      REQUIRE(config.isFullscreen() == false);
-      REQUIRE(config.boardSize() == 8);
+      REQUIRE(config.is_debug_mode() == false);
+      REQUIRE(config.is_fullscreen() == false);
+      REQUIRE(config.board_size() == 8);
     }
   }
 
@@ -43,7 +43,7 @@ SCENARIO("basic command line options handling")
     NoDice::Config config(argc, argv);
     THEN("debug mode is configured")
     {
-      REQUIRE(config.isDebugMode() == true);
+      REQUIRE(config.is_debug_mode() == true);
     }
   }
 
@@ -54,7 +54,23 @@ SCENARIO("basic command line options handling")
     NoDice::Config config(argc, argv);
     THEN("full-screen mode is configured")
     {
-      REQUIRE(config.isFullscreen() == true);
+      REQUIRE(config.is_fullscreen() == true);
+    }
+  }
+}
+
+
+SCENARIO("asset searching")
+{
+  GIVEN("a default-constructed Config")
+  {
+    char* argv[] = { (char*)"no-dice" };
+    int argc = sizeof(argv) / sizeof(char*);
+    NoDice::Config config(argc, argv);
+
+    THEN("the asset search path containts at least one item")
+    {
+      REQUIRE(config.asset_search_path().size() > 0);
     }
   }
 }

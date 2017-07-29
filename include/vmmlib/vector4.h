@@ -90,15 +90,15 @@ public:
     void set( const float* aa );
     void set( const double* aa );
 
-	void set( const Vector3< T >& xyz_, const T& w_ );
+    void set( const Vector3< T >& xyz_, const T& w_ );
 
-	// create vector from a string containing a whitespace (or parameter 
-	// 'delimiter' ) delimited list of values.
-	// returns false if failed, true if it (seems to have) succeeded.
-	// PRE: string must contain at least 4 values, delimited by char delimiter.
-	bool set( const std::string& values, char delimiter = ' ' );
-	// PRE: vector must contain at least 4 strings with one value each
-	bool set( const std::vector< std::string >& values );
+    // create vector from a string containing a whitespace (or parameter 
+    // 'delimiter' ) delimited list of values.
+    // returns false if failed, true if it (seems to have) succeeded.
+    // PRE: string must contain at least 4 values, delimited by char delimiter.
+    bool set( const std::string& values, char delimiter = ' ' );
+    // PRE: vector must contain at least 4 strings with one value each
+    bool set( const std::vector< std::string >& values );
 
     const Vector4& operator=( T aa ); 
     const Vector4& operator=( const Vector3<T>& aa ); 
@@ -119,7 +119,7 @@ public:
     Vector4 getNormalized() const;
     
     /** Return normalized Vector3, using only xyz coordinates */
-	Vector3 <T> getNormalizedVector3() const;
+    Vector3 <T> getNormalizedVector3() const;
 
     // vector/scalar operations
     Vector4 operator+( const T aa ) const;
@@ -158,32 +158,32 @@ public:
 
     T getMinComponent();
     T getMaxComponent();
-	
-	// uses the very bad cstdlib (rand()) rng. do NOT use for anything that needs
-	// real random numbers. also, srand() is not called, this is the duty of the 
-	// user. all random numbers are normalized to [0,1].
-	void randomize();
+    
+    // uses the very bad cstdlib (rand()) rng. do NOT use for anything that needs
+    // real random numbers. also, srand() is not called, this is the duty of the 
+    // user. all random numbers are normalized to [0,1].
+    void randomize();
 
-	// sphere functions
-	inline Vector3< T > projectPointOntoSphere( const Vector3< T >& point ) const;
-	// returns a negative distance if the point lies in the sphere
-	inline T getDistanceToSphere( const Vector3< T >& point ) const;
+    // sphere functions
+    inline Vector3< T > projectPointOntoSphere( const Vector3< T >& point ) const;
+    // returns a negative distance if the point lies in the sphere
+    inline T getDistanceToSphere( const Vector3< T >& point ) const;
 
     inline Vector3< T >& getSphereCenter();
     inline const Vector3< T >& getSphereCenter() const;
     
 
-	// plane functions
-	inline Vector3< T > projectPointOntoPlane( const Vector3< T >& point ) const;
+    // plane functions
+    inline Vector3< T > projectPointOntoPlane( const Vector3< T >& point ) const;
     // this normalizes the vector3 consisting of the first three 
     // coordinates, and leaves the fourth as is.
-	inline T getDistanceToPlane( const Vector3< T >& point ) const;
+    inline T getDistanceToPlane( const Vector3< T >& point ) const;
     void normalizePlane();
     
 
-	// writes the values into param result, delimited by param 'delimiter'.
-	// returns false if it failed, true if it (seems to have) succeeded.
-	bool getString( std::string& result, const std::string& delimiter = " " ) const;
+    // writes the values into param result, delimited by param 'delimiter'.
+    // returns false if it failed, true if it (seems to have) succeeded.
+    bool getString( std::string& result, const std::string& delimiter = " " ) const;
 
     friend std::ostream& operator << ( std::ostream& os, const Vector4& v )
     {
@@ -365,10 +365,10 @@ template < typename T >
 void
 Vector4< T >::set( const Vector3< T >& xyz_, const T& w_ )
 {
-	x = xyz_.x;
-	y = xyz_.y;
-	z = xyz_.z;
-	w = w_;
+    x = xyz_.x;
+    y = xyz_.y;
+    z = xyz_.z;
+    w = w_;
 }
 
 
@@ -381,9 +381,9 @@ template< typename T >
 bool
 Vector4< T >::set( const std::string& values, char delimiter )
 {
-	std::vector< std::string > tokens;
-	stringUtils::split( values, tokens, delimiter );
-	return set( tokens );
+    std::vector< std::string > tokens;
+    stringUtils::split( values, tokens, delimiter );
+    return set( tokens );
 }
 
 
@@ -396,19 +396,19 @@ template< typename T >
 bool
 Vector4< T >::set( const std::vector< std::string >& values )
 {
-	bool ok = true;
-	
-	if ( values.size() < 4 )
-		return false;
+    bool ok = true;
+    
+    if ( values.size() < 4 )
+    	return false;
 
-	std::vector< std::string >::const_iterator it 		= values.begin();
-	
-	for( size_t component = 0; ok && component < 4; ++component, ++it )
-	{
-			ok = stringUtils::fromString< T >( *it, xyzw[ component ] );
-	}
-	
-	return ok;
+    std::vector< std::string >::const_iterator it 		= values.begin();
+    
+    for( size_t component = 0; ok && component < 4; ++component, ++it )
+    {
+    		ok = stringUtils::fromString< T >( *it, xyzw[ component ] );
+    }
+    
+    return ok;
 }
 
 
@@ -474,7 +474,7 @@ const T& Vector4< T >::operator[]( size_t index ) const
 } 
 
 
-	
+    
 template < typename T > 
 T  Vector4< T >::length() const 
 { 
@@ -500,7 +500,7 @@ T  Vector4< T >::lengthSquared() const
 template < typename T > 
 T Vector4< T >::normalise()
 { 
-	return normalize();
+    return normalize();
 } 
 
 
@@ -512,7 +512,7 @@ T Vector4< T >::normalize()
     if ( l == 0 ) 
         return 0; 
 
-	const T ll = 1.0 / l;
+    const T ll = 1.0 / l;
     x *= ll; 
     y *= ll; 
     z *= ll; 
@@ -559,7 +559,7 @@ Vector3< T >
 Vector4< T >::getNormalizedVector3() const
 {
     const T len = sqrt( x * x + y * y + z * z );
-	const T ilen = 1.0 / len;
+    const T ilen = 1.0 / len;
     return Vector3<T>( x * ilen, y * ilen, z * ilen );
 }
 
@@ -910,7 +910,7 @@ inline bool Vector4< float >::isAkin( const Vector4& rhs, const float& delta ) c
 
 template < typename T > 
 void Vector4< T >::invert() 
-{	
+{
     x = -x; 
     y = -y; 
     z = -z; 
@@ -945,8 +945,8 @@ template < typename T >
 inline Vector3< T >
 Vector4< T >::projectPointOntoSphere( const Vector3< T >& point ) const
 {
-	const Vector3< T >& center_ = *reinterpret_cast< const Vector3< T >* >( &x );
-	return center_ + ( point - center_ ).normalize() * radius; 
+    const Vector3< T >& center_ = *reinterpret_cast< const Vector3< T >* >( &x );
+    return center_ + ( point - center_ ).normalize() * radius; 
 }
 
 
@@ -955,8 +955,8 @@ template < typename T >
 inline T
 Vector4< T >::getDistanceToSphere( const Vector3< T >& point ) const
 {
-	const Vector3< T >& center_ = *reinterpret_cast< const Vector3< T >* >( &x );
-	return ( point - center_ ).length() - radius;
+    const Vector3< T >& center_ = *reinterpret_cast< const Vector3< T >* >( &x );
+    return ( point - center_ ).length() - radius;
 }
 
 
@@ -982,8 +982,8 @@ template < typename T >
 inline Vector3< T >
 Vector4< T >::projectPointOntoPlane( const Vector3< T >& point ) const
 {
-	const Vector3< T >& normal_ = *reinterpret_cast< const Vector3< T >* >( &x );
-	return point - ( normal_ * getDistanceToPlane( point ) );
+    const Vector3< T >& normal_ = *reinterpret_cast< const Vector3< T >* >( &x );
+    return point - ( normal_ * getDistanceToPlane( point ) );
 }
 
 
@@ -992,7 +992,7 @@ template < typename T >
 inline T
 Vector4< T >::getDistanceToPlane( const Vector3< T >& point ) const
 {
-	const Vector3< T >& normal_ = *reinterpret_cast< const Vector3< T >* >( &x );
+    const Vector3< T >& normal_ = *reinterpret_cast< const Vector3< T >* >( &x );
     return normal_.dot( point ) + distance;
 }
 
@@ -1002,10 +1002,10 @@ template < typename T >
 void
 Vector4< T >::randomize()
 {
-	x = (double) rand() / RAND_MAX;
-	y = (double) rand() / RAND_MAX;
-	z = (double) rand() / RAND_MAX;
-	w = (double) rand() / RAND_MAX;
+    x = (double) rand() / RAND_MAX;
+    y = (double) rand() / RAND_MAX;
+    z = (double) rand() / RAND_MAX;
+    w = (double) rand() / RAND_MAX;
 }
 
 
@@ -1016,15 +1016,15 @@ template< typename T >
 bool
 Vector4< T >::getString( std::string& result, const std::string& delimiter ) const
 {
-	std::string tmp;
-	bool ok = true;
-	for( size_t component = 0; component < 4; ++component )
-	{
-		ok = stringUtils::toString< T >( xyzw[ component ], tmp );
-		result += tmp;
-		result += delimiter;
-	}
-	return ok;
+    std::string tmp;
+    bool ok = true;
+    for( size_t component = 0; component < 4; ++component )
+    {
+    	ok = stringUtils::toString< T >( xyzw[ component ], tmp );
+    	result += tmp;
+    	result += delimiter;
+    }
+    return ok;
 }
 
 

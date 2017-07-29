@@ -1,26 +1,30 @@
 /**
  * @file introstate.cpp
  * @brief Implemntation of the introstate module.
- *
+ */
+/*
  * Copyright 2010 Stephen M. Webb  <stephen.webb@bregmasoft.ca>
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of Version 2 of the GNU General Public License as
- * published by the Free Software Foundation.
+ * This file is part of no-dice.
  *
- * This program is distributed in the hope that it will be useful,
+ * No-dice is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * No-dice is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with no-dice.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "nodice_config.h"
 #include "nodice/introstate.h"
 
 #include "nodice/app.h"
+#include "nodice/config.h"
 #include "nodice/font.h"
 #include "nodice/playstate.h"
 #include "nodice/video.h"
@@ -30,45 +34,45 @@
 
 namespace 
 {
-	struct MenuEntry
-	{
-		const char*                    title;
-		vmml::Vector2f                 pos;
-		NoDice::IntroState::NextState  nextState;
-	};
+  struct MenuEntry
+  {
+    const char*                    title;
+    vmml::Vector2f                 pos;
+    NoDice::IntroState::NextState  nextState;
+  };
 
-	static MenuEntry entry[] = 
-	{
-		{ "options", vmml::Vector2f(0.0f, 0.0f), NoDice::IntroState::next_state_options },
-		{ "play",    vmml::Vector2f(0.0f, 0.0f), NoDice::IntroState::next_state_play },
-		{ "quit",    vmml::Vector2f(0.0f, 0.0f), NoDice::IntroState::next_state_quit }
-	};
+  static MenuEntry entry[] = 
+  {
+    { "options", vmml::Vector2f(0.0f, 0.0f), NoDice::IntroState::next_state_options },
+    { "play",    vmml::Vector2f(0.0f, 0.0f), NoDice::IntroState::next_state_play },
+    { "quit",    vmml::Vector2f(0.0f, 0.0f), NoDice::IntroState::next_state_quit }
+  };
 
-	static const std::size_t menuCount = sizeof(entry) / sizeof(MenuEntry);
+  static const std::size_t menuCount = sizeof(entry) / sizeof(MenuEntry);
 
-	static float titleColour[] = { 1.00f, 0.10f, 0.10f, 1.00f };
-	static float selectedColour[] = { 0.80f, 0.50f, 1.00f, 0.80f };
-	static float unselectedColour[] = { 0.20f, 0.20f, 0.80f, 0.80f };
+  static float titleColour[] = { 1.00f, 0.10f, 0.10f, 1.00f };
+  static float selectedColour[] = { 0.80f, 0.50f, 1.00f, 0.80f };
+  static float unselectedColour[] = { 0.20f, 0.20f, 0.80f, 0.80f };
 
 } // anonymous namespace
 
 
 NoDice::IntroState::
-IntroState(Config& config,
-           const Video& video NODICE_UNUSED)
-: GameState(config)
-, m_isActive(true)
-, m_menuFont(getFont(MENU_FONT, config.screenHeight() / 18))
-, m_titlePos(0.25 * config.screenWidth(), 0.75 * config.screenHeight())
-, m_selected(0)
-, m_nextState(next_state_same)
+IntroState(NoDice::App*  app,
+           Video const&  video NODICE_UNUSED)
+: GameState(app)
+, is_active_(true)
+, menu_font_(app_->font_cache().get_font(MENU_FONT, app_->config().screen_height() / 18))
+, title_pos_(0.25 * app_->config().screen_width(), 0.75 * app_->config().screen_height())
+, selected_(0)
+, next_state_(next_state_same)
 {
-	const float vspacing = -2.0f * m_menuFont.height();
-	entry[0].pos.set(m_titlePos.x, m_titlePos.y + vspacing);
-	for (std::size_t i = 1; i < menuCount; ++i)
-	{
-		entry[i].pos.set(entry[i-1].pos.x, entry[i-1].pos.y + vspacing);
-	}
+  const float vspacing = -2.0f * menu_font_.height();
+  entry[0].pos.set(title_pos_.x, title_pos_.y + vspacing);
+  for (std::size_t i = 1; i < menuCount; ++i)
+  {
+    entry[i].pos.set(entry[i-1].pos.x, entry[i-1].pos.y + vspacing);
+  }
 }
 
 NoDice::IntroState::
@@ -79,54 +83,54 @@ NoDice::IntroState::
 void NoDice::IntroState::
 pause()
 {
-	m_isActive = false;
+  is_active_ = false;
 }
 
 
 void NoDice::IntroState::
 resume()
 {
-	m_isActive = true;
+  is_active_ = true;
 }
 
 
 void NoDice::IntroState::
 key(SDL_keysym keysym)
 {
-	switch (keysym.sym)
-	{
-		case SDLK_UP:
-			--m_selected;
-			if (m_selected < 0)
-				m_selected = 0;
-			break;
+  switch (keysym.sym)
+  {
+    case SDLK_UP:
+      --selected_;
+      if (selected_ < 0)
+        selected_ = 0;
+      break;
 
-		case SDLK_DOWN:
-			++m_selected;
-			if (std::size_t(m_selected) >= menuCount)
-				m_selected = menuCount-1;
-			break;
+    case SDLK_DOWN:
+      ++selected_;
+      if (std::size_t(selected_) >= menuCount)
+        selected_ = menuCount-1;
+      break;
 
-		case SDLK_RETURN:
-		case SDLK_KP_ENTER:
-			m_nextState = entry[m_selected].nextState;
-			break;
+    case SDLK_RETURN:
+    case SDLK_KP_ENTER:
+      next_state_ = entry[selected_].nextState;
+      break;
 
-		case SDLK_o:
-			m_nextState = next_state_options;
-			break;
+    case SDLK_o:
+      next_state_ = next_state_options;
+      break;
 
-		case SDLK_p:
-			m_nextState = next_state_play;
-			break;
+    case SDLK_p:
+      next_state_ = next_state_play;
+      break;
 
-		case SDLK_q:
-			m_nextState = next_state_quit;
-			break;
+    case SDLK_q:
+      next_state_ = next_state_quit;
+      break;
 
-	        default:
-	                break;
-	}
+          default:
+                  break;
+  }
 }
 
 
@@ -150,36 +154,36 @@ pointerClick(int x NODICE_UNUSED,
 void NoDice::IntroState::
 update(App& app)
 {
-	switch (m_nextState)
-	{
-		case next_state_quit:
-			app.popGameState();
-			break;
+  switch (next_state_)
+  {
+    case next_state_quit:
+      app.pop_game_state();
+      break;
 
-		case next_state_play:
-			app.pushGameState(GameStatePtr(new PlayState(m_config)));
-			break;
+    case next_state_play:
+      app.push_game_state(GameStatePtr(new PlayState(app_)));
+      break;
 
-		default:
-			break;
-	}
+    default:
+      break;
+  }
 }
 
 
 void NoDice::IntroState::
 draw(Video& video NODICE_UNUSED)
 {
-	glColor4fv(titleColour);
-	m_menuFont.print(m_titlePos.x, m_titlePos.y, 1.0f, "No Dice!");
+  glColor4fv(titleColour);
+  menu_font_.print(title_pos_.x, title_pos_.y, 1.0f, "No Dice!");
 
-	for (std::size_t i = 0; i < menuCount; ++i)
-	{
-		if (i == std::size_t(m_selected))
-			glColor4fv(selectedColour);
-		else
-			glColor4fv(unselectedColour);
-		m_menuFont.print(entry[i].pos.x, entry[i].pos.y, 1.0f, entry[i].title);
-	}
+  for (std::size_t i = 0; i < menuCount; ++i)
+  {
+    if (i == std::size_t(selected_))
+      glColor4fv(selectedColour);
+    else
+      glColor4fv(unselectedColour);
+    menu_font_.print(entry[i].pos.x, entry[i].pos.y, 1.0f, entry[i].title);
+  }
 }
 
 
