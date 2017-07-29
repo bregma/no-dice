@@ -24,6 +24,7 @@
 #include "nodice/introstate.h"
 
 #include "nodice/app.h"
+#include "nodice/config.h"
 #include "nodice/font.h"
 #include "nodice/playstate.h"
 #include "nodice/video.h"
@@ -57,12 +58,12 @@ namespace
 
 
 NoDice::IntroState::
-IntroState(Config const* config,
+IntroState(NoDice::App*  app,
            Video const&  video NODICE_UNUSED)
-: GameState(config)
+: GameState(app)
 , is_active_(true)
-, menu_font_(getFont(MENU_FONT, config->screen_height() / 18))
-, title_pos_(0.25 * config->screen_width(), 0.75 * config->screen_height())
+, menu_font_(app_->font_cache().get_font(MENU_FONT, app_->config().screen_height() / 18))
+, title_pos_(0.25 * app_->config().screen_width(), 0.75 * app_->config().screen_height())
 , selected_(0)
 , next_state_(next_state_same)
 {
@@ -156,11 +157,11 @@ update(App& app)
   switch (next_state_)
   {
     case next_state_quit:
-      app.popGameState();
+      app.pop_game_state();
       break;
 
     case next_state_play:
-      app.pushGameState(GameStatePtr(new PlayState(config_)));
+      app.push_game_state(GameStatePtr(new PlayState(app_)));
       break;
 
     default:

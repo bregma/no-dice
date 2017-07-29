@@ -24,48 +24,47 @@
 #ifndef NODICE_GAMESTATE_H
 #define NODICE_GAMESTATE_H 1
 
-#include "nodice/config.h"
 #include <SDL/SDL_events.h>
-#include <tr1/memory>
+#include <memory>
 
 
 namespace NoDice
 {
-	class App;
-	class Video;
+  class App;
+  class Video;
 
-	/**
-	 * An abstract base class for things implementing a stateful part of the game.
-	 */
-	class GameState
-	{
-	public:
-		enum PointerAction
-		{
-			pointerUp,
-			pointerDown,
-			pointerDoubleDown
-		};
+  /**
+   * An abstract base class for things implementing a stateful part of the game.
+   */
+  class GameState
+  {
+  public:
+    enum PointerAction
+    {
+      pointerUp,
+      pointerDown,
+      pointerDoubleDown
+    };
 
-	public:
-		GameState(Config const* config);
-		virtual ~GameState() = 0;
+  public:
+    GameState(App* app);
+    virtual ~GameState() = 0;
 
-		virtual void pause();
-		virtual void resume();
+    virtual void pause();
+    virtual void resume();
 
-		virtual void key(SDL_keysym keysym);
-		virtual void pointerMove(int x, int y, int dx, int dy);
-		virtual void pointerClick(int x, int y, PointerAction action);
-		virtual void update(App& app) = 0;
+    virtual void key(SDL_keysym keysym);
+    virtual void pointerMove(int x, int y, int dx, int dy);
+    virtual void pointerClick(int x, int y, PointerAction action);
+    virtual void update(App& app) = 0;
 
-		virtual void draw(Video& video) = 0;
+    virtual void draw(Video& video) = 0;
 
-	protected:
-		Config const* config_;
-	};
+  protected:
+    App*  app_;
+  };
 
-	typedef std::tr1::shared_ptr<GameState> GameStatePtr;
+  typedef std::shared_ptr<GameState> GameStatePtr;
 
 } // namespace NoDice
 

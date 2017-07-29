@@ -29,45 +29,45 @@
 
 namespace NoDice
 {
-	class Font;
+  class Font;
 
-	/**
-	 * Provides the "game introduction" state:  mostly just the loading screen.
-	 */
-	class IntroState
-	: public GameState
-	{
-	public:
-		enum NextState
-		{
-			next_state_same,
-			next_state_options,
-			next_state_play,
-			next_state_quit
-		};
+  /**
+   * Provides the "game introduction" state:  mostly just the loading screen.
+   */
+  class IntroState
+  : public GameState
+  {
+  public:
+    enum NextState
+    {
+      next_state_same,
+      next_state_options,
+      next_state_play,
+      next_state_quit
+    };
 
-	public:
-		IntroState(Config const* config, const Video& video);
+  public:
+    IntroState(App* app, const Video& video);
 
-		~IntroState();
+    ~IntroState();
 
-		void pause();
-		void resume();
+    void pause();
+    void resume();
 
-		void key(SDL_keysym keysym);
-		void pointerMove(int x, int y, int dx, int dy);
-		void pointerClick(int x, int y, PointerAction action);
-		void update(App& app);
+    void key(SDL_keysym keysym);
+    void pointerMove(int x, int y, int dx, int dy);
+    void pointerClick(int x, int y, PointerAction action);
+    void update(App& app);
 
-		void draw(Video& video);
+    void draw(Video& video);
 
-	private:
-		bool       is_active_;
-		Font&      menu_font_;
-		Vector2f   title_pos_;
-		int        selected_;
-		NextState  next_state_;
-	};
+  private:
+    bool       is_active_;
+    Font&      menu_font_;
+    Vector2f   title_pos_;
+    int        selected_;
+    NextState  next_state_;
+  };
 
 } // namespace NoDice
 

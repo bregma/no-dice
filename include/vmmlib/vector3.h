@@ -77,13 +77,13 @@ public:
     void set( const float* values );
     void set( const double* values );
 
-	// create vector from a string containing a whitespace (or parameter 
-	// 'delimiter' ) delimited list of values.
-	// returns false if failed, true if it (seems to have) succeeded.
-	// PRE: string must contain at least 3 values, delimited by char delimiter.
-	bool set( const std::string& values, char delimiter = ' ' );
-	// PRE: vector must contain at least 3 strings with one value each
-	bool set( const std::vector< std::string >& values );
+    // create vector from a string containing a whitespace (or parameter 
+    // 'delimiter' ) delimited list of values.
+    // returns false if failed, true if it (seems to have) succeeded.
+    // PRE: string must contain at least 3 values, delimited by char delimiter.
+    bool set( const std::string& values, char delimiter = ' ' );
+    // PRE: vector must contain at least 3 strings with one value each
+    bool set( const std::vector< std::string >& values );
 
     const Vector3& operator=( T a ); 
     const Vector3& operator=( const Vector3& rhs ); 
@@ -170,15 +170,15 @@ public:
 
     T getMinComponent();
     T getMaxComponent();
-	
-	// uses the very bad cstdlib (rand()) rng. do NOT use for anything that needs
-	// real random numbers. also, srand() is not called, this is the duty of the 
-	// user. all random numbers are normalized to [0,1].
-	void randomize();
+    
+    // uses the very bad cstdlib (rand()) rng. do NOT use for anything that needs
+    // real random numbers. also, srand() is not called, this is the duty of the 
+    // user. all random numbers are normalized to [0,1].
+    void randomize();
 
-	// writes the values into param result, delimited by param 'delimiter'.
-	// returns false if it failed, true if it (seems to have) succeeded.
-	bool getString( std::string& result, const std::string& delimiter = " " ) const;
+    // writes the values into param result, delimited by param 'delimiter'.
+    // returns false if it failed, true if it (seems to have) succeeded.
+    bool getString( std::string& result, const std::string& delimiter = " " ) const;
 
     friend std::ostream& operator << ( std::ostream& os, const Vector3& v )
     {
@@ -372,9 +372,9 @@ template< typename T >
 bool
 Vector3< T >::set( const std::string& values, char delimiter )
 {
-	std::vector< std::string > tokens;
-	stringUtils::split( values, tokens, delimiter );
-	return set( tokens );
+    std::vector< std::string > tokens;
+    stringUtils::split( values, tokens, delimiter );
+    return set( tokens );
 }
 
 
@@ -387,19 +387,19 @@ template< typename T >
 bool
 Vector3< T >::set( const std::vector< std::string >& values )
 {
-	bool ok = true;
-	
-	if ( values.size() < 3 )
-		return false;
+    bool ok = true;
+    
+    if ( values.size() < 3 )
+    	return false;
 
-	std::vector< std::string >::const_iterator it 		= values.begin();
-	
-	for( size_t component = 0; ok && component < 3; ++component, ++it )
-	{
-			ok = stringUtils::fromString< T >( *it, xyz[ component ] );
-	}
-	
-	return ok;
+    std::vector< std::string >::const_iterator it 		= values.begin();
+    
+    for( size_t component = 0; ok && component < 3; ++component, ++it )
+    {
+    		ok = stringUtils::fromString< T >( *it, xyz[ component ] );
+    }
+    
+    return ok;
 }
 
 
@@ -454,7 +454,7 @@ const T& Vector3< T >::operator[]( size_t index ) const
 } 
 
 
-	
+    
 template < typename T > 
 T  Vector3< T >::length() const 
 { 
@@ -507,7 +507,7 @@ T  Vector3< T >::normalise()
 template < typename T > 
 T  Vector3< T >::normalise( float* source )
 {
-	return normalize( source );
+    return normalize( source );
 }
 
 
@@ -519,7 +519,7 @@ T  Vector3< T >::normalize()
     if ( l == 0 ) 
         return 0; 
 
-	const T ll = 1.0 / l;
+    const T ll = 1.0 / l;
     x *= ll; 
     y *= ll; 
     z *= ll; 
@@ -537,7 +537,7 @@ T  Vector3< T >::normalize( float* source )
     if ( l == 0 ) 
         return 0;
     
-	const T ll = 1.0 / l;
+    const T ll = 1.0 / l;
     source[0] *= ll;
     source[1] *= ll;
     source[2] *= ll;
@@ -1040,9 +1040,9 @@ template < typename T >
 void
 Vector3< T >::randomize()
 {
-	x = (double) rand() / RAND_MAX;
-	y = (double) rand() / RAND_MAX;
-	z = (double) rand() / RAND_MAX;
+    x = (double) rand() / RAND_MAX;
+    y = (double) rand() / RAND_MAX;
+    z = (double) rand() / RAND_MAX;
 }
 
 
@@ -1053,19 +1053,19 @@ template< typename T >
 bool
 Vector3< T >::getString( std::string& result, const std::string& delimiter ) const
 {
-	std::string tmp;
-	bool ok = true;
-	for( size_t component = 0; component < 3; ++component )
-	{
-		ok = stringUtils::toString< T >( xyz[ component ], tmp );
-		result += tmp;
-		result += delimiter;
-	}
-	return ok;
+    std::string tmp;
+    bool ok = true;
+    for( size_t component = 0; component < 3; ++component )
+    {
+    	ok = stringUtils::toString< T >( xyz[ component ], tmp );
+    	result += tmp;
+    	result += delimiter;
+    }
+    return ok;
 }
 
 
 
 } //namespace vmml
-	
+    
 #endif

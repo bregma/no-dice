@@ -68,7 +68,9 @@ Font(const std::string& fontname, unsigned int pointsize)
 	ftStatus = FT_New_Face(ftLib, m_name.c_str(), 0, &ftFace);
 	if (ftStatus != 0)
 	{
-		throw std::runtime_error("error in FT_New_Face");
+                std::ostringstream ostr;
+		ostr << "error " << ftStatus << " in FT_New_Face(\"" << m_name << "\"";
+		throw std::runtime_error(ostr.str());
 	}
 
 	// munge character size.  Freetype uses 1/64th of a point (1/4608 of an inch)
@@ -329,45 +331,4 @@ print(GLfloat x, GLfloat y, GLfloat scale, const std::string& text)
 	glPopMatrix();
 }
 
-
-#ifndef DATA_DIR
-# define DATA_DIR "./"
-#endif
-
-/**
- * @param typefaceName[in]  Name of the typeface.
- * @param pointSize[in]     Size of the font in points.
- *
- * Checks the global font cache for the named font and returns a reference to
- * it.  If the font is not in the cache, it gets loaded first.
- */
-NoDice::Font& NoDice::
-getFont(const std::string& typefaceName, unsigned int pointSize)
-{
-  typedef std::map<std::string, Font> FontCache;
-  static FontCache s_fontCache;
-
-  std::ostringstream ostr;
-  ostr << typefaceName << '_' << pointSize;
-  std::string fontKey = ostr.str();
-  FontCache::iterator it = s_fontCache.find(fontKey);
-  if (it != s_fontCache.end())
-  {
-    return  it->second;
-  }
-
-  // allow in-build-directory to take precedence
-  std::string filename = "./assets/" + typefaceName + ".ttf";
-  if (0 != access(filename.c_str(), R_OK))
-  {
-    filename = DATA_DIR + std::string("/") + typefaceName + ".ttf";
-    if (0 != access(filename.c_str(), R_OK))
-    {
-      filename = typefaceName;
-    }
-  }
-  std::pair<FontCache::iterator,bool> p = s_fontCache.insert(
-                std::make_pair(fontKey, Font(filename, pointSize)));
-  return p.first->second;
-}
 

@@ -39,7 +39,7 @@ namespace NoDice
   : public GameState
   {
   public:
-    PlayState(Config const* config);
+    PlayState(App* app);
     ~PlayState();
 
     void pointerMove(int x, int y, int dx, int dy);

@@ -23,6 +23,7 @@
 #ifndef NODICE_APP_H
 #define NODICE_APP_H 1
 
+#include "nodice/fontcache.h"
 #include "nodice/gamestate.h"
 #include "nodice/video.h"
 #include <stack>
@@ -40,7 +41,7 @@ namespace NoDice
   {
   public:
     explicit
-    App(Config const* config);
+    App(Config * config);
 
     ~App();
 
@@ -48,10 +49,16 @@ namespace NoDice
     run();
 
     void
-    pushGameState(GameStatePtr state);
+    push_game_state(GameStatePtr state);
 
     void
-    popGameState();
+    pop_game_state();
+
+    Config&
+    config();
+
+    FontCache&
+    font_cache();
 
   private:
     /** @brief A special RAII object for SDL initialization and teardown. */
@@ -64,9 +71,10 @@ namespace NoDice
   private:
     typedef std::stack<GameStatePtr, std::vector<GameStatePtr>> StateStack;
 
-    Config const*  config_;
+    Config*        config_;
     SdlInit        sdl_init_;
     Video          video_;
+    FontCache      font_cache_;
     StateStack     state_stack_;
   };
 

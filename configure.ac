@@ -57,7 +57,7 @@ AC_SUBST([GL_LIBS])
 
 # Crank the warnings level up to 11
 AC_SUBST([AM_CXXFLAGS],
-         ["-Wall -Wextra -Werror -pedantic -std=c++0x -D_GNU_SOURCE=1"])
+         ["-Wall -Wextra -Werror -pedantic -std=c++14 -D_GNU_SOURCE=1"])
 AC_DEFINE([NODICE_UNUSED],
           [__attribute__((unused))],[symbol is unused])
 

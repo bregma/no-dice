@@ -65,13 +65,14 @@ NoDice::App::SdlInit::
  * The App object takes care of initializing the even system.
  */
 NoDice::App::
-App(NoDice::Config const* config)
+App(NoDice::Config* config)
 : config_(config)
 , sdl_init_()
 , video_(config)
+, font_cache_(config)
 {
 	std::srand(std::time(NULL));
-	pushGameState(GameStatePtr(new IntroState(config_, video_)));
+	push_game_state(GameStatePtr(new IntroState(this, video_)));
 }
 
 
@@ -173,16 +174,30 @@ run()
 
 
 void NoDice::App::
-pushGameState(GameStatePtr state)
+push_game_state(GameStatePtr state)
 {
 	state_stack_.push(state);
 }
 
 
 void NoDice::App::
-popGameState()
+pop_game_state()
 {
 	state_stack_.pop();
+}
+
+
+NoDice::Config& NoDice::App::
+config()
+{
+  return *config_;
+}
+
+
+NoDice::FontCache& NoDice::App::
+font_cache()
+{
+  return font_cache_;
 }
 
 

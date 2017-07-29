@@ -26,8 +26,8 @@
 
 
 NoDice::GameState::
-GameState(Config const* config)
-: config_(config)
+GameState(NoDice::App* app)
+: app_(app)
 {
 }
 

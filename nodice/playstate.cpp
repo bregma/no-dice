@@ -26,7 +26,9 @@
 #include <iomanip>
 #include <iostream>
 #include <sstream>
+#include "nodice/app.h"
 #include "nodice/colour.h"
+#include "nodice/config.h"
 #include "nodice/font.h"
 #include "nodice/object.h"
 #include "nodice/shape.h"
@@ -50,11 +52,11 @@ namespace
 
 
 NoDice::PlayState::
-PlayState(Config const* config)
-: GameState(config)
+PlayState(App* app)
+: GameState(app)
 , state_(state_idle)
-, gameboard_(config)
-, score_font_(getFont(SCORE_FONT, config->screen_height() / 18))
+, gameboard_(&app_->config())
+, score_font_(app_->font_cache().get_font(SCORE_FONT, app_->config().screen_height() / 18))
 , mouse_is_down_(false)
 , multiplier_(0)
 , score_(0)
@@ -63,8 +65,8 @@ PlayState(Config const* config)
   glMatrixMode(GL_PROJECTION);
   glPushMatrix();
   glLoadIdentity();
-  int w = config->screen_width();
-  int h = config->screen_height();
+  int w = app_->config().screen_width();
+  int h = app_->config().screen_height();
   float right = 1.0f;
   float top   = 1.0f;
   if (h < w)
@@ -112,7 +114,7 @@ pointerMove(int x, int y, int dx, int dy)
     {
       if (dx < 0 && selected_pos_.x > 0)
           --pos2.x;
-      else if (selected_pos_.x < config_->board_size()-1)
+      else if (selected_pos_.x < app_->config().board_size()-1)
           ++pos2.x;
       else
         return;
@@ -121,7 +123,7 @@ pointerMove(int x, int y, int dx, int dy)
     {
       if (dy > 0 && selected_pos_.y > 0)
           --pos2.y;
-      else if (selected_pos_.y < config_->board_size()-1)
+      else if (selected_pos_.y < app_->config().board_size()-1)
           ++pos2.y;
       else
         return;
@@ -143,8 +145,8 @@ pointerClick(int x, int y, PointerAction action)
   else if (action == pointerDown)
   {
     mouse_down_pos_.set(x, y);
-    float win_width = float(config_->screen_width()) / 2.0f;
-    float win_height = float(config_->screen_height()) / 2.0f;
+    float win_width = float(app_->config().screen_width()) / 2.0f;
+    float win_height = float(app_->config().screen_height()) / 2.0f;
     float unit_x = float(x - win_width) / win_width;
     float unit_y = -float(y - win_height) / win_height;
 
@@ -152,9 +154,9 @@ pointerClick(int x, int y, PointerAction action)
     Vector4f beam = unproject_ * ray;
     selected_pos_.x = int(beam.x / 2.0f + 0.50f);
     selected_pos_.y = int(beam.y / 2.0f + 0.50f);
-    if (selected_pos_.x >= config_->board_size() || selected_pos_.x < 0)
+    if (selected_pos_.x >= app_->config().board_size() || selected_pos_.x < 0)
       return;
-    if (selected_pos_.y >= config_->board_size() || selected_pos_.y < 0)
+    if (selected_pos_.y >= app_->config().board_size() || selected_pos_.y < 0)
       return;
 
     ObjectPtr obj = gameboard_.at(selected_pos_.x, selected_pos_.y);
@@ -262,8 +264,8 @@ draw(Video& video NODICE_UNUSED)
   glLoadIdentity();
 
   // Adjust projection to take aspect ratio into account.
-  int w = config_->screen_width();
-  int h = config_->screen_height();
+  int w = app_->config().screen_width();
+  int h = app_->config().screen_height();
   float right = 1.0f;
   float top   = 1.0f;
   if (h < w)
