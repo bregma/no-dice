@@ -140,12 +140,64 @@ stop_game()
 }
 
 
+namespace
+{
+
+std::string
+event_to_name(SDL_EventType type)
+{
+  static struct {
+    SDL_EventType type;
+    std::string   name;
+  } sdl_event_types[] = {
+    { SDL_NOEVENT,         "SDL_NOEVENT" },
+    { SDL_ACTIVEEVENT,     "SDL_ACTIVEEVENT" },
+    { SDL_KEYDOWN,         "SDL_KEYDOWN" },
+    { SDL_KEYUP,           "SDL_KEYUP" },
+    { SDL_MOUSEMOTION,     "SDL_MOUSEMOTION" },
+    { SDL_MOUSEBUTTONDOWN, "SDL_MOUSEBUTTONDOWN" },
+    { SDL_MOUSEBUTTONUP,   "SDL_MOUSEBUTTONUP" },
+    { SDL_JOYAXISMOTION,   "SDL_JOYAXISMOTION" },
+    { SDL_JOYBALLMOTION,   "SDL_JOYBALLMOTION" },
+    { SDL_JOYHATMOTION,    "SDL_JOYHATMOTION" },
+    { SDL_JOYBUTTONDOWN,   "SDL_JOYBUTTONDOWN" },
+    { SDL_JOYBUTTONUP,     "SDL_JOYBUTTONUP" },
+    { SDL_QUIT,            "SDL_QUIT" },
+    { SDL_SYSWMEVENT,      "SDL_SYSWMEVENT" },
+    { SDL_EVENT_RESERVEDA, "SDL_EVENT_RESERVEDA" },
+    { SDL_EVENT_RESERVEDB, "SDL_EVENT_RESERVEDB" },
+    { SDL_VIDEORESIZE,     "SDL_VIDEORESIZE" },
+    { SDL_VIDEOEXPOSE,     "SDL_VIDEOEXPOSE" },
+    { SDL_EVENT_RESERVED2, "SDL_EVENT_RESERVED2" },
+    { SDL_EVENT_RESERVED3, "SDL_EVENT_RESERVED3" },
+    { SDL_EVENT_RESERVED4, "SDL_EVENT_RESERVED4" },
+    { SDL_EVENT_RESERVED5, "SDL_EVENT_RESERVED5" },
+    { SDL_EVENT_RESERVED6, "SDL_EVENT_RESERVED6" },
+    { SDL_EVENT_RESERVED7, "SDL_EVENT_RESERVED7" },
+    { SDL_USEREVENT,       "SDL_USEREVENT" }
+  };
+
+  for (auto const& event: sdl_event_types)
+  {
+    if (type == event.type)
+    {
+      return event.name;
+    }
+  }
+  return "unknown";
+}
+
+} // anonymous namespace
+
+
 void NoDice::App::
 process_input()
 {
   SDL_Event event;
   while (SDL_PollEvent(&event))
   {
+    if (config_->is_debug_mode())
+      std::cerr << "==smw> event type " << event_to_name(static_cast<SDL_EventType>(event.type)) << " received.\n";
 
     switch (event.type)
     {
@@ -198,8 +250,6 @@ process_input()
       break;
 
     default:
-      if (config_->is_debug_mode())
-        std::cerr << "==smw> event type " << static_cast<int>(event.type) << " received.\n";
       break;
     }
   }

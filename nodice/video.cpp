@@ -58,11 +58,13 @@ Video(Config const* config)
 #endif
 {
   initGL();
+  check_gl_error("initGL()");
   glViewport(0, 0, config->screen_width(), config->screen_height());
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
+  check_gl_error("Video::Video()");
 }
 
 
@@ -76,9 +78,11 @@ void NoDice::Video::
 update()
 {
   m_context->swapBuffers();
+  check_gl_error("Video::update()");
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glLoadIdentity();
   glTranslatef(0.0f, 0.0f, -1.0f);
+  check_gl_error("Video::update()");
 }
 
 
