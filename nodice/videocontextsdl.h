@@ -24,6 +24,7 @@
 #define NODICE_VIDEOCONTEXTSDL_H 1
 
 #include "nodice/videocontext.h"
+#include <SDL.h>
 
 
 namespace NoDice
@@ -39,6 +40,9 @@ namespace NoDice
 
     void
     swapBuffers() override;
+
+  private:
+    SDL_Window* window_;
   };
 
 } // namespace NoDice

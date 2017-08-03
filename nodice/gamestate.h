@@ -24,7 +24,7 @@
 #ifndef NODICE_GAMESTATE_H
 #define NODICE_GAMESTATE_H 1
 
-#include <SDL/SDL_events.h>
+#include <SDL_events.h>
 #include <memory>
 
 
@@ -53,7 +53,7 @@ namespace NoDice
     virtual void pause();
     virtual void resume();
 
-    virtual void key(SDL_keysym keysym);
+    virtual void key(SDL_Keysym keysym);
     virtual void pointerMove(int x, int y, int dx, int dy);
     virtual void pointerClick(int x, int y, PointerAction action);
     virtual void update(App& app) = 0;

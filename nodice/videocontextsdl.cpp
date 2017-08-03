@@ -24,11 +24,10 @@
 
 #include <iostream>
 #include "nodice/config.h"
-#include <SDL/SDL.h>
 
 
 NoDice::VideoContextSDL::
-VideoContextSDL(Config const* config)
+VideoContextSDL(Config const*)
 {
   if (0 != ::SDL_InitSubSystem(SDL_INIT_VIDEO))
   {
@@ -37,111 +36,22 @@ VideoContextSDL(Config const* config)
     exit(1);
   }
 
-  SDL_GL_SetAttribute(SDL_GL_RED_SIZE,     5);
-  SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE,   5);
-  SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE,    5);
-  SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE,  16);
-  SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+  window_ = SDL_CreateWindow("No Dice",
+                             SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+                             640, 480,
+                             SDL_WINDOW_OPENGL);
 
-  const SDL_VideoInfo* videoInfo = SDL_GetVideoInfo();
-  if (!videoInfo)
+  SDL_GLContext context = SDL_GL_CreateContext(window_);
+  if (!context)
   {
-    std::cerr << "*** ERRROR in SDL_GetVideoInfo(): "
-              << ::SDL_GetError() << "\n";
+    std::cerr << "*** ERRROR in SDL_GL_CreateContext(): " << ::SDL_GetError() << "\n";
     exit(1);
   }
-  if (config->is_debug_mode())
-    std::cerr << "Video Info:\n"
-              << "  current_w=" << videoInfo->current_w << "\n"
-              << "  current_h=" << videoInfo->current_h << "\n"
-              << "  vfmt->BitsPerPixel="
-              << static_cast<int>(videoInfo->vfmt->BitsPerPixel) << "\n";
-
-  SDL_Rect** modes = SDL_ListModes(videoInfo->vfmt, SDL_OPENGL|SDL_FULLSCREEN);
-//  SDL_Rect** modes = SDL_ListModes(videoInfo->vfmt, SDL_OPENGL);
-  if (modes == NULL)
-  {
-    std::cerr << "*** ERRROR no supported video modes available.\n";
-    exit(1);
-  }
-
-  int width = config->is_fullscreen() ? videoInfo->current_w : config->screen_width();
-  int height = config->is_fullscreen() ? videoInfo->current_h : config->screen_height();
-  if (modes == (SDL_Rect **)-1)
-  {
-    std::cerr << "==smw> all video resolutions available.\n";
-  }
-  else
-  {
-    if (config->is_debug_mode())
-    {
-      std::cerr << "Available Modes:\n";
-      for (int i=0; modes[i]; ++i)
-      {
-        std::cerr << "  " << modes[i]->w << "x" << modes[i]->h << "\n";
-      }
-    }
-
-    bool mode_found = false;
-    for (int i=0; modes[i]; ++i)
-    {
-      if (modes[i]->w == width && modes[i]->h == height)
-      {
-        mode_found = true;
-        break;
-      }
-    }
-    if (!mode_found && modes[0])
-    {
-      if (config->is_debug_mode())
-        std::cerr << ".. mode " << width << "x" << height
-                  << "not found, falling back to default.\n";
-      if (config->is_small_window())
-      {
-        width = 640;
-        height = 480;
-      }
-      else
-      {
-        width = modes[0]->w;
-        height = modes[0]->h;
-      }
-    }
-  }
-  if (config->is_debug_mode())
-    std::cerr << ".. choosing window size " << width
-        << "x" << height
-        << "x" << static_cast<int>(videoInfo->vfmt->BitsPerPixel) << ".\n";
-
-  Uint32 videoFlags = SDL_OPENGL | SDL_GL_DOUBLEBUFFER;
-  if (config->is_fullscreen())
-  {
-    if (config->is_debug_mode())
-      std::cerr << ".. choosing full-screen mode\n";
-    videoFlags |= SDL_FULLSCREEN;
-  }
-  else if (config->is_debug_mode())
-  {
-    std::cerr << ".. choosing windowed mode\n";
-  }
-
-  SDL_Surface* surface = SDL_SetVideoMode(width, height, videoInfo->vfmt->BitsPerPixel, videoFlags);
-  if (!surface)
-  {
-    std::cerr << "*** ERRROR in SDL_SetVideoMode(): " << ::SDL_GetError() << "\n";
-    exit(1);
-  }
-
-  videoInfo = SDL_GetVideoInfo();
-#if 0
-  config->setScreenWidth(videoInfo->current_w);
-  config->setScreenHeight(videoInfo->current_h);
-#endif
 }
 
 void NoDice::VideoContextSDL::swapBuffers()
 {
-  SDL_GL_SwapBuffers();
+  SDL_GL_SwapWindow(window_);
 }
 
 

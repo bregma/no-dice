@@ -29,14 +29,13 @@
 #include "nodice/config.h"
 #include "nodice/introstate.h"
 #include "nodice/video.h"
-#include <SDL/SDL.h>
+#include <SDL.h>
 
 
 namespace
 {
   static const Uint32 UPDATE_TICKS         = 1000/44;
   static const Uint32 ACTIVE_FRAME_DELAY   = 10;
-  static const Uint32 INACTIVE_FRAME_DELAY = 300;
 } // anonymous namespace
 
 
@@ -150,31 +149,50 @@ event_to_name(SDL_EventType type)
     SDL_EventType type;
     std::string   name;
   } sdl_event_types[] = {
-    { SDL_NOEVENT,         "SDL_NOEVENT" },
-    { SDL_ACTIVEEVENT,     "SDL_ACTIVEEVENT" },
-    { SDL_KEYDOWN,         "SDL_KEYDOWN" },
-    { SDL_KEYUP,           "SDL_KEYUP" },
-    { SDL_MOUSEMOTION,     "SDL_MOUSEMOTION" },
-    { SDL_MOUSEBUTTONDOWN, "SDL_MOUSEBUTTONDOWN" },
-    { SDL_MOUSEBUTTONUP,   "SDL_MOUSEBUTTONUP" },
-    { SDL_JOYAXISMOTION,   "SDL_JOYAXISMOTION" },
-    { SDL_JOYBALLMOTION,   "SDL_JOYBALLMOTION" },
-    { SDL_JOYHATMOTION,    "SDL_JOYHATMOTION" },
-    { SDL_JOYBUTTONDOWN,   "SDL_JOYBUTTONDOWN" },
-    { SDL_JOYBUTTONUP,     "SDL_JOYBUTTONUP" },
-    { SDL_QUIT,            "SDL_QUIT" },
-    { SDL_SYSWMEVENT,      "SDL_SYSWMEVENT" },
-    { SDL_EVENT_RESERVEDA, "SDL_EVENT_RESERVEDA" },
-    { SDL_EVENT_RESERVEDB, "SDL_EVENT_RESERVEDB" },
-    { SDL_VIDEORESIZE,     "SDL_VIDEORESIZE" },
-    { SDL_VIDEOEXPOSE,     "SDL_VIDEOEXPOSE" },
-    { SDL_EVENT_RESERVED2, "SDL_EVENT_RESERVED2" },
-    { SDL_EVENT_RESERVED3, "SDL_EVENT_RESERVED3" },
-    { SDL_EVENT_RESERVED4, "SDL_EVENT_RESERVED4" },
-    { SDL_EVENT_RESERVED5, "SDL_EVENT_RESERVED5" },
-    { SDL_EVENT_RESERVED6, "SDL_EVENT_RESERVED6" },
-    { SDL_EVENT_RESERVED7, "SDL_EVENT_RESERVED7" },
-    { SDL_USEREVENT,       "SDL_USEREVENT" }
+    { SDL_FIRSTEVENT,               "SDL_FIRSTEVENT" },
+    { SDL_QUIT,                     "SDL_QUIT" },
+    { SDL_APP_TERMINATING,          "SDL_APP_TERMINATING" },
+    { SDL_APP_LOWMEMORY,            "SDL_APP_LOWMEMORY" },
+    { SDL_APP_WILLENTERBACKGROUND,  "SDL_APP_WILLENTERBACKGROUND" },
+    { SDL_APP_DIDENTERBACKGROUND,   "SDL_APP_DIDENTERBACKGROUND" },
+    { SDL_APP_WILLENTERFOREGROUND,  "SDL_APP_WILLENTERFOREGROUND" },
+    { SDL_APP_DIDENTERFOREGROUND,   "SDL_APP_DIDENTERFOREGROUND" },
+    { SDL_WINDOWEVENT,              "SDL_WINDOWEVENT" },
+    { SDL_SYSWMEVENT,               "SDL_SYSWMEVENT" },
+    { SDL_KEYDOWN,                  "SDL_KEYDOWN" },
+    { SDL_KEYUP,                    "SDL_KEYUP" },
+    { SDL_TEXTEDITING,              "SDL_TEXTEDITING" },
+    { SDL_TEXTINPUT,                "SDL_TEXTINPUT" },
+    { SDL_KEYMAPCHANGED,            "SDL_KEYMAPCHANGED" },
+    { SDL_MOUSEMOTION,              "SDL_MOUSEMOTION" },
+    { SDL_MOUSEBUTTONDOWN,          "SDL_MOUSEBUTTONDOWN" },
+    { SDL_MOUSEBUTTONUP,            "SDL_MOUSEBUTTONUP" },
+    { SDL_MOUSEWHEEL,               "SDL_MOUSEWHEEL" },
+    { SDL_JOYAXISMOTION,            "SDL_JOYAXISMOTION" },
+    { SDL_JOYBALLMOTION,            "SDL_JOYBALLMOTION" },
+    { SDL_JOYHATMOTION,             "SDL_JOYHATMOTION" },
+    { SDL_JOYBUTTONDOWN,            "SDL_JOYBUTTONDOWN" },
+    { SDL_JOYBUTTONUP,              "SDL_JOYBUTTONUP" },
+    { SDL_JOYDEVICEADDED,           "SDL_JOYDEVICEADDED" },
+    { SDL_JOYDEVICEREMOVED,         "SDL_JOYDEVICEREMOVED" },
+    { SDL_CONTROLLERAXISMOTION,     "SDL_CONTROLLERAXISMOTION" },
+    { SDL_CONTROLLERBUTTONDOWN,     "SDL_CONTROLLERBUTTONDOWN" },
+    { SDL_CONTROLLERBUTTONUP,       "SDL_CONTROLLERBUTTONUP" },
+    { SDL_CONTROLLERDEVICEADDED,    "SDL_CONTROLLERDEVICEADDED" },
+    { SDL_CONTROLLERDEVICEREMOVED,  "SDL_CONTROLLERDEVICEREMOVED" },
+    { SDL_CONTROLLERDEVICEREMAPPED, "SDL_CONTROLLERDEVICEREMAPPED" },
+    { SDL_FINGERDOWN,               "SDL_FINGERDOWN" },
+    { SDL_FINGERUP,                 "SDL_FINGERUP" },
+    { SDL_FINGERMOTION,             "SDL_FINGERMOTION" },
+    { SDL_DOLLARGESTURE,            "SDL_DOLLARGESTURE" },
+    { SDL_DOLLARRECORD,             "SDL_DOLLARRECORD" },
+    { SDL_MULTIGESTURE,             "SDL_MULTIGESTURE" },
+    { SDL_CLIPBOARDUPDATE,          "SDL_CLIPBOARDUPDATE" },
+    { SDL_DROPFILE,                 "SDL_DROPFILE" },
+    { SDL_AUDIODEVICEADDED,         "SDL_AUDIODEVICEADDED" },
+    { SDL_AUDIODEVICEREMOVED,       "SDL_AUDIODEVICEREMOVED" },
+    { SDL_RENDER_TARGETS_RESET,     "SDL_RENDER_TARGETS_RESET" },
+    { SDL_RENDER_DEVICE_RESET,      "SDL_RENDER_DEVICE_RESET" }
   };
 
   for (auto const& event: sdl_event_types)
@@ -201,6 +219,7 @@ process_input()
 
     switch (event.type)
     {
+#if 0
     case SDL_ACTIVEEVENT:
       if (event.active.gain != 0)
       {
@@ -211,6 +230,7 @@ process_input()
         state_stack_.top()->pause();
       }
       break;
+#endif
 
     case SDL_MOUSEMOTION:
       state_stack_.top()->pointerMove(event.motion.x, event.motion.y,
@@ -235,7 +255,7 @@ process_input()
                   << " keysym.scancode=" << (int)event.key.keysym.scancode
                   << " keysym.sym=" << event.key.keysym.sym
                   << " keysym.mod=" << event.key.keysym.mod
-                  << " keysym.unicode=" << event.key.keysym.unicode
+                  << " keysym.scancode=" << event.key.keysym.scancode
                   << "\n";
       if (event.key.keysym.sym == 27) // esc
         stop_game();

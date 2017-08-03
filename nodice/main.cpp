@@ -23,7 +23,7 @@
 #include <iostream>
 #include "nodice/app.h"
 #include "nodice/config.h"
-#include <SDL/SDL_main.h>
+#include <SDL_main.h>
 #include <stdexcept>
 
 

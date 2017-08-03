@@ -53,7 +53,7 @@ resume()
 
 
 void NoDice::GameState::
-key(SDL_keysym keysym NODICE_UNUSED)
+key(SDL_Keysym keysym NODICE_UNUSED)
 {
 	std::cerr << __PRETTY_FUNCTION__ << "\n";
 }
