@@ -36,7 +36,7 @@ LT_INIT
 # Checks for library functions.
 
 # Checks for third-party packages
-PKG_CHECK_MODULES([SDL],      [sdl2 >= 2.0.4])
+PKG_CHECK_MODULES([SDL],      [sdl2 >= 2.0.2])
 PKG_CHECK_MODULES([FREETYPE], [freetype2 >= 9.10.3])
 PKG_CHECK_MODULES([GL],       [gl >= 7])
 
