@@ -9,7 +9,7 @@ branches:
 matrix:
   include:
     - compiler: gcc
-      env: COMPILER=g++-5
+      env: COMPILER=g++-6
     - compiler: clang
       env: COMPILER=clang++-4.0
 
@@ -22,10 +22,10 @@ addons:
     - autoconf
     - automake
     - clang-4.0
-    - g++-5
+    - g++-6
     - libfreetype6-dev
     - libgl1-mesa-dev
-    - libsdl1.2-dev
+    - libsdl2-dev
     - pkg-config
 
 before_script:

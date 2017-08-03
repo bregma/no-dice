@@ -69,12 +69,23 @@ namespace NoDice
     };
 
   private:
+    void
+    process_input();
+
+    void
+    update();
+
+    void
+    stop_game();
+
+  private:
     typedef std::stack<GameStatePtr, std::vector<GameStatePtr>> StateStack;
 
     Config*        config_;
     SdlInit        sdl_init_;
     Video          video_;
     FontCache      font_cache_;
+    bool           game_is_running_;
     StateStack     state_stack_;
   };
 

@@ -95,7 +95,7 @@ resume()
 
 
 void NoDice::IntroState::
-key(SDL_keysym keysym)
+key(SDL_Keysym keysym)
 {
   switch (keysym.sym)
   {
