@@ -163,7 +163,9 @@ event_to_name(SDL_EventType type)
     { SDL_KEYUP,                    "SDL_KEYUP" },
     { SDL_TEXTEDITING,              "SDL_TEXTEDITING" },
     { SDL_TEXTINPUT,                "SDL_TEXTINPUT" },
+#if SDL_VERSION_ATLEAST(2, 0, 4)
     { SDL_KEYMAPCHANGED,            "SDL_KEYMAPCHANGED" },
+#endif
     { SDL_MOUSEMOTION,              "SDL_MOUSEMOTION" },
     { SDL_MOUSEBUTTONDOWN,          "SDL_MOUSEBUTTONDOWN" },
     { SDL_MOUSEBUTTONUP,            "SDL_MOUSEBUTTONUP" },
@@ -189,10 +191,14 @@ event_to_name(SDL_EventType type)
     { SDL_MULTIGESTURE,             "SDL_MULTIGESTURE" },
     { SDL_CLIPBOARDUPDATE,          "SDL_CLIPBOARDUPDATE" },
     { SDL_DROPFILE,                 "SDL_DROPFILE" },
+#if SDL_VERSION_ATLEAST(2, 0, 4)
     { SDL_AUDIODEVICEADDED,         "SDL_AUDIODEVICEADDED" },
     { SDL_AUDIODEVICEREMOVED,       "SDL_AUDIODEVICEREMOVED" },
+#endif
     { SDL_RENDER_TARGETS_RESET,     "SDL_RENDER_TARGETS_RESET" },
-    { SDL_RENDER_DEVICE_RESET,      "SDL_RENDER_DEVICE_RESET" }
+#if SDL_VERSION_ATLEAST(2, 0, 4)
+    { SDL_RENDER_DEVICE_RESET,      "SDL_RENDER_DEVICE_RESET" },
+#endif
   };
 
   for (auto const& event: sdl_event_types)
