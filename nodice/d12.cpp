@@ -37,28 +37,28 @@ D12()
 : Shape("d12", NoDice::Colour(0.3f, 0.5f, 1.0f, 0.80))
 {
   // Magic precomputed vertexes of the unit-sphere dodecahedron
-  static const Vector3f vertex[] = 
+  static const vec3 vertex[] = 
   {
-    Vector3f( 0.607f,  0.000f,  0.795f),
-    Vector3f( 0.188f,  0.577f,  0.795f),
-    Vector3f(-0.491f,  0.357f,  0.795f),
-    Vector3f(-0.491f, -0.357f,  0.795f),
-    Vector3f( 0.188f, -0.577f,  0.795f),
-    Vector3f( 0.982f,  0.000f,  0.188f),
-    Vector3f( 0.304f,  0.934f,  0.188f),
-    Vector3f(-0.795f,  0.577f,  0.188f),
-    Vector3f(-0.795f, -0.577f,  0.188f),
-    Vector3f( 0.304f, -0.934f,  0.188f),
-    Vector3f( 0.795f,  0.577f, -0.188f),
-    Vector3f(-0.304f,  0.934f, -0.188f),
-    Vector3f(-0.982f,  0.000f, -0.188f),
-    Vector3f(-0.304f, -0.934f, -0.188f),
-    Vector3f( 0.795f, -0.577f, -0.188f),
-    Vector3f( 0.491f,  0.375f, -0.795f),
-    Vector3f(-0.188f,  0.577f, -0.795f),
-    Vector3f(-0.607f,  0.000f, -0.795f),
-    Vector3f(-0.188f, -0.577f, -0.795f),
-    Vector3f( 0.491f, -0.357f, -0.795f)
+    vec3{ 0.607f,  0.000f,  0.795f},
+    vec3{ 0.188f,  0.577f,  0.795f},
+    vec3{-0.491f,  0.357f,  0.795f},
+    vec3{-0.491f, -0.357f,  0.795f},
+    vec3{ 0.188f, -0.577f,  0.795f},
+    vec3{ 0.982f,  0.000f,  0.188f},
+    vec3{ 0.304f,  0.934f,  0.188f},
+    vec3{-0.795f,  0.577f,  0.188f},
+    vec3{-0.795f, -0.577f,  0.188f},
+    vec3{ 0.304f, -0.934f,  0.188f},
+    vec3{ 0.795f,  0.577f, -0.188f},
+    vec3{-0.304f,  0.934f, -0.188f},
+    vec3{-0.982f,  0.000f, -0.188f},
+    vec3{-0.304f, -0.934f, -0.188f},
+    vec3{ 0.795f, -0.577f, -0.188f},
+    vec3{ 0.491f,  0.375f, -0.795f},
+    vec3{-0.188f,  0.577f, -0.795f},
+    vec3{-0.607f,  0.000f, -0.795f},
+    vec3{-0.188f, -0.577f, -0.795f},
+    vec3{ 0.491f, -0.357f, -0.795f}
   };
 
   // List of vertexes making up a face.

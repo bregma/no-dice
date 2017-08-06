@@ -41,12 +41,12 @@ namespace
 {
   static const GLfloat near =  0.0f;
   static const GLfloat far  = 10.0f;
-  static const NoDice::Vector3f board_scale(1.0f/12.0f, 1.0f/12.0f, 1.0f/12.0f);
-  static const NoDice::Vector3f board_pos(-0.3f, -0.5f, -1.0f);
-  static const NoDice::Vector4f lightAmbient(0.2f, 0.2f, 0.2f, 1.0f);
-  static const NoDice::Vector4f lightDiffuse(0.8f, 0.8f, 0.8f, 1.0f);
-  static const NoDice::Vector4f lightPosition(2.0f, 2.0f, 3.0f, 0.0f);
-  static const NoDice::Vector3f lightDirection(-2.0f, -2.0f, -3.0f);
+  static const NoDice::vec3   board_scale{1.0f/12.0f, 1.0f/12.0f, 1.0f/12.0f};
+  static const NoDice::vec3   board_pos{-0.3f, -0.5f, -1.0f};
+  static const NoDice::Colour lightAmbient{0.2f, 0.2f, 0.2f, 1.0f};
+  static const NoDice::Colour lightDiffuse{0.8f, 0.8f, 0.8f, 1.0f};
+  static const NoDice::vec4   lightPosition{2.0f, 2.0f, 3.0f, 0.0f};
+  static const NoDice::vec3   lightDirection{-2.0f, -2.0f, -3.0f};
   static const int mouseMoveThreshold = 20;
 } // anonymous namespace
 
@@ -83,9 +83,9 @@ PlayState(App* app)
   glLoadIdentity();
   glTranslatef(board_pos.x, board_pos.y, board_pos.z);
   glScalef(board_scale.x, board_scale.y, board_scale.z);
-  Matrix4f projection;
+  mat4 projection;
   glGetFloatv(GL_PROJECTION_MATRIX, projection.array);
-  Matrix4f modelview;
+  mat4 modelview;
   glGetFloatv(GL_MODELVIEW_MATRIX, modelview.array);
   (projection * modelview).getInverse(unproject_);
   glPopMatrix();
@@ -105,11 +105,11 @@ pointerMove(int x, int y, int dx, int dy)
 {
   if (mouse_is_down_ && state_ != state_swapping)
   {
-    Vector2i d = mouse_down_pos_ - Vector2i(x, y);
+    ivec2 d = mouse_down_pos_ - ivec2(x, y);
     if (d.lengthSquared() < mouseMoveThreshold * mouseMoveThreshold)
       return;
 
-    Vector2i pos2 = selected_pos_;
+    ivec2 pos2 = selected_pos_;
     if (std::abs(dx) > std::abs(dy))
     {
       if (dx < 0 && selected_pos_.x > 0)
@@ -150,8 +150,8 @@ pointerClick(int x, int y, PointerAction action)
     float unit_x = float(x - win_width) / win_width;
     float unit_y = -float(y - win_height) / win_height;
 
-    Vector4f ray(unit_x, unit_y, 0.0f, 1.0f);
-    Vector4f beam = unproject_ * ray;
+    vec4 ray(unit_x, unit_y, 0.0f, 1.0f);
+    vec4 beam = unproject_ * ray;
     selected_pos_.x = int(beam.x / 2.0f + 0.50f);
     selected_pos_.y = int(beam.y / 2.0f + 0.50f);
     if (selected_pos_.x >= app_->config().board_size() || selected_pos_.x < 0)

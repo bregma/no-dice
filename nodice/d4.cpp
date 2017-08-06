@@ -37,12 +37,12 @@ D4()
 {
   static const GLfloat half = 0.5773502692; // for tetrahedron in unit sphere
 
-  static const Vector3f vertex[] =
+  static const vec3 vertex[] =
   {
-    Vector3f( half,  half,  half),
-    Vector3f(-half,  half, -half),
-    Vector3f(-half, -half,  half),
-    Vector3f( half, -half, -half)
+    vec3( half,  half,  half),
+    vec3(-half,  half, -half),
+    vec3(-half, -half,  half),
+    vec3( half, -half, -half)
   };
 
   // List of vertexes making up a face.

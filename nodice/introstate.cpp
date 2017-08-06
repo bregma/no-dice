@@ -24,6 +24,7 @@
 #include "nodice/introstate.h"
 
 #include "nodice/app.h"
+#include "nodice/colour.h"
 #include "nodice/config.h"
 #include "nodice/font.h"
 #include "nodice/playstate.h"
@@ -37,22 +38,22 @@ namespace
   struct MenuEntry
   {
     const char*                    title;
-    vmml::Vector2f                 pos;
+    NoDice::vec2                   pos;
     NoDice::IntroState::NextState  nextState;
   };
 
   static MenuEntry entry[] = 
   {
-    { "options", vmml::Vector2f(0.0f, 0.0f), NoDice::IntroState::next_state_options },
-    { "play",    vmml::Vector2f(0.0f, 0.0f), NoDice::IntroState::next_state_play },
-    { "quit",    vmml::Vector2f(0.0f, 0.0f), NoDice::IntroState::next_state_quit }
+    { "options", NoDice::vec2{0.0f, 0.0f}, NoDice::IntroState::next_state_options },
+    { "play",    NoDice::vec2{0.0f, 0.0f}, NoDice::IntroState::next_state_play },
+    { "quit",    NoDice::vec2{0.0f, 0.0f}, NoDice::IntroState::next_state_quit }
   };
 
   static const std::size_t menuCount = sizeof(entry) / sizeof(MenuEntry);
 
-  static float titleColour[] = { 1.00f, 0.10f, 0.10f, 1.00f };
-  static float selectedColour[] = { 0.80f, 0.50f, 1.00f, 0.80f };
-  static float unselectedColour[] = { 0.20f, 0.20f, 0.80f, 0.80f };
+  static NoDice::Colour titleColour{ 1.00f, 0.10f, 0.10f, 1.00f };
+  static NoDice::Colour selectedColour{ 0.80f, 0.50f, 1.00f, 0.80f };
+  static NoDice::Colour unselectedColour{ 0.20f, 0.20f, 0.80f, 0.80f };
 
 } // anonymous namespace
 
@@ -173,15 +174,15 @@ update(App& app)
 void NoDice::IntroState::
 draw(Video& video NODICE_UNUSED)
 {
-  glColor4fv(titleColour);
+  glColor4fv(titleColour.rgba);
   menu_font_.print(title_pos_.x, title_pos_.y, 1.0f, "No Dice!");
 
   for (std::size_t i = 0; i < menuCount; ++i)
   {
     if (i == std::size_t(selected_))
-      glColor4fv(selectedColour);
+      glColor4fv(selectedColour.rgba);
     else
-      glColor4fv(unselectedColour);
+      glColor4fv(unselectedColour.rgba);
     menu_font_.print(entry[i].pos.x, entry[i].pos.y, 1.0f, entry[i].title);
   }
 }

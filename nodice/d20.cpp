@@ -44,20 +44,20 @@ D20()
   // 1 / sqrt(1 + t^2)
   static const GLfloat phi = 0.5257311121f;
 
-  static const Vector3f vertex[] = 
+  static const vec3 vertex[] = 
   {
-    Vector3f( tau,  phi, 0.0f),
-    Vector3f(-tau,  phi, 0.0f),
-    Vector3f(-tau, -phi, 0.0f),
-    Vector3f( tau, -phi, 0.0f),
-    Vector3f( phi, 0.0f,  tau),
-    Vector3f( phi, 0.0f, -tau),
-    Vector3f(-phi, 0.0f, -tau),
-    Vector3f(-phi, 0.0f,  tau),
-    Vector3f(0.0f,  tau,  phi),
-    Vector3f(0.0f, -tau,  phi),
-    Vector3f(0.0f, -tau, -phi),
-    Vector3f(0.0f,  tau, -phi),
+    vec3{ tau,  phi, 0.0f},
+    vec3{-tau,  phi, 0.0f},
+    vec3{-tau, -phi, 0.0f},
+    vec3{ tau, -phi, 0.0f},
+    vec3{ phi, 0.0f,  tau},
+    vec3{ phi, 0.0f, -tau},
+    vec3{-phi, 0.0f, -tau},
+    vec3{-phi, 0.0f,  tau},
+    vec3{0.0f,  tau,  phi},
+    vec3{0.0f, -tau,  phi},
+    vec3{0.0f, -tau, -phi},
+    vec3{0.0f,  tau, -phi},
   };
 
   // List of vertexes making up a face.

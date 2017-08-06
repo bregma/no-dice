@@ -66,12 +66,12 @@ namespace NoDice
     Board                     gameboard_;
     Font&                     score_font_;
     bool                      mouse_is_down_;
-    Vector2i                  mouse_down_pos_;
-    Vector2i                  selected_pos_;
+    ivec2                     mouse_down_pos_;
+    ivec2                     selected_pos_;
     int                       multiplier_;
     int                       score_;
     std::vector<std::string>  win_messages_;
-    Matrix4f                  unproject_;
+    mat4                      unproject_;
   };
 
 } // namespace noDice

@@ -1,21 +1,24 @@
 /**
  * @file nodice/shape.cpp
  * @brief Implemntation of the nodice/shape module.
+ */
+/*
+ * Copyright 2009, 2010, 2011, 2017 Stephen M. Webb  <stephen.webb@bregmasoft.ca>
  *
- * Copyright 2009, 2010, 2011 Stephen M. Webb  <stephen.webb@bregmasoft.ca>
+ * This file is part of no-dice.
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of Version 2 of the GNU General Public License as
- * published by the Free Software Foundation.
+ * No-dice is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
+ * No-dice is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with no-dice.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "nodice/shape.h"
 
@@ -29,31 +32,12 @@
 #include "nodice/d20.h"
 #include <vector>
 
-namespace
-{
-	typedef std::vector<NoDice::ShapePtr> ShapeBag;
-
-	ShapeBag
-	generateShapeBag()
-	{
-		ShapeBag bag;
-
-		bag.push_back(NoDice::ShapePtr(new NoDice::D4));
-		bag.push_back(NoDice::ShapePtr(new NoDice::D6)); 
-		bag.push_back(NoDice::ShapePtr(new NoDice::D8)); 
-		bag.push_back(NoDice::ShapePtr(new NoDice::D12)); 
-		bag.push_back(NoDice::ShapePtr(new NoDice::D20)); 
-
-		return bag;
-	}
-} // anonymous namespace
-
 
 NoDice::Shape::
 Shape(const std::string& name,
-			const Colour&      defaultColour)
-: m_name(name)
-, m_defaultColour(defaultColour)
+      const Colour&      default_colour)
+: name_(name)
+, default_colour_(default_colour)
 {
 }
 
@@ -67,14 +51,14 @@ NoDice::Shape::
 const std::string& NoDice::Shape::
 name() const
 {
-  return m_name;
+  return name_;
 }
 
 
 const NoDice::Colour& NoDice::Shape::
-defaultColour() const
+default_colour() const
 {
-  return m_defaultColour;
+  return default_colour_;
 }
 
 
@@ -85,71 +69,86 @@ score()
 }
 
 
+/**
+ * Chooses a random die from a bag.
+ */
 NoDice::ShapePtr NoDice::
-chooseAShape()
+choose_a_shape()
 {
-	static ShapeBag s_shapeBag = generateShapeBag();
+  using ShapeBag = std::vector<ShapePtr>;
 
-	int r = (rand() >> 2) % s_shapeBag.size();
-	return s_shapeBag.at(r);
+  static ShapeBag s_shapeBag {
+      ShapePtr(new D4), ShapePtr(new D6), ShapePtr(new D8), ShapePtr(new D12), ShapePtr(new D20)
+  };
+
+  int r = (rand() >> 2) % s_shapeBag.size();
+  return s_shapeBag.at(r);
 }
 
 /**
- * Generates the VBO entries for a triangle.
+ * Generates the vertex buffer entries for a triangle.
  * @param[in]  vertex Array of vertexes 
  * @param[in]  index  Index of 3 vertexes in CCW order
  * @param[out] buffer Output buffer
  *
- * The index must provide vertexes in the correct CCW winding order.
+ * Calculates the normals at each vertex and copies the vertexes and normals
+ * into the vertex buffer in an interleaved { V V V N N N } fashion.
+ *
+ * @warning The index must provide vertexes in the correct CCW winding order.
+ * @warning The output @p buffer must be large enough to hold 18 floats.
  */
 void NoDice::
-triangle(const NoDice::Vector3f vertex[], const int index[3], GLfloat*& buffer)
+triangle(const NoDice::vec3 vertex[], const int index[3], GLfloat*& buffer)
 {
-	Vector3f v1 = (vertex[index[1]] - vertex[index[0]]);
-	Vector3f v2 = (vertex[index[2]] - vertex[index[0]]);
-	Vector3f normal = v1.cross(v2);
+  vec3 v1 = (vertex[index[1]] - vertex[index[0]]);
+  vec3 v2 = (vertex[index[2]] - vertex[index[0]]);
+  vec3 normal = v1.cross(v2);
 
-	buffer = std::copy(vertex[index[0]].begin(), vertex[index[0]].end(), buffer);
-	buffer = std::copy(normal.begin(), normal.end(), buffer);
-	buffer = std::copy(vertex[index[1]].begin(), vertex[index[1]].end(), buffer);
-	buffer = std::copy(normal.begin(), normal.end(), buffer);
-	buffer = std::copy(vertex[index[2]].begin(), vertex[index[2]].end(), buffer);
-	buffer = std::copy(normal.begin(), normal.end(), buffer);
+  buffer = std::copy(vertex[index[0]].begin(), vertex[index[0]].end(), buffer);
+  buffer = std::copy(normal.begin(), normal.end(), buffer);
+  buffer = std::copy(vertex[index[1]].begin(), vertex[index[1]].end(), buffer);
+  buffer = std::copy(normal.begin(), normal.end(), buffer);
+  buffer = std::copy(vertex[index[2]].begin(), vertex[index[2]].end(), buffer);
+  buffer = std::copy(normal.begin(), normal.end(), buffer);
 }
 
 /**
- * Generates the VBO entries for a pentagon.
+ * Generates the vertex buffer entries for a pentagon.
  * @param[in]  vertex Array of vertexes 
  * @param[in]  index  Index of 5 vertexes in CCW order
  * @param[out] buffer Output buffer
  *
- * The index must provide vertexes in the correct CCW winding order.
+ * Calculates the normals at each vertex and copies the vertexes and normals
+ * into the vertex buffer in an interleaved { V V V N N N } fashion.
+ *
+ * @warning The index must provide vertexes in the correct CCW winding order.
+ * @warning The output @p buffer must be large enough to hold 30 floats.
  */
 void NoDice::
-pentagon(const NoDice::Vector3f vertex[], const int index[5], GLfloat*& buffer)
+pentagon(const NoDice::vec3 vertex[], const int index[5], GLfloat*& buffer)
 {
-	Vector3f v1 = (vertex[index[1]] - vertex[index[0]]);
-	Vector3f v2 = (vertex[index[2]] - vertex[index[0]]);
-	Vector3f normal = v1.cross(v2);
+  vec3 v1 {vertex[index[1]] - vertex[index[0]]};
+  vec3 v2 {vertex[index[2]] - vertex[index[0]]};
+  vec3 normal = v1.cross(v2);
 
-	buffer = std::copy(vertex[index[0]].begin(), vertex[index[0]].end(), buffer);
-	buffer = std::copy(normal.begin(), normal.end(), buffer);
-	buffer = std::copy(vertex[index[1]].begin(), vertex[index[1]].end(), buffer);
-	buffer = std::copy(normal.begin(), normal.end(), buffer);
-	buffer = std::copy(vertex[index[2]].begin(), vertex[index[2]].end(), buffer);
-	buffer = std::copy(normal.begin(), normal.end(), buffer);
-	buffer = std::copy(vertex[index[0]].begin(), vertex[index[0]].end(), buffer);
-	buffer = std::copy(normal.begin(), normal.end(), buffer);
-	buffer = std::copy(vertex[index[2]].begin(), vertex[index[2]].end(), buffer);
-	buffer = std::copy(normal.begin(), normal.end(), buffer);
-	buffer = std::copy(vertex[index[3]].begin(), vertex[index[3]].end(), buffer);
-	buffer = std::copy(normal.begin(), normal.end(), buffer);
-	buffer = std::copy(vertex[index[0]].begin(), vertex[index[0]].end(), buffer);
-	buffer = std::copy(normal.begin(), normal.end(), buffer);
-	buffer = std::copy(vertex[index[3]].begin(), vertex[index[3]].end(), buffer);
-	buffer = std::copy(normal.begin(), normal.end(), buffer);
-	buffer = std::copy(vertex[index[4]].begin(), vertex[index[4]].end(), buffer);
-	buffer = std::copy(normal.begin(), normal.end(), buffer);
+  buffer = std::copy(vertex[index[0]].begin(), vertex[index[0]].end(), buffer);
+  buffer = std::copy(normal.begin(), normal.end(), buffer);
+  buffer = std::copy(vertex[index[1]].begin(), vertex[index[1]].end(), buffer);
+  buffer = std::copy(normal.begin(), normal.end(), buffer);
+  buffer = std::copy(vertex[index[2]].begin(), vertex[index[2]].end(), buffer);
+  buffer = std::copy(normal.begin(), normal.end(), buffer);
+  buffer = std::copy(vertex[index[0]].begin(), vertex[index[0]].end(), buffer);
+  buffer = std::copy(normal.begin(), normal.end(), buffer);
+  buffer = std::copy(vertex[index[2]].begin(), vertex[index[2]].end(), buffer);
+  buffer = std::copy(normal.begin(), normal.end(), buffer);
+  buffer = std::copy(vertex[index[3]].begin(), vertex[index[3]].end(), buffer);
+  buffer = std::copy(normal.begin(), normal.end(), buffer);
+  buffer = std::copy(vertex[index[0]].begin(), vertex[index[0]].end(), buffer);
+  buffer = std::copy(normal.begin(), normal.end(), buffer);
+  buffer = std::copy(vertex[index[3]].begin(), vertex[index[3]].end(), buffer);
+  buffer = std::copy(normal.begin(), normal.end(), buffer);
+  buffer = std::copy(vertex[index[4]].begin(), vertex[index[4]].end(), buffer);
+  buffer = std::copy(normal.begin(), normal.end(), buffer);
 }
 
 

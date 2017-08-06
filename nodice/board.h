@@ -51,7 +51,7 @@ namespace NoDice
     draw() const;
 
     void
-    start_swap(Vector2i objPos1, Vector2i objPos2);
+    start_swap(ivec2 objPos1, ivec2 objPos2);
 
     void
     un_swap();
@@ -66,13 +66,13 @@ namespace NoDice
     find_wins();
 
   private:
-    ObjectPtr& at(const Vector2i& point);
+    ObjectPtr& at(const ivec2& point);
 
   private:
-    typedef std::vector<Vector2i>         RemovalQueue;
-    typedef std::pair<Vector2i, Vector2i> MovePair;
-    typedef std::vector<MovePair>         FallingQueue;
-    typedef std::vector<Vector2i>         CreateQueue;
+    using RemovalQueue = std::vector<ivec2>;
+    using MovePair     = std::pair<ivec2, ivec2>;
+    using FallingQueue = std::vector<MovePair>;
+    using CreateQueue  = std::vector<ivec2>;
 
     enum State
     {
@@ -86,7 +86,7 @@ namespace NoDice
     ObjectBag      objects_;
     State          state_;
     float          swap_step_;
-    Vector2i       swap_obj_[2];
+    ivec2          swap_obj_[2];
     RemovalQueue   removal_queue_;
     FallingQueue   falling_queue_;
     CreateQueue    create_queue_;

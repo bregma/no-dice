@@ -64,7 +64,7 @@ namespace NoDice
   private:
     bool       is_active_;
     Font&      menu_font_;
-    Vector2f   title_pos_;
+    vec2       title_pos_;
     int        selected_;
     NextState  next_state_;
   };

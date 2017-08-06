@@ -43,14 +43,14 @@ D8()
   static const GLfloat r = 1.0f;
   static const GLfloat z = 0.0f;
 
-  static const Vector3f vertex[] = 
+  static const vec3 vertex[] = 
   {
-    Vector3f( r,  z,  z),
-    Vector3f( z,  r,  z),
-    Vector3f( z,  z,  r),
-    Vector3f(-r,  z,  z),
-    Vector3f( z,  z, -r),
-    Vector3f( z, -r,  z)
+    vec3( r,  z,  z),
+    vec3( z,  r,  z),
+    vec3( z,  z,  r),
+    vec3(-r,  z,  z),
+    vec3( z,  z, -r),
+    vec3( z, -r,  z)
   };
 
   // List of vertexes making up a face.

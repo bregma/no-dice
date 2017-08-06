@@ -33,9 +33,9 @@ namespace
 
 
 NoDice::Object::
-Object(const ShapePtr shape, const Vector3f& initialPosition)
+Object(const ShapePtr shape, const vec3& initialPosition)
 : m_shape(shape)
-, m_colour(m_shape->defaultColour())
+, m_colour(m_shape->default_colour())
 , m_normalColour(m_colour)
 , m_highlightColour(1.0f, 0.8f, 0.2f, 0.5f)
 , m_position(initialPosition)
@@ -130,7 +130,7 @@ draw() const
 
 
 void NoDice::Object::
-setVelocity(const Vector3f& velocity)
+setVelocity(const vec3& velocity)
 { m_velocity = velocity; }
   
 
@@ -155,7 +155,7 @@ isFalling() const
 
 
 void NoDice::Object::
-startFalling(const Vector3f& newPosition)
+startFalling(const vec3& newPosition)
 {
   m_isMoving = true;
   m_newPosition = newPosition;

@@ -41,7 +41,7 @@ namespace NoDice
   {
   public:
     /** Constructs the object with a given shape. */
-    Object(const ShapePtr shape, const Vector3f& initialPosition);
+    Object(const ShapePtr shape, const vec3& initialPosition);
 
     /** Destroys the object. */
     virtual ~Object();
@@ -61,7 +61,7 @@ namespace NoDice
     /** Renders the object on the current drawing surface. */
     virtual void draw() const;
 
-    void setVelocity(const Vector3f& velocity);
+    void setVelocity(const vec3& velocity);
 
     /**
      * @name Disappearance
@@ -86,7 +86,7 @@ namespace NoDice
     bool isFalling() const;
 
     /** Starts the object falling. */
-    void startFalling(const Vector3f& newPosition);
+    void startFalling(const vec3& newPosition);
     /*@}*/
 
   private:
@@ -98,9 +98,9 @@ namespace NoDice
     Colour         m_colour;
     Colour         m_normalColour;
     Colour         m_highlightColour;
-    Vector3f       m_position;
-    Vector3f       m_velocity;
-    Vector3f       m_newPosition;
+    vec3           m_position;
+    vec3           m_velocity;
+    vec3           m_newPosition;
     bool           m_isMoving;
     bool           m_isDisappearing;
     float          m_fadeFactor;

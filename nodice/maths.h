@@ -29,11 +29,11 @@
 
 namespace NoDice
 {
-	using vmml::Vector2f;
-	using vmml::Vector2i;
-	using vmml::Vector3f;
-	using vmml::Vector4f;
-	using vmml::Matrix4f;
+	using vec2  = vmml::Vector2f;
+	using ivec2 = vmml::Vector2i;
+	using vec3  = vmml::Vector3f;
+	using vec4  = vmml::Vector4f;
+	using mat4  = vmml::Matrix4f;
 
 	/** Number of Cartesian coordinates in a 3D vertex. */
 	const int coords_per_vertex = 3;
