@@ -49,6 +49,7 @@ libnodice_la_SOURCES = \
 	opengl.h           opengl.cpp \
 	playstate.h        playstate.cpp \
 	shader.h           shader.cpp \
+	shaderprogram.h    shaderprogram.cpp \
 	shape.h            shape.cpp \
 	video.h            video.cpp \
 	videocontext.h \

@@ -29,12 +29,22 @@
 
 namespace NoDice
 {
+  class Config;
 
   class Shader
   {
   public:
-    Shader(GLenum shader_type, std::string const& source_file_name);
+    /** Creates a Shader. */
+    Shader(Config const&      config,
+           GLenum             shader_type,
+           std::string const& source_file_name);
+
+    /** Destroys a Shader. */
     ~Shader();
+
+    /** Gets the GL shader object. */
+    GLint
+    id() const;
 
   private:
     Shader(Shader const&) = delete;
