@@ -1,7 +1,8 @@
 /**
  * @file nodice/shader.h
  * @brief Public interface of the nodice/shader module.
- *
+ */
+/*
  * Copyright 2013 Stephen M. Webb  <stephen.webb@bregmasoft.ca>
  *
  * This file is part of no-dice.
