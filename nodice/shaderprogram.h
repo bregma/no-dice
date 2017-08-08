@@ -24,6 +24,7 @@
 #define NODICE_SHADERPROGRAM_H 1
 
 #include <memory>
+#include "nodice/maths.h"
 #include <string>
 
 
@@ -64,15 +65,13 @@ namespace NoDice
     void
     setUniform(const std::string& name, float v1, float v2, float v3);
 
-#ifdef LATER_DUDE
     /** Sets a mat4 uniform value. */
     void
-    setUniform(const std::string& name, const glm::mat4& mat);
-#endif
+    setUniform(const std::string& name, const mat4& mat);
 
     /** Sets an attribute value. */
     void
-    setAttribute(const std::string& name, int size, int stride, void* ptr);
+    setAttribute(const std::string& name, int size, int stride, void const* ptr);
 
   private:
     ShaderProgram(ShaderProgram const&) = delete;

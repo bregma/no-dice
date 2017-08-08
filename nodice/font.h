@@ -27,6 +27,8 @@
 
 namespace NoDice
 {
+  class App;
+
 	struct Glyph
 	{
 		typedef std::vector<GLubyte> Bitmap;
@@ -47,7 +49,7 @@ namespace NoDice
 	class Font
 	{
 	public:
-		Font(const std::string& fontname, unsigned int height);
+		Font(App* app, const std::string& fontname, unsigned int height);
 		~Font();
 
 		void mapToTexture();
@@ -58,6 +60,7 @@ namespace NoDice
 		void print(GLfloat x, GLfloat y, GLfloat scale, const std::string& text);
 
 	private:
+		App*               app_;
 		std::string        m_name;
 		float              m_height;
 		std::vector<Glyph> m_glyph;

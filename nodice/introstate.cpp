@@ -28,6 +28,8 @@
 #include "nodice/config.h"
 #include "nodice/font.h"
 #include "nodice/playstate.h"
+#include "nodice/shader.h"
+#include "nodice/shaderprogram.h"
 #include "nodice/video.h"
 
 #define MENU_FONT "spindle"
@@ -42,18 +44,15 @@ namespace
     NoDice::IntroState::NextState  nextState;
   };
 
-  static MenuEntry entry[] = 
-  {
+  std::vector<MenuEntry> menu_entry{
     { "options", NoDice::vec2{0.0f, 0.0f}, NoDice::IntroState::next_state_options },
     { "play",    NoDice::vec2{0.0f, 0.0f}, NoDice::IntroState::next_state_play },
     { "quit",    NoDice::vec2{0.0f, 0.0f}, NoDice::IntroState::next_state_quit }
   };
 
-  static const std::size_t menuCount = sizeof(entry) / sizeof(MenuEntry);
-
-  static NoDice::Colour titleColour{ 1.00f, 0.10f, 0.10f, 1.00f };
-  static NoDice::Colour selectedColour{ 0.80f, 0.50f, 1.00f, 0.80f };
-  static NoDice::Colour unselectedColour{ 0.20f, 0.20f, 0.80f, 0.80f };
+  NoDice::Colour titleColour{ 1.00f, 0.10f, 0.10f, 1.00f };
+  NoDice::Colour selectedColour{ 0.80f, 0.50f, 1.00f, 0.80f };
+  NoDice::Colour unselectedColour{ 0.20f, 0.20f, 0.80f, 0.80f };
 
 } // anonymous namespace
 
@@ -69,10 +68,10 @@ IntroState(NoDice::App*  app,
 , next_state_(next_state_same)
 {
   const float vspacing = -2.0f * menu_font_.height();
-  entry[0].pos.set(title_pos_.x, title_pos_.y + vspacing);
-  for (std::size_t i = 1; i < menuCount; ++i)
+  menu_entry[0].pos.set(title_pos_.x, title_pos_.y + vspacing);
+  for (std::size_t i = 1; i < menu_entry.size(); ++i)
   {
-    entry[i].pos.set(entry[i-1].pos.x, entry[i-1].pos.y + vspacing);
+    menu_entry[i].pos.set(menu_entry[i-1].pos.x, menu_entry[i-1].pos.y + vspacing);
   }
 }
 
@@ -108,13 +107,13 @@ key(SDL_Keysym keysym)
 
     case SDLK_DOWN:
       ++selected_;
-      if (std::size_t(selected_) >= menuCount)
-        selected_ = menuCount-1;
+      if (std::size_t(selected_) >= menu_entry.size())
+        selected_ = menu_entry.size()-1;
       break;
 
     case SDLK_RETURN:
     case SDLK_KP_ENTER:
-      next_state_ = entry[selected_].nextState;
+      next_state_ = menu_entry[selected_].nextState;
       break;
 
     case SDLK_o:
@@ -174,17 +173,40 @@ update(App& app)
 void NoDice::IntroState::
 draw(Video& video NODICE_UNUSED)
 {
+#ifdef USE_FIXED_PIPELINE
   glColor4fv(titleColour.rgba);
+  check_gl_error("IntroState::draw() glColor4fv(1a)");
+#else
+  Shader vertex_shader(app_->config(), GL_VERTEX_SHADER, "intro-vertex.glsl");
+  Shader fragment_shader(app_->config(), GL_FRAGMENT_SHADER, "intro-fragment.glsl");
+  ShaderProgram shader_program;
+  shader_program.attach(vertex_shader);
+  shader_program.attach(fragment_shader);
+  shader_program.activate();
+  check_gl_error("IntroState::draw() shader_program.activate()");
+#endif 
+
   menu_font_.print(title_pos_.x, title_pos_.y, 1.0f, "No Dice!");
 
-  for (std::size_t i = 0; i < menuCount; ++i)
+  for (std::size_t i = 0; i < menu_entry.size(); ++i)
   {
+#ifdef USE_FIXED_PIPELINE
     if (i == std::size_t(selected_))
+    {
       glColor4fv(selectedColour.rgba);
+      check_gl_error("IntroState::draw() glColor4fv(2)");
+    }
     else
+    {
       glColor4fv(unselectedColour.rgba);
-    menu_font_.print(entry[i].pos.x, entry[i].pos.y, 1.0f, entry[i].title);
+      check_gl_error("IntroState::draw() glColor4fv(3)");
+    }
+#endif
+    menu_font_.print(menu_entry[i].pos.x, menu_entry[i].pos.y, 1.0f, menu_entry[i].title);
   }
+#ifndef USE_FIXED_PIPELINE
+  shader_program.deactivate();
+#endif
 }
 
 

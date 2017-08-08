@@ -32,6 +32,7 @@
 
 namespace
 {
+#ifdef USE_FIXED_PIPELINE
   void initGL()
   {
     initGlVboExtension();
@@ -47,6 +48,7 @@ namespace
     glDepthFunc(GL_EQUAL);
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
   }
+#endif
 }
 
 NoDice::Video::
@@ -57,14 +59,19 @@ Video(Config const* config)
 : m_context(new VideoContextSDL(config))
 #endif
 {
+#ifdef USE_FIXED_PIPELINE
   initGL();
   check_gl_error("initGL()");
+#endif
   glViewport(0, 0, config->screen_width(), config->screen_height());
+  check_gl_error("glViewport()");
+#ifdef USE_FIXED_PIPELINE
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
   check_gl_error("Video::Video()");
+#endif
 }
 
 
@@ -78,11 +85,15 @@ void NoDice::Video::
 update()
 {
   m_context->swapBuffers();
-  check_gl_error("Video::update()");
+  check_gl_error("Video::update() m_context->swapBuffers()");
+  glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+  check_gl_error("Video::update() glClearColor()");
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  check_gl_error("Video::update() glClear()");
+#ifdef USE_FIXED_PIPELINE
   glLoadIdentity();
   glTranslatef(0.0f, 0.0f, -1.0f);
-  check_gl_error("Video::update()");
+#endif
 }
 
 

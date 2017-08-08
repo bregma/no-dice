@@ -65,7 +65,7 @@ void initGlVboExtension()
 void check_gl_error(const std::string& msg)
 {
 	GLenum err = glGetError();
-	while (err != 0)
+	while (err != GL_NO_ERROR)
 	{
 		std::cerr << "GL error 0x" << std::hex << err << std::dec << " at " << msg << "\n";
 		err = glGetError();

@@ -25,6 +25,7 @@
 #include "nodice/fontcache.h"
 
 #include <algorithm>
+#include "nodice/app.h"
 #include "nodice/config.h"
 #include "nodice/font.h"
 #include <sstream>
@@ -53,8 +54,8 @@ namespace
 
 
 NoDice::FontCache::
-FontCache(Config const* config)
-: config_(config)
+FontCache(App* app)
+: app_(app)
 { }
 
 
@@ -78,12 +79,12 @@ get_font(std::string const& typeface, unsigned pointsize)
   }
 
   auto const& ttf_filename = ttf_filename_for_typeface(typeface);
-  for (auto const& path: config_->asset_search_path())
+  for (auto const& path: app_->config().asset_search_path())
   {
     std::string filename = path + "/" + ttf_filename;
     if (0 == ::access(filename.c_str(), R_OK))
     {
-      cache_.push_back(Cache::value_type{font_key, std::make_unique<Font>(filename, pointsize)});
+      cache_.push_back(Cache::value_type{font_key, std::make_unique<Font>(app_, filename, pointsize)});
       return *cache_.back().font;
     }
   }

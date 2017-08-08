@@ -30,7 +30,7 @@
 
 namespace NoDice
 {
-class Config;
+class App;
 class Font;
 
 /**
@@ -40,7 +40,7 @@ class Font;
 class FontCache
 {
 public:
-  FontCache(Config const* config);
+  FontCache(App* app);
 
   ~FontCache();
 
@@ -62,8 +62,8 @@ private:
   using Cache = std::vector<Entry>;
 
 private:
-  Config const*  config_;
-  Cache          cache_;
+  App*   app_;
+  Cache  cache_;
 };
 
 

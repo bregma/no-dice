@@ -68,7 +68,7 @@ App(NoDice::Config* config)
 : config_(config)
 , sdl_init_()
 , video_(config)
-, font_cache_(config)
+, font_cache_(this)
 , game_is_running_(false)
 {
   std::srand(std::time(NULL));

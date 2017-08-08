@@ -231,22 +231,20 @@ setUniform(const std::string& name, float v1, float v2, float v3)
 }
 
 
-#ifdef LATER_DUDE
 void NoDice::ShaderProgram::
-setUniform(const std::string& name, const glm::mat4& mat)
+setUniform(const std::string& name, const NoDice::mat4& mat)
 {
   auto it = impl_->uniform_index_map.find(name);
   if (it == impl_->uniform_index_map.end())
   {
     std::cerr << "WARNING: uniform \"" << name << "\" not found.\n";
   }
-  glUniformMatrix4fv(it->second, 1, GL_FALSE, &mat[0][0]);
+  glUniformMatrix4fv(it->second, 1, GL_FALSE, mat.array);
 }
-#endif
 
 
 void NoDice::ShaderProgram::
-setAttribute(const std::string& name, int size, int stride, void* ptr)
+setAttribute(const std::string& name, int size, int stride, void const* ptr)
 {
   auto it = impl_->attribute_index_map.find(name);
   if (it == impl_->attribute_index_map.end())
