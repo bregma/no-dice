@@ -3,7 +3,7 @@
  * @brief Private implemntation of the nodice/shaderprogram module.
  */
 /*
- * Copyright 2013 Stephen M. Webb  <stephen.webb@bregmasoft.ca>
+ * Copyright 2017 Stephen M. Webb  <stephen.webb@bregmasoft.ca>
  *
  * This file is part of no-dice.
  *
@@ -46,13 +46,13 @@ struct NoDice::ShaderProgram::Impl
     glDeleteProgram(program_);
   }
 
-  typedef std::map<std::string, GLint> AttributeIndexMap;
-  typedef std::map<std::string, GLint> UniformIndexMap;
+  using AttributeIndexMap = std::map<std::string, GLint>;
+  using UniformIndexMap   = std::map<std::string, GLint>;
 
   GLuint            program_;
   bool              is_linked_;
-  AttributeIndexMap attribute_index_map;
-  UniformIndexMap   uniform_index_map;
+  AttributeIndexMap attribute_index_map_;
+  UniformIndexMap   uniform_index_map_;
 };
 
 
@@ -133,7 +133,7 @@ link()
                          &uniform_name[0]);
       std::string name(&uniform_name[0], name_length);
       GLint loc = glGetUniformLocation(impl_->program_, name.c_str());
-      impl_->uniform_index_map.insert(std::make_pair(name, loc));
+      impl_->uniform_index_map_.insert(std::make_pair(name, loc));
       std::cerr << "==smw> " << __PRETTY_FUNCTION__ << " uniform: "
                 << name
                 << " type=" << type
@@ -170,7 +170,7 @@ link()
                          &attribute_name[0]);
       std::string name(&attribute_name[0], name_length);
       GLint loc = glGetAttribLocation(impl_->program_, name.c_str());
-      impl_->attribute_index_map.insert(std::make_pair(name, loc));
+      impl_->attribute_index_map_.insert(std::make_pair(name, loc));
       std::cerr << "==smw> " << __PRETTY_FUNCTION__
                 << " attribute: "
                 << name
@@ -201,55 +201,57 @@ activate()
 void NoDice::ShaderProgram::
 deactivate()
 {
-  std::cerr << "==smw> " << __PRETTY_FUNCTION__ << " begins\n";
   glUseProgram(0);
-  std::cerr << "==smw> " << __PRETTY_FUNCTION__ << " ends\n";
 }
 
 
 void NoDice::ShaderProgram::
-setUniform(const std::string& name, float value)
+set_uniform(const std::string& name, float value)
 {
-  auto it = impl_->uniform_index_map.find(name);
-  if (it == impl_->uniform_index_map.end())
+  auto it = impl_->uniform_index_map_.find(name);
+  if (it == impl_->uniform_index_map_.end())
   {
     std::cerr << "WARNING: uniform \"" << name << "\" not found.\n";
+    return;
   }
   glUniform1f(it->second, value);
 }
 
 
 void NoDice::ShaderProgram::
-setUniform(const std::string& name, float v1, float v2, float v3)
+set_uniform(const std::string& name, float v1, float v2, float v3)
 {
-  auto it = impl_->uniform_index_map.find(name);
-  if (it == impl_->uniform_index_map.end())
+  auto it = impl_->uniform_index_map_.find(name);
+  if (it == impl_->uniform_index_map_.end())
   {
     std::cerr << "WARNING: uniform \"" << name << "\" not found.\n";
+    return;
   }
   glUniform3f(it->second, v1, v2, v3);
 }
 
 
 void NoDice::ShaderProgram::
-setUniform(const std::string& name, const NoDice::mat4& mat)
+set_uniform(const std::string& name, const NoDice::mat4& mat)
 {
-  auto it = impl_->uniform_index_map.find(name);
-  if (it == impl_->uniform_index_map.end())
+  auto it = impl_->uniform_index_map_.find(name);
+  if (it == impl_->uniform_index_map_.end())
   {
     std::cerr << "WARNING: uniform \"" << name << "\" not found.\n";
+    return;
   }
   glUniformMatrix4fv(it->second, 1, GL_FALSE, mat.array);
 }
 
 
 void NoDice::ShaderProgram::
-setAttribute(const std::string& name, int size, int stride, void const* ptr)
+set_attribute(const std::string& name, int size, int stride, void const* ptr)
 {
-  auto it = impl_->attribute_index_map.find(name);
-  if (it == impl_->attribute_index_map.end())
+  auto it = impl_->attribute_index_map_.find(name);
+  if (it == impl_->attribute_index_map_.end())
   {
     std::cerr << "WARNING: attribute \"" << name << "\" not found.\n";
+    return;
   }
   glEnableVertexAttribArray(it->second);
   glVertexAttribPointer(it->second, size, GL_FLOAT, GL_FALSE, stride, ptr);

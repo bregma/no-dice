@@ -357,10 +357,10 @@ print(GLfloat x, GLfloat y, GLfloat scale, const std::string& text)
   shader_program.activate();
   check_gl_error("IntroState::draw() shader_program.activate()");
 
-  shader_program.setUniform("mvp", MVP_matrix);
+  shader_program.set_uniform("mvp", MVP_matrix);
 
-  shader_program.setAttribute("in_position", coords_per_vertex, stride_bytes, (const void*)0);
-  shader_program.setAttribute("in_texcoord", coords_per_vertex, stride_bytes, (const void*)(2*sizeof(GLfloat)));
+  shader_program.set_attribute("in_position", coords_per_vertex, stride_bytes, (const void*)0);
+  shader_program.set_attribute("in_texcoord", coords_per_vertex, stride_bytes, (const void*)(2*sizeof(GLfloat)));
   /** @todo move into ShaderProgram... */
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, m_texture);

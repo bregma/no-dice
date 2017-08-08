@@ -3,7 +3,7 @@
  * @brief Public interface of the nodice/shaderprogram module.
  */
 /*
- * Copyright 2013 Stephen M. Webb  <stephen.webb@bregmasoft.ca>
+ * Copyright 2017 Stephen M. Webb  <stephen.webb@bregmasoft.ca>
  *
  * This file is part of no-dice.
  *
@@ -59,19 +59,19 @@ namespace NoDice
 
     /** Sets a scalar uniform value. */
     void
-    setUniform(const std::string& name, float value);
+    set_uniform(const std::string& name, float value);
 
     /** Sets a (vec3) uniform value. */
     void
-    setUniform(const std::string& name, float v1, float v2, float v3);
+    set_uniform(const std::string& name, float v1, float v2, float v3);
 
     /** Sets a mat4 uniform value. */
     void
-    setUniform(const std::string& name, const mat4& mat);
+    set_uniform(const std::string& name, const mat4& mat);
 
     /** Sets an attribute value. */
     void
-    setAttribute(const std::string& name, int size, int stride, void const* ptr);
+    set_attribute(const std::string& name, int size, int stride, void const* ptr);
 
   private:
     ShaderProgram(ShaderProgram const&) = delete;
