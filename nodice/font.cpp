@@ -30,6 +30,8 @@
 #include "nodice/app.h"
 #include "nodice/shader.h"
 #include "nodice/shaderprogram.h"
+#include "nodice/vertexarray.h"
+#include "nodice/vertexbuffer.h"
 #include <sstream>
 #include <stdexcept>
 #include <unistd.h>
@@ -272,6 +274,14 @@ print(GLfloat x, GLfloat y, GLfloat scale, const std::string& text)
   vmml::Frustumf frustum((GLfloat)viewport[0], GLfloat(viewport[2]), GLfloat(viewport[1]), GLfloat(viewport[3]), -1.0f, 1.0f);
   mat4 MVP_matrix NODICE_UNUSED = frustum.computeOrthoMatrix();
 
+  Shader vertex_shader(app_->config(), GL_VERTEX_SHADER, "intro-vertex.glsl");
+  Shader fragment_shader(app_->config(), GL_FRAGMENT_SHADER, "intro-fragment.glsl");
+  ShaderProgram shader_program;
+  shader_program.attach(vertex_shader);
+  shader_program.attach(fragment_shader);
+  shader_program.link();
+  check_gl_error("IntroState::draw() shader_program.activate()");
+
   static const GLuint coords_per_vertex = 2;
   static const GLuint coords_per_texture = 2;
   static const GLuint row_width = coords_per_vertex + coords_per_texture;
@@ -279,106 +289,88 @@ print(GLfloat x, GLfloat y, GLfloat scale, const std::string& text)
   static const GLuint vertexes_per_glyph = 4;
   static const GLuint indexes_per_glyph = 6;
 
-  GLuint vao;
-  glGenVertexArrays(1, &vao);
-  glBindVertexArray(vao);
-
-  GLuint vbo[2]; /* 0 == vertex buffer, 1 == index buffer */
-  glGenBuffers(2, vbo);
-  check_gl_error("Font::print() glGenBuffers()");
-  glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
-  check_gl_error("Font::print() glBindBuffer(GL_ARRAY_BUFFER)");
-  glBufferData(GL_ARRAY_BUFFER, stride_bytes * text.length() * vertexes_per_glyph, nullptr, GL_DYNAMIC_DRAW);
-  check_gl_error("Font::print() glBufferData(GL_ARRAY_BUFFER)");
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo[1]);
-  check_gl_error("Font::print() glBindBuffer(GL_ELEMENT_ARRAY_BUFFER)");
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLushort) * indexes_per_glyph * text.length(), nullptr, GL_DYNAMIC_DRAW);
-  check_gl_error("Font::print() glBufferData(GL_ELEMENT_ARRAY_BUFFER)");
-
-  glEnable(GL_BLEND);
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-  // Two coords per vertex, two coords per texture, three vertexes for first
-  // triangle, one for second triangle = (2 + 2) * (3 + 1) = 16.
-  GLfloat  varray[16];
-  GLushort char_index = 0;
-  for (std::string::const_iterator it = text.begin(); it != text.end(); ++it)
+  VertexArray  text_line_vao; // These three object need to persist during draw calls.
+  VertexBuffer vertex_vbo(GL_ARRAY_BUFFER, stride_bytes * text.length() * vertexes_per_glyph, nullptr, GL_DYNAMIC_DRAW);
+  VertexBuffer index_vbo(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLushort) * indexes_per_glyph * text.length(), nullptr, GL_DYNAMIC_DRAW);
   {
-    char c = *it;
+    VertexBufferBinding vertex_vbo_binding(vertex_vbo);
+    VertexBufferBinding index_vbo_binding(index_vbo);
 
-    varray[0]  = x + m_glyph[c].left * scale;
-    varray[1]  = y - (m_glyph[c].height - m_glyph[c].top) * scale;
-    varray[2]  = m_glyph[c].s;
-    varray[3]  = m_glyph[c].t + m_glyph[c].h;
-    varray[4]  = x + m_glyph[c].width * scale;
-    varray[5]  = y - (m_glyph[c].height - m_glyph[c].top) * scale;
-    varray[6]  = m_glyph[c].s + m_glyph[c].w;
-    varray[7]  = m_glyph[c].t + m_glyph[c].h;
-    varray[8]  = x + m_glyph[c].left * scale;
-    varray[9]  = y + m_glyph[c].top * scale;
-    varray[10] = m_glyph[c].s;
-    varray[11] = m_glyph[c].t;
-    varray[12] = x + m_glyph[c].width * scale;
-    varray[13] = y + m_glyph[c].top * scale;
-    varray[14] = m_glyph[c].s + m_glyph[c].w;
-    varray[15] = m_glyph[c].t;
+    // Two coords per vertex, two coords per texture, three vertexes for first
+    // triangle, one for second triangle = (2 + 2) * (3 + 1) = 16.
+    GLfloat  varray[16];
+    GLushort char_index = 0;
+    for (std::string::const_iterator it = text.begin(); it != text.end(); ++it)
+    {
+      char c = *it;
 
-    glBufferSubData(GL_ARRAY_BUFFER,
-                    char_index * vertexes_per_glyph * stride_bytes,
-                    vertexes_per_glyph * stride_bytes,
-                    varray);
-    check_gl_error("Font::print() glBufferSubData(GL_ARRAY_BUFFER)");
+      varray[0]  = x + m_glyph[c].left * scale;
+      varray[1]  = y - (m_glyph[c].height - m_glyph[c].top) * scale;
+      varray[2]  = m_glyph[c].s;
+      varray[3]  = m_glyph[c].t + m_glyph[c].h;
+      varray[4]  = x + m_glyph[c].width * scale;
+      varray[5]  = y - (m_glyph[c].height - m_glyph[c].top) * scale;
+      varray[6]  = m_glyph[c].s + m_glyph[c].w;
+      varray[7]  = m_glyph[c].t + m_glyph[c].h;
+      varray[8]  = x + m_glyph[c].left * scale;
+      varray[9]  = y + m_glyph[c].top * scale;
+      varray[10] = m_glyph[c].s;
+      varray[11] = m_glyph[c].t;
+      varray[12] = x + m_glyph[c].width * scale;
+      varray[13] = y + m_glyph[c].top * scale;
+      varray[14] = m_glyph[c].s + m_glyph[c].w;
+      varray[15] = m_glyph[c].t;
 
-    GLushort indexes[] = {
-      GLushort(0 + char_index * vertexes_per_glyph),
-      GLushort(1 + char_index * vertexes_per_glyph),
-      GLushort(2 + char_index * vertexes_per_glyph),
-      GLushort(2 + char_index * vertexes_per_glyph),
-      GLushort(1 + char_index * vertexes_per_glyph),
-      GLushort(3 + char_index * vertexes_per_glyph)
-    };
-    glBufferSubData(GL_ELEMENT_ARRAY_BUFFER,
-                    char_index * indexes_per_glyph * sizeof(GLushort),
-                    sizeof(GLushort) * indexes_per_glyph,
-                    indexes);
-    check_gl_error("Font::print() glBufferSubData(GL_ELEMENT_ARRAY_BUFFER)");
+      vertex_vbo.copy_in(char_index * vertexes_per_glyph * stride_bytes,
+                         vertexes_per_glyph * stride_bytes,
+                         varray);
 
-    x += m_glyph[c].advance * scale;
-    ++char_index;
+      GLushort indexes[] = {
+        GLushort(0 + char_index * vertexes_per_glyph),
+        GLushort(1 + char_index * vertexes_per_glyph),
+        GLushort(2 + char_index * vertexes_per_glyph),
+        GLushort(2 + char_index * vertexes_per_glyph),
+        GLushort(1 + char_index * vertexes_per_glyph),
+        GLushort(3 + char_index * vertexes_per_glyph)
+      };
+      index_vbo.copy_in(char_index * indexes_per_glyph * sizeof(GLushort),
+                        sizeof(GLushort) * indexes_per_glyph,
+                        indexes);
+
+      x += m_glyph[c].advance * scale;
+      ++char_index;
+    }
+
+    shader_program.set_attribute("in_position", coords_per_vertex, stride_bytes, (const void*)0);
+    shader_program.set_attribute("in_texcoord", coords_per_vertex, stride_bytes, (const void*)(2*sizeof(GLfloat)));
+    text_line_vao.unbind(); // The VAO needs to be unbound before the VBOs.
   }
 
   /* -- separation of mesh creation and rendering -- */
 
-  Shader vertex_shader(app_->config(), GL_VERTEX_SHADER, "intro-vertex.glsl");
-  Shader fragment_shader(app_->config(), GL_FRAGMENT_SHADER, "intro-fragment.glsl");
-  ShaderProgram shader_program;
-  shader_program.attach(vertex_shader);
-  shader_program.attach(fragment_shader);
   shader_program.activate();
-  check_gl_error("IntroState::draw() shader_program.activate()");
-
   shader_program.set_uniform("mvp", MVP_matrix);
 
-  shader_program.set_attribute("in_position", coords_per_vertex, stride_bytes, (const void*)0);
-  shader_program.set_attribute("in_texcoord", coords_per_vertex, stride_bytes, (const void*)(2*sizeof(GLfloat)));
+  text_line_vao.bind();
+
   /** @todo move into ShaderProgram... */
   glActiveTexture(GL_TEXTURE0);
+  check_gl_error("Font::print() glActiveTexture()");
   glBindTexture(GL_TEXTURE_2D, m_texture);
   check_gl_error("Font::print() glBindTexture()");
   glUniform1i(1, 0);
   check_gl_error("Font::print() glUniform1i()");
   /** ... */
 
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+
   glDrawElements(GL_TRIANGLES, text.length() * indexes_per_glyph, GL_UNSIGNED_SHORT, NULL);
   check_gl_error("Font::print() glDrawArrays()");
 
+  text_line_vao.unbind();
   shader_program.deactivate();
-
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-  glBindBuffer(GL_ARRAY_BUFFER, 0);
-  glDeleteBuffers(2, vbo);
-  glDeleteVertexArrays(1, &vao);
-  check_gl_error("Font::print() glDeleteBuffers()");
 }
 
 

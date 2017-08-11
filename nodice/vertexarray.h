@@ -1,9 +1,9 @@
 /**
- * @file nodice/d4.h
- * @brief Public interface of the no-dice d4 module.
+ * @file vertexarray.h
+ * @brief Public interface of the vertex array object module.
  */
 /*
- * Copyright 2010, 2011, 2017 Stephen M. Webb  <stephen.webb@bregmasoft.ca>
+ * Copyright 2017 Stephen M. Webb  <stephen.webb@bregmasoft.ca>
  *
  * This file is part of no-dice.
  *
@@ -20,33 +20,36 @@
  * You should have received a copy of the GNU General Public License
  * along with no-dice.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef NODICE_D4_H
-#define NODICE_D4_H 1
+#ifndef NODICE_VERTEXARRAY_H
+#define NODICE_VERTEXARRAY_H 1
 
-#include "nodice/shape.h"
-#include "nodice/vertexbuffer.h"
-#include "nodice/video.h"
+#include "nodice/opengl.h"
 
 
 namespace NoDice
 {
-
   /**
-   * A 4-sided (tetrahedral) polyhedral die.
+   * RAII wrapper around an OpenGL Vertex Array Object.
    */
-  class D4
-  : public Shape
+  class VertexArray
   {
   public:
-    D4();
-    ~D4();
-    int score();
-    void draw() const;
+    /**
+     * Creates an RAII object for a VAO.
+     */
+    VertexArray();
 
-  private:
-    VertexBuffer  vbo_;
-    GLsizei       vertex_count_;
+    ~VertexArray();
+
+    void
+    bind() const;
+
+    void
+    unbind() const;
+
+  public:
+    GLuint vao_;
   };
-} // namespace noDice
+} // namespace NoDice
 
-#endif // NODICE_D4_H
+#endif // NODICE_VERTEXARRAY_H
