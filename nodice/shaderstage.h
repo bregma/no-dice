@@ -1,6 +1,6 @@
 /**
- * @file nodice/shader.h
- * @brief Public interface of the nodice/shader module.
+ * @file nodice/shaderstage.h
+ * @brief Public interface of the shader stage module.
  */
 /*
  * Copyright 2013 Stephen M. Webb  <stephen.webb@bregmasoft.ca>
@@ -31,24 +31,24 @@ namespace NoDice
 {
   class Config;
 
-  class Shader
+  class ShaderStage
   {
   public:
-    /** Creates a Shader. */
-    Shader(Config const&      config,
-           GLenum             shader_type,
-           std::string const& source_file_name);
+    /** Creates a ShaderStage. */
+    ShaderStage(Config const&      config,
+                GLenum             shader_type,
+                std::string const& source_file_name);
 
-    /** Destroys a Shader. */
-    ~Shader();
+    /** Destroys a ShaderStage. */
+    ~ShaderStage();
 
     /** Gets the GL shader object. */
     GLint
     id() const;
 
   private:
-    Shader(Shader const&) = delete;
-    Shader& operator=(Shader const&) = delete;
+    ShaderStage(ShaderStage const&) = delete;
+    ShaderStage& operator=(ShaderStage const&) = delete;
 
   private:
     GLuint  shader_;

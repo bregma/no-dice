@@ -48,9 +48,9 @@ libnodice_la_SOURCES = \
 	object.h           object.cpp \
 	opengl.h           opengl.cpp \
 	playstate.h        playstate.cpp \
-	renderer.h         renderer.cpp \
-	shader.h           shader.cpp \
-	shaderprogram.h    shaderprogram.cpp \
+	shadercache.h      shadercache.cpp \
+	shaderpipeline.h   shaderpipeline.cpp \
+	shaderstage.h      shaderstage.cpp \
 	shape.h            shape.cpp \
 	vertexarray.h      vertexarray.cpp \
 	vertexbuffer.h     vertexbuffer.cpp \

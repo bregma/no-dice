@@ -28,8 +28,8 @@
 #include "nodice/config.h"
 #include "nodice/font.h"
 #include "nodice/playstate.h"
-#include "nodice/shader.h"
-#include "nodice/shaderprogram.h"
+//#include "nodice/shader.h"
+//#include "nodice/shaderprogram.h"
 #include "nodice/video.h"
 
 #define MENU_FONT "spindle"
@@ -177,13 +177,13 @@ draw(Video& video NODICE_UNUSED)
   glColor4fv(titleColour.rgba);
   check_gl_error("IntroState::draw() glColor4fv(1a)");
 #else
-  Shader vertex_shader(app_->config(), GL_VERTEX_SHADER, "intro-vertex.glsl");
-  Shader fragment_shader(app_->config(), GL_FRAGMENT_SHADER, "intro-fragment.glsl");
-  ShaderProgram shader_program;
-  shader_program.attach(vertex_shader);
-  shader_program.attach(fragment_shader);
-  shader_program.activate();
-  check_gl_error("IntroState::draw() shader_program.activate()");
+//  Shader vertex_shader(app_->config(), GL_VERTEX_SHADER, "intro-vertex.glsl");
+//  Shader fragment_shader(app_->config(), GL_FRAGMENT_SHADER, "intro-fragment.glsl");
+//  ShaderProgram shader_program;
+//  shader_program.attach(vertex_shader);
+//  shader_program.attach(fragment_shader);
+//  shader_program.activate();
+//  check_gl_error("IntroState::draw() shader_program.activate()");
 #endif 
 
   menu_font_.print(title_pos_.x, title_pos_.y, 1.0f, "No Dice!");
@@ -205,7 +205,7 @@ draw(Video& video NODICE_UNUSED)
     menu_font_.print(menu_entry[i].pos.x, menu_entry[i].pos.y, 1.0f, menu_entry[i].title);
   }
 #ifndef USE_FIXED_PIPELINE
-  shader_program.deactivate();
+//  shader_program.deactivate();
 #endif
 }
 

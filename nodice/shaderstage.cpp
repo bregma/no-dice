@@ -1,6 +1,6 @@
 /**
- * @file nodice/shader.cpp
- * @brief Private implemntation of the nodice/shader module.
+ * @file nodice/shaderstage.cpp
+ * @brief Private implemntation of the shader stage module.
  */
 /*
  * Copyright 2013 Stephen M. Webb  <stephen.webb@bregmasoft.ca>
@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU General Public License
  * along with no-dice.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "nodice/shader.h"
+#include "nodice/shaderstage.h"
 
 #include <fstream>
 #include <iterator>
@@ -76,8 +76,8 @@ load_shader(NoDice::Config const& config,
  *                             of @c GL_VERTEX_SHADER or @c GL_FRAGMENT_SHADER.
  * @param[in] source_file_name The name of the shader source file.
  */
-NoDice::Shader::
-Shader(NoDice::Config const& config,
+NoDice::ShaderStage::
+ShaderStage(NoDice::Config const& config,
        GLenum                shader_type,
        std::string const&    source_file_name)
 : shader_(glCreateShader(shader_type))
@@ -104,8 +104,8 @@ Shader(NoDice::Config const& config,
 /**
  * Destroys the shader object.
  */
-NoDice::Shader::
-~Shader()
+NoDice::ShaderStage::
+~ShaderStage()
 {
   glDeleteShader(shader_);
 }
@@ -114,7 +114,7 @@ NoDice::Shader::
 /**
  * Gets the internal identifier for the shader.
  */
-GLint NoDice::Shader::
+GLint NoDice::ShaderStage::
 id() const
 {
   return shader_;

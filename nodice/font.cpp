@@ -28,8 +28,8 @@
 #include <map>
 #include "nodice/maths.h"
 #include "nodice/app.h"
-#include "nodice/shader.h"
-#include "nodice/shaderprogram.h"
+#include "nodice/shaderpipeline.h"
+#include "nodice/shaderstage.h"
 #include "nodice/vertexarray.h"
 #include "nodice/vertexbuffer.h"
 #include <sstream>
@@ -274,13 +274,13 @@ print(GLfloat x, GLfloat y, GLfloat scale, const std::string& text)
   vmml::Frustumf frustum((GLfloat)viewport[0], GLfloat(viewport[2]), GLfloat(viewport[1]), GLfloat(viewport[3]), -1.0f, 1.0f);
   mat4 MVP_matrix NODICE_UNUSED = frustum.computeOrthoMatrix();
 
-  Shader vertex_shader(app_->config(), GL_VERTEX_SHADER, "intro-vertex.glsl");
-  Shader fragment_shader(app_->config(), GL_FRAGMENT_SHADER, "intro-fragment.glsl");
-  ShaderProgram shader_program;
-  shader_program.attach(vertex_shader);
-  shader_program.attach(fragment_shader);
-  shader_program.link();
-  check_gl_error("IntroState::draw() shader_program.activate()");
+  ShaderStage vertex_shader(app_->config(), GL_VERTEX_SHADER, "intro-vertex.glsl");
+  ShaderStage fragment_shader(app_->config(), GL_FRAGMENT_SHADER, "intro-fragment.glsl");
+  ShaderPipeline shader_pipeline;
+  shader_pipeline.attach(vertex_shader);
+  shader_pipeline.attach(fragment_shader);
+  shader_pipeline.link();
+  check_gl_error("IntroState::draw() shader_pipeline.activate()");
 
   static const GLuint coords_per_vertex = 2;
   static const GLuint coords_per_texture = 2;
@@ -341,19 +341,19 @@ print(GLfloat x, GLfloat y, GLfloat scale, const std::string& text)
       ++char_index;
     }
 
-    shader_program.set_attribute("in_position", coords_per_vertex, stride_bytes, (const void*)0);
-    shader_program.set_attribute("in_texcoord", coords_per_vertex, stride_bytes, (const void*)(2*sizeof(GLfloat)));
+    shader_pipeline.set_attribute("in_position", coords_per_vertex, stride_bytes, (const void*)0);
+    shader_pipeline.set_attribute("in_texcoord", coords_per_vertex, stride_bytes, (const void*)(2*sizeof(GLfloat)));
     text_line_vao.unbind(); // The VAO needs to be unbound before the VBOs.
   }
 
   /* -- separation of mesh creation and rendering -- */
 
-  shader_program.activate();
-  shader_program.set_uniform("mvp", MVP_matrix);
+  shader_pipeline.activate();
+  shader_pipeline.set_uniform("mvp", MVP_matrix);
 
   text_line_vao.bind();
 
-  /** @todo move into ShaderProgram... */
+  /** @todo move into ShaderPipeline... */
   glActiveTexture(GL_TEXTURE0);
   check_gl_error("Font::print() glActiveTexture()");
   glBindTexture(GL_TEXTURE_2D, m_texture);
@@ -370,7 +370,7 @@ print(GLfloat x, GLfloat y, GLfloat scale, const std::string& text)
   check_gl_error("Font::print() glDrawArrays()");
 
   text_line_vao.unbind();
-  shader_program.deactivate();
+  shader_pipeline.deactivate();
 }
 
 

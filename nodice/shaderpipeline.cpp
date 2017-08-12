@@ -1,6 +1,6 @@
 /**
- * @file nodice/shaderprogram.cpp
- * @brief Private implemntation of the nodice/shaderprogram module.
+ * @file nodice/shaderpipeline.cpp
+ * @brief Private implemntation of the shader pipeline module.
  */
 /*
  * Copyright 2017 Stephen M. Webb  <stephen.webb@bregmasoft.ca>
@@ -20,12 +20,12 @@
  * You should have received a copy of the GNU General Public License
  * along with no-dice.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "nodice/shaderprogram.h"
+#include "nodice/shaderpipeline.h"
 
 #include <iostream>
 #include <map>
 #include "nodice/opengl.h"
-#include "nodice/shader.h"
+#include "nodice/shaderstage.h"
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -34,7 +34,7 @@
 /**
  * Internal implemntation of the SHaderProgram.
  */
-struct NoDice::ShaderProgram::Impl
+struct NoDice::ShaderPipeline::Impl
 {
   Impl()
   : program_(glCreateProgram())
@@ -57,39 +57,39 @@ struct NoDice::ShaderProgram::Impl
 
 
 /**
- * Constructs a shader program object.
+ * Constructs a shader pipeline object.
  */
-NoDice::ShaderProgram::
-ShaderProgram()
+NoDice::ShaderPipeline::
+ShaderPipeline()
 : impl_(new Impl())
 {
 }
 
 
 /**
- * Destroys the shader object.
+ * Destroys the shader pipeline object.
  */
-NoDice::ShaderProgram::
-~ShaderProgram()
+NoDice::ShaderPipeline::
+~ShaderPipeline()
 {
 }
 
 
 /**
- * Attaches a shader to the program.
+ * Attaches a shader stage to the pipeline.
  */
-void NoDice::ShaderProgram::
-attach(NoDice::Shader const& shader)
+void NoDice::ShaderPipeline::
+attach(NoDice::ShaderStage const& shader_stage)
 {
-  glAttachShader(impl_->program_, shader.id());
+  glAttachShader(impl_->program_, shader_stage.id());
   impl_->is_linked_ = false;
 }
 
 
 /**
- * Links the program.
+ * Links the stages in the pipeline.
  */
-void NoDice::ShaderProgram::
+void NoDice::ShaderPipeline::
 link()
 {
   glLinkProgram(impl_->program_);
@@ -185,9 +185,9 @@ link()
 
 
 /**
- * Makes the program the currect shader program in use.
+ * Makes the pipeline the currect shader pipeline in use.
  */
-void NoDice::ShaderProgram::
+void NoDice::ShaderPipeline::
 activate()
 {
   if (!impl_->is_linked_)
@@ -198,14 +198,14 @@ activate()
 }
 
 
-void NoDice::ShaderProgram::
+void NoDice::ShaderPipeline::
 deactivate()
 {
   glUseProgram(0);
 }
 
 
-void NoDice::ShaderProgram::
+void NoDice::ShaderPipeline::
 set_uniform(const std::string& name, float value)
 {
   auto it = impl_->uniform_index_map_.find(name);
@@ -218,7 +218,7 @@ set_uniform(const std::string& name, float value)
 }
 
 
-void NoDice::ShaderProgram::
+void NoDice::ShaderPipeline::
 set_uniform(const std::string& name, float v1, float v2, float v3)
 {
   auto it = impl_->uniform_index_map_.find(name);
@@ -231,7 +231,7 @@ set_uniform(const std::string& name, float v1, float v2, float v3)
 }
 
 
-void NoDice::ShaderProgram::
+void NoDice::ShaderPipeline::
 set_uniform(const std::string& name, const NoDice::mat4& mat)
 {
   auto it = impl_->uniform_index_map_.find(name);
@@ -244,7 +244,7 @@ set_uniform(const std::string& name, const NoDice::mat4& mat)
 }
 
 
-void NoDice::ShaderProgram::
+void NoDice::ShaderPipeline::
 set_attribute(const std::string& name, int size, int stride, void const* ptr)
 {
   auto it = impl_->attribute_index_map_.find(name);
@@ -254,6 +254,8 @@ set_attribute(const std::string& name, int size, int stride, void const* ptr)
     return;
   }
   glEnableVertexAttribArray(it->second);
+  check_gl_error("ShaderPipeline::set_attribute() glEnableVertexAttribArray()");
   glVertexAttribPointer(it->second, size, GL_FLOAT, GL_FALSE, stride, ptr);
+  check_gl_error("ShaderPipeline::set_attribute() glVertexAttribPointer()");
 }
 

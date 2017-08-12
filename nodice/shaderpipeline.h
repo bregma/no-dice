@@ -1,6 +1,6 @@
 /**
- * @file nodice/shaderprogram.h
- * @brief Public interface of the nodice/shaderprogram module.
+ * @file nodice/shaderpipeline.h
+ * @brief Public interface of the shader pipeline module.
  */
 /*
  * Copyright 2017 Stephen M. Webb  <stephen.webb@bregmasoft.ca>
@@ -20,8 +20,8 @@
  * You should have received a copy of the GNU General Public License
  * along with no-dice.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef NODICE_SHADERPROGRAM_H
-#define NODICE_SHADERPROGRAM_H 1
+#ifndef NODICE_SHADERPIPELINE_H
+#define NODICE_SHADERPIPELINE_H 1
 
 #include <memory>
 #include "nodice/maths.h"
@@ -30,20 +30,20 @@
 
 namespace NoDice
 {
-  class Shader;
+  class ShaderStage;
 
-  class ShaderProgram
+  class ShaderPipeline
   {
   public:
-    /** Creates a ShaderProgram. */
-    ShaderProgram();
+    /** Creates a ShaderPipeline. */
+    ShaderPipeline();
 
-    /** Destroys a ShaderProgram. */
-    ~ShaderProgram();
+    /** Destroys a ShaderPipeline. */
+    ~ShaderPipeline();
 
     /** Attaches a shader to the program. */
     void
-    attach(Shader const& shader);
+    attach(ShaderStage const& shader_stage);
 
     /** Links the shader program (the final step in creation). */
     void
@@ -74,16 +74,18 @@ namespace NoDice
     set_attribute(const std::string& name, int size, int stride, void const* ptr);
 
   private:
-    ShaderProgram(ShaderProgram const&) = delete;
-    ShaderProgram& operator=(ShaderProgram const&) = delete;
+    ShaderPipeline(ShaderPipeline const&) = delete;
+    ShaderPipeline& operator=(ShaderPipeline const&) = delete;
 
   private:
     class Impl;
 
     std::unique_ptr<Impl> impl_;
   };
+
+  using ShaderPtr = ShaderPipeline*;
 }
 
-#endif // NODICE_SHADERPROGRAM_H
+#endif // NODICE_SHADERPIPELINE_H
 
 
