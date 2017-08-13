@@ -24,6 +24,7 @@
 #define NODICE_SHADER_H 1
 
 #include "nodice/opengl.h"
+#include <memory>
 #include <string>
 
 
@@ -31,12 +32,23 @@ namespace NoDice
 {
   class Config;
 
+
   class ShaderStage
   {
   public:
+    enum class Type
+    {
+      Vertex,
+      Fragment,
+    };
+
+    /** Uniquely identifies a particular shader stage instance. */
+    using Id = std::size_t;
+   
+  public:
     /** Creates a ShaderStage. */
     ShaderStage(Config const&      config,
-                GLenum             shader_type,
+                Type               shader_type,
                 std::string const& source_file_name);
 
     /** Destroys a ShaderStage. */
@@ -53,6 +65,10 @@ namespace NoDice
   private:
     GLuint  shader_;
   };
+
+
+  using ShaderStageOwningPtr = std::unique_ptr<ShaderStage>;
+  using ShaderStagePtr       = ShaderStage*;
 }
 
 #endif // NODICE_SHADER_H

@@ -28,6 +28,7 @@
 #include <map>
 #include "nodice/maths.h"
 #include "nodice/app.h"
+#include "nodice/shadercache.h"
 #include "nodice/shaderpipeline.h"
 #include "nodice/shaderstage.h"
 #include "nodice/vertexarray.h"
@@ -274,13 +275,10 @@ print(GLfloat x, GLfloat y, GLfloat scale, const std::string& text)
   vmml::Frustumf frustum((GLfloat)viewport[0], GLfloat(viewport[2]), GLfloat(viewport[1]), GLfloat(viewport[3]), -1.0f, 1.0f);
   mat4 MVP_matrix NODICE_UNUSED = frustum.computeOrthoMatrix();
 
-  ShaderStage vertex_shader(app_->config(), GL_VERTEX_SHADER, "intro-vertex.glsl");
-  ShaderStage fragment_shader(app_->config(), GL_FRAGMENT_SHADER, "intro-fragment.glsl");
-  ShaderPipeline shader_pipeline;
-  shader_pipeline.attach(vertex_shader);
-  shader_pipeline.attach(fragment_shader);
-  shader_pipeline.link();
-  check_gl_error("IntroState::draw() shader_pipeline.activate()");
+  ShaderPipelinePtr shader_pipeline = app_->shader_cache().get({
+                                        {ShaderStage::Type::Vertex,   "intro-vertex.glsl"},
+                                        {ShaderStage::Type::Fragment, "intro-fragment.glsl"}
+                                      });
 
   static const GLuint coords_per_vertex = 2;
   static const GLuint coords_per_texture = 2;
@@ -341,15 +339,15 @@ print(GLfloat x, GLfloat y, GLfloat scale, const std::string& text)
       ++char_index;
     }
 
-    shader_pipeline.set_attribute("in_position", coords_per_vertex, stride_bytes, (const void*)0);
-    shader_pipeline.set_attribute("in_texcoord", coords_per_vertex, stride_bytes, (const void*)(2*sizeof(GLfloat)));
+    shader_pipeline->set_attribute("in_position", coords_per_vertex, stride_bytes, (const void*)0);
+    shader_pipeline->set_attribute("in_texcoord", coords_per_vertex, stride_bytes, (const void*)(2*sizeof(GLfloat)));
     text_line_vao.unbind(); // The VAO needs to be unbound before the VBOs.
   }
 
   /* -- separation of mesh creation and rendering -- */
 
-  shader_pipeline.activate();
-  shader_pipeline.set_uniform("mvp", MVP_matrix);
+  shader_pipeline->activate();
+  shader_pipeline->set_uniform("mvp", MVP_matrix);
 
   text_line_vao.bind();
 
@@ -365,12 +363,11 @@ print(GLfloat x, GLfloat y, GLfloat scale, const std::string& text)
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-
   glDrawElements(GL_TRIANGLES, text.length() * indexes_per_glyph, GL_UNSIGNED_SHORT, NULL);
   check_gl_error("Font::print() glDrawArrays()");
 
   text_line_vao.unbind();
-  shader_pipeline.deactivate();
+  shader_pipeline->deactivate();
 }
 
 

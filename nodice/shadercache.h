@@ -23,32 +23,61 @@
 #ifndef NODICE_SHADERCACHE_H
 #define NODICE_SHADERCACHE_H 1
 
-#include <unordered_set>
-#include <memory>
+#include "nodice/shaderpipeline.h"
+#include "nodice/shaderstage.h"
+#include <map>
 #include <string>
+#include <vector>
 
 
 namespace NoDice
 {
-  class ShaderStage;
-  class ShaderPipeline;
+  class App;
 
+
+  /**
+   * The source of all things shader.
+   *
+   * Provides a shader pipeline given the application configuration and a list
+   * of shader stages by name.  If the shader stages and pipeline are not
+   * already in the cache, they get loaded from the appropriate shader resource
+   * and set up appropriately.
+   */
   class ShaderCache
   {
   public:
     /** Constructs am empty shader cache. */
-    ShaderCache();
+    ShaderCache(App* app);
 
     /** Destructs a shader cache. */
     ~ShaderCache();
+
+    /** A description of a shader stage to load. */
+    struct StageDesc
+    {
+      ShaderStage::Type type;
+      std::string       name;
+    };
+
+    /** Gets a (pointer to a) shader pipeline by shader stage name(s). */
+    ShaderPipelinePtr
+    get(std::vector<StageDesc> const& desc);
+
+    /** Gets a (pointer to a) shader pipeline by ShaderId. */
+    ShaderPipelinePtr
+    get(ShaderPipeline::Id) const;
 
   private:
     ShaderCache(ShaderCache const&) = delete;
     ShaderCache& operator=(ShaderCache const&) = delete;
 
   private:
-    using StageCache = std::unordered_set<std::unique_ptr<ShaderStage>>;
-    using PipelineCache = std::unordered_set<std::unique_ptr<ShaderPipeline>>;
+    using StageCache = std::map<ShaderStage::Id, ShaderStageOwningPtr>;
+    using PipelineCache = std::map<ShaderPipeline::Id, ShaderPipelineOwningPtr>;
+
+    App*           app_;
+    StageCache     stage_cache_;
+    PipelineCache  pipeline_cache_;
   };
 
 } // namespace NoDice

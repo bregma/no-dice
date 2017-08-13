@@ -25,6 +25,7 @@
 
 #include "nodice/fontcache.h"
 #include "nodice/gamestate.h"
+#include "nodice/shadercache.h"
 #include "nodice/video.h"
 #include <stack>
 #include <vector>
@@ -57,6 +58,9 @@ namespace NoDice
     Config&
     config();
 
+    ShaderCache&
+    shader_cache();
+
     FontCache&
     font_cache();
 
@@ -84,6 +88,7 @@ namespace NoDice
     Config*        config_;
     SdlInit        sdl_init_;
     Video          video_;
+    ShaderCache    shader_cache_;
     FontCache      font_cache_;
     bool           game_is_running_;
     StateStack     state_stack_;

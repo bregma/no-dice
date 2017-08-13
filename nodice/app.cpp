@@ -68,6 +68,7 @@ App(NoDice::Config* config)
 : config_(config)
 , sdl_init_()
 , video_(config)
+, shader_cache_(this)
 , font_cache_(this)
 , game_is_running_(false)
 {
@@ -122,6 +123,13 @@ NoDice::Config& NoDice::App::
 config()
 {
   return *config_;
+}
+
+
+NoDice::ShaderCache& NoDice::App::
+shader_cache()
+{
+  return shader_cache_;
 }
 
 

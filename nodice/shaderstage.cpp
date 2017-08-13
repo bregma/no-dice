@@ -30,12 +30,15 @@
 #include <unistd.h>
 
 
+namespace
+{
+
 /**
  * Finds the named shader source file on the configured asset path.
  * @param[in] config           The current configuration.
  * @param[in] source_file_name The name of the shader source file.
  */
-static std::string
+std::string
 find_shader_source(NoDice::Config const& config,
                    std::string const&    source_file_name)
 {
@@ -59,7 +62,7 @@ find_shader_source(NoDice::Config const& config,
  * @param[in] config           The current configuration.
  * @param[in] source_file_name The name of the shader source file.
  */
-static std::string const
+std::string const
 load_shader(NoDice::Config const& config,
             std::string const&    source_file_name)
 {
@@ -68,19 +71,41 @@ load_shader(NoDice::Config const& config,
                      std::istreambuf_iterator<char>());
 }
 
+/**
+ * Converts the NoDice shader type into an OpenGL shader type.
+ */
+GLenum
+shader_stage_type_to_gl_type(NoDice::ShaderStage::Type shader_type)
+{
+  switch (shader_type)
+  {
+    case NoDice::ShaderStage::Type::Vertex:
+      return GL_VERTEX_SHADER;
+      break;
+
+    case NoDice::ShaderStage::Type::Fragment:
+      return GL_FRAGMENT_SHADER;
+      break;
+  }
+
+  return 0;
+}
+
+} // anonymous namespace
+
 
 /**
  * Constructs a shader object from a named GLSL source file.
  * @param[in] config           The current configuration.
  * @param[in] shader_type      The type of the shader to compile:  should be one
- *                             of @c GL_VERTEX_SHADER or @c GL_FRAGMENT_SHADER.
+ *                             of @c Type::Vertex or @c Type::Fragment.
  * @param[in] source_file_name The name of the shader source file.
  */
 NoDice::ShaderStage::
-ShaderStage(NoDice::Config const& config,
-       GLenum                shader_type,
-       std::string const&    source_file_name)
-: shader_(glCreateShader(shader_type))
+ShaderStage(NoDice::Config const&      config,
+            NoDice::ShaderStage::Type  shader_type,
+            std::string const&         source_file_name)
+: shader_(glCreateShader(shader_stage_type_to_gl_type(shader_type)))
 {
   std::string const source = load_shader(config, source_file_name);
   char const* ptrs[1] = { source.c_str() };

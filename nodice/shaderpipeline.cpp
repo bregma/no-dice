@@ -60,8 +60,9 @@ struct NoDice::ShaderPipeline::Impl
  * Constructs a shader pipeline object.
  */
 NoDice::ShaderPipeline::
-ShaderPipeline()
-: impl_(new Impl())
+ShaderPipeline(NoDice::ShaderPipeline::Id id)
+: id_(id)
+, impl_(new Impl())
 {
 }
 
@@ -73,6 +74,14 @@ NoDice::ShaderPipeline::
 ~ShaderPipeline()
 {
 }
+
+
+/**
+ * @todo make this real.
+ */
+std::size_t NoDice::ShaderPipeline::
+id() const
+{ return id_; }
 
 
 /**

@@ -32,14 +32,23 @@ namespace NoDice
 {
   class ShaderStage;
 
+
   class ShaderPipeline
   {
   public:
+    /** Uniquely identifies this particular shader pipeline. */
+    using Id = std::size_t;
+
+  public:
     /** Creates a ShaderPipeline. */
-    ShaderPipeline();
+    explicit
+    ShaderPipeline(Id id);
 
     /** Destroys a ShaderPipeline. */
     ~ShaderPipeline();
+
+    Id
+    id() const;
 
     /** Attaches a shader to the program. */
     void
@@ -80,10 +89,12 @@ namespace NoDice
   private:
     class Impl;
 
+    Id                    id_;
     std::unique_ptr<Impl> impl_;
   };
 
-  using ShaderPtr = ShaderPipeline*;
+  using ShaderPipelineOwningPtr = std::unique_ptr<ShaderPipeline>;
+  using ShaderPipelinePtr       = ShaderPipeline*;
 }
 
 #endif // NODICE_SHADERPIPELINE_H
