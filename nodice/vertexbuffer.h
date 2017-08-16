@@ -64,6 +64,10 @@ namespace NoDice
     void
     unbind() const;
 
+  private:
+    VertexBuffer(VertexBuffer const&) = delete;
+    VertexBuffer& operator=(VertexBuffer const&) = delete;
+
   public:
     GLuint vbo_;
     GLenum target_;

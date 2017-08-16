@@ -47,8 +47,29 @@ namespace NoDice
     void
     unbind() const;
 
+  private:
+    VertexArray(VertexArray const&) = delete;
+    VertexArray& operator=(VertexArray const&) = delete;
+
   public:
     GLuint vao_;
+  };
+
+  /**
+   * RAII object foir scoped binding of a VAO.
+   */
+  class VertexArrayBinding
+  {
+  public:
+    VertexArrayBinding(VertexArray const& vao)
+    : vao_(vao)
+    { vao_.bind(); }
+
+    ~VertexArrayBinding()
+    { vao_.unbind(); }
+
+  private:
+    VertexArray const& vao_;
   };
 } // namespace NoDice
 

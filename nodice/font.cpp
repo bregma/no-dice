@@ -288,11 +288,13 @@ print(GLfloat x, GLfloat y, GLfloat scale, const std::string& text)
   static const GLuint indexes_per_glyph = 6;
 
   VertexArray  text_line_vao; // These three object need to persist during draw calls.
+  text_line_vao.bind();
   VertexBuffer vertex_vbo(GL_ARRAY_BUFFER, stride_bytes * text.length() * vertexes_per_glyph, nullptr, GL_DYNAMIC_DRAW);
   VertexBuffer index_vbo(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLushort) * indexes_per_glyph * text.length(), nullptr, GL_DYNAMIC_DRAW);
   {
     VertexBufferBinding vertex_vbo_binding(vertex_vbo);
     VertexBufferBinding index_vbo_binding(index_vbo);
+    VertexArrayBinding vao_binding(text_line_vao); // must be bound last
 
     // Two coords per vertex, two coords per texture, three vertexes for first
     // triangle, one for second triangle = (2 + 2) * (3 + 1) = 16.
@@ -341,7 +343,6 @@ print(GLfloat x, GLfloat y, GLfloat scale, const std::string& text)
 
     shader_pipeline->set_attribute("in_position", coords_per_vertex, stride_bytes, (const void*)0);
     shader_pipeline->set_attribute("in_texcoord", coords_per_vertex, stride_bytes, (const void*)(2*sizeof(GLfloat)));
-    text_line_vao.unbind(); // The VAO needs to be unbound before the VBOs.
   }
 
   /* -- separation of mesh creation and rendering -- */
@@ -349,7 +350,7 @@ print(GLfloat x, GLfloat y, GLfloat scale, const std::string& text)
   shader_pipeline->activate();
   shader_pipeline->set_uniform("mvp", MVP_matrix);
 
-  text_line_vao.bind();
+  VertexArrayBinding vao_binding(text_line_vao);
 
   /** @todo move into ShaderPipeline... */
   glActiveTexture(GL_TEXTURE0);
@@ -366,7 +367,6 @@ print(GLfloat x, GLfloat y, GLfloat scale, const std::string& text)
   glDrawElements(GL_TRIANGLES, text.length() * indexes_per_glyph, GL_UNSIGNED_SHORT, NULL);
   check_gl_error("Font::print() glDrawArrays()");
 
-  text_line_vao.unbind();
   shader_pipeline->deactivate();
 }
 

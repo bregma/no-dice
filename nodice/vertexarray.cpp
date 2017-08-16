@@ -30,7 +30,6 @@ VertexArray()
 {
   glGenVertexArrays(1, &vao_);
   check_gl_error(std::string{__PRETTY_FUNCTION__} + " glGenVertexArrays()");
-  bind();
 }
 
 
