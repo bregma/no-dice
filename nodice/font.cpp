@@ -270,16 +270,6 @@ height() const
 void NoDice::Font::
 print(GLfloat x, GLfloat y, GLfloat scale, const std::string& text)
 {
-  GLint viewport[4];
-  glGetIntegerv(GL_VIEWPORT, viewport);
-  vmml::Frustumf frustum((GLfloat)viewport[0], GLfloat(viewport[2]), GLfloat(viewport[1]), GLfloat(viewport[3]), -1.0f, 1.0f);
-  mat4 MVP_matrix NODICE_UNUSED = frustum.computeOrthoMatrix();
-
-  ShaderPipelinePtr shader_pipeline = app_->shader_cache().get({
-                                        {ShaderStage::Type::Vertex,   "intro-vertex.glsl"},
-                                        {ShaderStage::Type::Fragment, "intro-fragment.glsl"}
-                                      });
-
   static const GLuint coords_per_vertex = 2;
   static const GLuint coords_per_texture = 2;
   static const GLuint row_width = coords_per_vertex + coords_per_texture;
@@ -287,70 +277,67 @@ print(GLfloat x, GLfloat y, GLfloat scale, const std::string& text)
   static const GLuint vertexes_per_glyph = 4;
   static const GLuint indexes_per_glyph = 6;
 
-  VertexArray  text_line_vao; // These three object need to persist during draw calls.
-  text_line_vao.bind();
-  VertexBuffer vertex_vbo(GL_ARRAY_BUFFER, stride_bytes * text.length() * vertexes_per_glyph, nullptr, GL_DYNAMIC_DRAW);
-  VertexBuffer index_vbo(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLushort) * indexes_per_glyph * text.length(), nullptr, GL_DYNAMIC_DRAW);
+  // This will be an interleaved array of { X Y S T } values for each vertex.
+  using VertexData = std::vector<vec4>;
+  VertexData vertexes;
+  vertexes.reserve(vertexes_per_glyph * text.length());
+
+  // This is an index array for drawing two triangles for each glyph.
+  using IndexData = std::vector<GLushort>;
+  IndexData indexes;
+  indexes.reserve(indexes_per_glyph * text.length());
+
+  for (GLushort i = 0; i < text.length(); ++i)
   {
-    VertexBufferBinding vertex_vbo_binding(vertex_vbo);
-    VertexBufferBinding index_vbo_binding(index_vbo);
-    VertexArrayBinding vao_binding(text_line_vao); // must be bound last
+    auto const& c = text[i];
+    auto const& glyph = m_glyph[c];
 
-    // Two coords per vertex, two coords per texture, three vertexes for first
-    // triangle, one for second triangle = (2 + 2) * (3 + 1) = 16.
-    GLfloat  varray[16];
-    GLushort char_index = 0;
-    for (std::string::const_iterator it = text.begin(); it != text.end(); ++it)
-    {
-      char c = *it;
+    GLfloat left   = x + glyph.left * scale;
+    GLfloat right  = x + glyph.width * scale;
+    GLfloat top    = y - (glyph.height - glyph.top) * scale;
+    GLfloat bottom = y + glyph.top * scale;
 
-      varray[0]  = x + m_glyph[c].left * scale;
-      varray[1]  = y - (m_glyph[c].height - m_glyph[c].top) * scale;
-      varray[2]  = m_glyph[c].s;
-      varray[3]  = m_glyph[c].t + m_glyph[c].h;
-      varray[4]  = x + m_glyph[c].width * scale;
-      varray[5]  = y - (m_glyph[c].height - m_glyph[c].top) * scale;
-      varray[6]  = m_glyph[c].s + m_glyph[c].w;
-      varray[7]  = m_glyph[c].t + m_glyph[c].h;
-      varray[8]  = x + m_glyph[c].left * scale;
-      varray[9]  = y + m_glyph[c].top * scale;
-      varray[10] = m_glyph[c].s;
-      varray[11] = m_glyph[c].t;
-      varray[12] = x + m_glyph[c].width * scale;
-      varray[13] = y + m_glyph[c].top * scale;
-      varray[14] = m_glyph[c].s + m_glyph[c].w;
-      varray[15] = m_glyph[c].t;
+    vertexes.emplace_back(left,  top,    glyph.s,           glyph.t + glyph.h);
+    vertexes.emplace_back(right, top,    glyph.s + glyph.w, glyph.t + glyph.h);
+    vertexes.emplace_back(left,  bottom, glyph.s,           glyph.t);
+    vertexes.emplace_back(right, bottom, glyph.s + glyph.w, glyph.t);
 
-      vertex_vbo.copy_in(char_index * vertexes_per_glyph * stride_bytes,
-                         vertexes_per_glyph * stride_bytes,
-                         varray);
+    indexes.push_back(0 + i * vertexes_per_glyph);
+    indexes.push_back(1 + i * vertexes_per_glyph);
+    indexes.push_back(2 + i * vertexes_per_glyph);
+    indexes.push_back(2 + i * vertexes_per_glyph);
+    indexes.push_back(1 + i * vertexes_per_glyph);
+    indexes.push_back(3 + i * vertexes_per_glyph);
 
-      GLushort indexes[] = {
-        GLushort(0 + char_index * vertexes_per_glyph),
-        GLushort(1 + char_index * vertexes_per_glyph),
-        GLushort(2 + char_index * vertexes_per_glyph),
-        GLushort(2 + char_index * vertexes_per_glyph),
-        GLushort(1 + char_index * vertexes_per_glyph),
-        GLushort(3 + char_index * vertexes_per_glyph)
-      };
-      index_vbo.copy_in(char_index * indexes_per_glyph * sizeof(GLushort),
-                        sizeof(GLushort) * indexes_per_glyph,
-                        indexes);
-
-      x += m_glyph[c].advance * scale;
-      ++char_index;
-    }
-
-    shader_pipeline->set_attribute("in_position", coords_per_vertex, stride_bytes, (const void*)0);
-    shader_pipeline->set_attribute("in_texcoord", coords_per_vertex, stride_bytes, (const void*)(2*sizeof(GLfloat)));
+    x += glyph.advance * scale;
   }
+
+  VertexArray  text_line_vao;
+  VertexArrayBinding vao_binding(text_line_vao);
+
+  // @todo: make these belong to the VAO object so their lifetime depends on the VAO lifetime.
+  VertexBuffer vertex_vbo(GL_ARRAY_BUFFER, vertexes.size() * sizeof(VertexData::value_type), &vertexes[0], GL_STATIC_DRAW);
+  VertexBuffer index_vbo(GL_ELEMENT_ARRAY_BUFFER, indexes.size() * sizeof(IndexData::value_type), &indexes[0], GL_STATIC_DRAW);
 
   /* -- separation of mesh creation and rendering -- */
 
-  shader_pipeline->activate();
-  shader_pipeline->set_uniform("mvp", MVP_matrix);
+  GLint viewport[4];
+  glGetIntegerv(GL_VIEWPORT, viewport);
+  check_gl_error("Font::print() glGetIntegerv(GL_VIEWPORT)");
+  vmml::Frustumf frustum((GLfloat)viewport[0], GLfloat(viewport[2]), GLfloat(viewport[1]), GLfloat(viewport[3]), -1.0f, 1.0f);
+  mat4 MVP_matrix = frustum.computeOrthoMatrix();
 
-  VertexArrayBinding vao_binding(text_line_vao);
+  ShaderPipelinePtr shader_pipeline = app_->shader_cache().get({
+                                        {ShaderStage::Type::Vertex,   "intro-vertex.glsl"},
+                                        {ShaderStage::Type::Fragment, "intro-fragment.glsl"}
+                                      });
+  shader_pipeline->activate();
+
+  // -- rebind VAO here with separate renderer --
+
+  shader_pipeline->set_uniform("mvp", MVP_matrix);
+  shader_pipeline->set_attribute("in_position", coords_per_vertex, stride_bytes, (const void*)0);
+  shader_pipeline->set_attribute("in_texcoord", coords_per_vertex, stride_bytes, (const void*)(2*sizeof(GLfloat)));
 
   /** @todo move into ShaderPipeline... */
   glActiveTexture(GL_TEXTURE0);
@@ -362,7 +349,9 @@ print(GLfloat x, GLfloat y, GLfloat scale, const std::string& text)
   /** ... */
 
   glEnable(GL_BLEND);
+  check_gl_error("Font::print() glEnable(GL_BLEND)");
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  check_gl_error("Font::print() glBlendFunc()");
 
   glDrawElements(GL_TRIANGLES, text.length() * indexes_per_glyph, GL_UNSIGNED_SHORT, NULL);
   check_gl_error("Font::print() glDrawArrays()");
