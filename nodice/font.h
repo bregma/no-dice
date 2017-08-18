@@ -2,25 +2,27 @@
  * @file nodice/font.h
  * @brief Public interface of the nodice/font module.
  *
- * Copyright 2009, 2010 Stephen M. Webb  <stephen.webb@bregmasoft.ca>
+ * Copyright 2009, 2010, 2017 Stephen M. Webb  <stephen.webb@bregmasoft.ca>
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of Version 2 of the GNU General Public License as
- * published by the Free Software Foundation.
+ * This file is part of no-dice.
  *
- * This program is distributed in the hope that it will be useful,
+ * No-dice is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * No-dice is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with no-dice.  If not, see <http://www.gnu.org/licenses/>.
  */
 #ifndef NODICE_FONT_H
 #define NODICE_FONT_H 1
 
-#include "opengl.h"
+#include <cstdint>
 #include <string>
 #include <vector>
 
@@ -29,46 +31,49 @@ namespace NoDice
 {
   class App;
 
-	struct Glyph
-	{
-		typedef std::vector<GLubyte> Bitmap;
+  struct Glyph
+  {
+    typedef std::vector<uint8_t> Bitmap;
 
-		Bitmap   bitmap;  // bitmap
-		GLsizei  left;
-		GLsizei  top;
-		GLsizei  width;	  // width of bitmap in pixels
-		GLsizei  height;  // height of bitmap in pixels
-		GLsizei  advance; // horizontal advance in pixels
+    Bitmap    bitmap;  // bitmap
+    int16_t   left;    // offset of glyph left from glyph origin
+    int16_t   top;     // offset of glyph top from glyph origin
+    uint16_t  width;   // width of bitmap in pixels
+    uint16_t  height;  // height of bitmap in pixels
+    int16_t   advance; // horizontal advance in pixels
 
-		GLfloat  s;       // X-offset of glyph within texture
-		GLfloat  t;       // Y-offset of glyph within texture
-		GLfloat  w;       // width of glyph within texture
-		GLfloat  h;       // height of glyph within texture
-	};
+    float     s;       // normalized X-offset of glyph within texture
+    float     t;       // normalized Y-offset of glyph within texture
+    float     w;       // normalized width of glyph within texture
+    float     h;       // normalized height of glyph within texture
+  };
 
-	class Font
-	{
-	public:
-		Font(App* app, const std::string& fontname, unsigned int height);
-		~Font();
+  class Font
+  {
+  public:
+    Font(App* app, std::string const& fontname, uint16_t height);
+    ~Font();
 
-		void mapToTexture();
+    void
+    mapToTexture();
 
-		GLsizei height() const;
+    uint16_t
+    height() const;
 
-		// temporary function for testing
-		void print(GLfloat x, GLfloat y, GLfloat scale, const std::string& text);
+    // temporary function for testing
+    void
+    print(float x, float y, float scale, std::string const& text);
 
-	private:
-		App*               app_;
-		std::string        m_name;
-		float              m_height;
-		std::vector<Glyph> m_glyph;
+  private:
+    App*               app_;
+    std::string        typeface_;
+    uint16_t           pointsize_;
+    std::vector<Glyph> glyph_metrics_;
 
-		GLsizei            m_textureWidth;
-		GLsizei            m_textureHeight;
-		GLuint             m_texture;
-	};
+    uint16_t           texture_width_in_texels_;
+    uint16_t           texture_height_in_texels_;
+    uint32_t           texture_id_;
+  };
 } // namespace NoDice
 
 #endif // NODICE_FONT_H

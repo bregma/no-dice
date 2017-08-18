@@ -2,20 +2,22 @@
  * @file nodice/font.cpp
  * @brief Implemntation of the nodice/font module.
  *
- * Copyright 2009-2013 Stephen M. Webb  <stephen.webb@bregmasoft.ca>
+ * Copyright 2009-2013, 2017 Stephen M. Webb  <stephen.webb@bregmasoft.ca>
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of Version 2 of the GNU General Public License as
- * published by the Free Software Foundation.
+ * This file is part of no-dice.
  *
- * This program is distributed in the hope that it will be useful,
+ * No-dice is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * No-dice is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with no-dice.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "nodice_config.h"
 #include "nodice/font.h"
@@ -40,9 +42,9 @@
 
 namespace
 {
-  static const int s_max_char = 128;
+  constexpr int s_max_char = 128;
 
-  GLsizei nextPowerOfTwo(GLsizei x)
+  uint16_t nextPowerOfTwo(uint16_t x)
   {
     --x;
     x |= x >> 1;
@@ -56,11 +58,11 @@ namespace
 
 
 NoDice::Font::
-Font(App* app, const std::string& fontname, unsigned int pointsize)
+Font(App* app, std::string const& typeface, uint16_t pointsize)
 : app_(app)
-, m_name(fontname)
-, m_height(pointsize)
-, m_glyph(s_max_char)
+, typeface_(typeface)
+, pointsize_(pointsize)
+, glyph_metrics_(s_max_char)
 {
   // Calculate the maximum extent of textures supported by OpenGL.
   GLint max_tex_width;
@@ -74,11 +76,11 @@ Font(App* app, const std::string& fontname, unsigned int pointsize)
   }
 
   FT_Face ftFace;
-  ftStatus = FT_New_Face(ftLib, m_name.c_str(), 0, &ftFace);
+  ftStatus = FT_New_Face(ftLib, typeface_.c_str(), 0, &ftFace);
   if (ftStatus != 0)
   {
                 std::ostringstream ostr;
-    ostr << "error " << ftStatus << " in FT_New_Face(\"" << m_name << "\"";
+    ostr << "error " << ftStatus << " in FT_New_Face(\"" << typeface_ << "\"";
     throw std::runtime_error(ostr.str());
   }
 
@@ -92,15 +94,15 @@ Font(App* app, const std::string& fontname, unsigned int pointsize)
   // @todo fix assumptions about screen dot pitch
   //
   int dpi = 100;
-  ftStatus = FT_Set_Char_Size(ftFace, pointsize<<6, pointsize<<6, dpi, dpi);
+  ftStatus = FT_Set_Char_Size(ftFace, pointsize_<<6, pointsize_<<6, dpi, dpi);
 
   // Import the bitmap for each character in the font.  This go-round, we're
   // only supporting 7-bit ASCII.
   // @todo fix assumptions about character sets
-  GLsizei curTexWidth = 0;
-  GLsizei maxTexWidth = 0;
-  GLsizei curTexHeight = 0;
-  GLsizei maxTexHeight = 0;
+  uint16_t curTexWidth = 0;
+  uint16_t maxTexWidth = 0;
+  uint16_t curTexHeight = 0;
+  uint16_t maxTexHeight = 0;
   int    glyphCount = 0;
   for (unsigned char c = 0; c < s_max_char; ++c)
   {
@@ -110,25 +112,25 @@ Font(App* app, const std::string& fontname, unsigned int pointsize)
       throw std::runtime_error("error in FT_Load_Glyph");
     }
 
-    m_glyph[c].left     = ftFace->glyph->bitmap_left;
-    m_glyph[c].top      = ftFace->glyph->bitmap_top;
-    m_glyph[c].width    = ftFace->glyph->bitmap.width;
-    m_glyph[c].height   = ftFace->glyph->bitmap.rows;
-    m_glyph[c].advance  = ftFace->glyph->advance.x >> 6;
+    glyph_metrics_[c].left     = ftFace->glyph->bitmap_left;
+    glyph_metrics_[c].top      = ftFace->glyph->bitmap_top;
+    glyph_metrics_[c].width    = ftFace->glyph->bitmap.width;
+    glyph_metrics_[c].height   = ftFace->glyph->bitmap.rows;
+    glyph_metrics_[c].advance  = ftFace->glyph->advance.x >> 6;
 
     // If this glyph fits in current line, add to totals otherwise start a new
     // line.
-    if (curTexWidth + m_glyph[c].width < max_tex_width)
+    if (curTexWidth + glyph_metrics_[c].width < max_tex_width)
     {
-      curTexWidth += m_glyph[c].width;
-      curTexHeight = std::max(curTexHeight, m_glyph[c].height);
+      curTexWidth += glyph_metrics_[c].width;
+      curTexHeight = std::max(curTexHeight, glyph_metrics_[c].height);
       ++glyphCount;
     }
     else
     {
       maxTexWidth = std::max(maxTexWidth, curTexWidth);
-      curTexWidth = m_glyph[c].width;
-      maxTexHeight += std::max(curTexHeight, m_glyph[c].height);
+      curTexWidth = glyph_metrics_[c].width;
+      maxTexHeight += std::max(curTexHeight, glyph_metrics_[c].height);
       curTexHeight = 0;
       glyphCount = 0;
     }
@@ -136,8 +138,8 @@ Font(App* app, const std::string& fontname, unsigned int pointsize)
     // Allocate the required memory for this glyph's bitmap.
     //
     // The bitmap needs width*height bytes for the alpha component.
-    m_glyph[c].bitmap = Glyph::Bitmap(m_glyph[c].width
-                                      * m_glyph[c].height
+    glyph_metrics_[c].bitmap = Glyph::Bitmap(glyph_metrics_[c].width
+                                      * glyph_metrics_[c].height
                                       * sizeof(GLubyte));
 
     // Convert the freefont bitmap into an alpha channel bitmap by
@@ -145,12 +147,12 @@ Font(App* app, const std::string& fontname, unsigned int pointsize)
     // zero.  See, a lot of truetype fonts have built-in antialiasing.  This
     // mechanism trats a zero luminance as a transparent background.
     int i = 0;
-    for (int y = 0; y < m_glyph[c].height; ++y)
+    for (int y = 0; y < glyph_metrics_[c].height; ++y)
     {
-      for (int x = 0; x < m_glyph[c].width; ++x)
+      for (int x = 0; x < glyph_metrics_[c].width; ++x)
       {
-        int index = x + m_glyph[c].width*y;
-        m_glyph[c].bitmap[i++] = ftFace->glyph->bitmap.buffer[index];
+        int index = x + glyph_metrics_[c].width*y;
+        glyph_metrics_[c].bitmap[i++] = ftFace->glyph->bitmap.buffer[index];
       }
     }
   }
@@ -160,8 +162,8 @@ Font(App* app, const std::string& fontname, unsigned int pointsize)
 
   maxTexWidth = std::max(maxTexWidth, curTexWidth);
   maxTexHeight += curTexHeight;
-  m_textureWidth  = nextPowerOfTwo(maxTexWidth);
-  m_textureHeight = nextPowerOfTwo(maxTexHeight);
+  texture_width_in_texels_  = nextPowerOfTwo(maxTexWidth);
+  texture_height_in_texels_ = nextPowerOfTwo(maxTexHeight);
   mapToTexture();
 }
 
@@ -181,24 +183,24 @@ NoDice::Font::
 void NoDice::Font::
 mapToTexture()
 {
-  typedef std::vector<GLubyte> Texture;
+  typedef std::vector<uint8_t> Texture;
 
-  static const std::size_t bitmapDepth = sizeof(GLubyte);
+  constexpr std::size_t bitmapDepth = sizeof(uint8_t);
 
   // The stride for individual bitmap rows within the texture.
-  const Texture::size_type stride = m_textureWidth * bitmapDepth;
+  const Texture::size_type stride = texture_width_in_texels_ * bitmapDepth;
 
   // Convenience variables to make later  conversion of tex coords onto (0,1)
   // easier.
-  const GLfloat fTextureWidth  = static_cast<GLfloat>(m_textureWidth);
-  const GLfloat fTextureHeight = static_cast<GLfloat>(m_textureHeight);
+  const float texture_width  = static_cast<float>(texture_width_in_texels_);
+  const float texture_height = static_cast<float>(texture_height_in_texels_);
 
-  Texture texture(m_textureWidth * m_textureHeight * bitmapDepth);
+  Texture texture(texture_width_in_texels_ * texture_height_in_texels_ * bitmapDepth);
 
   // The current write-to position within the texture.  These values do not take
   // the bitmapDepth into account.
-  int curTexX = 0;
-  int curTexY = 0;
+  unsigned int curTexX = 0;
+  unsigned int curTexY = 0;
 
   for (unsigned char c = 0; c < s_max_char; ++c)
   {
@@ -206,29 +208,29 @@ mapToTexture()
     //
     // The glyph bitmap is a packed array of height rows of width bytes.  This
     // has to be projected into the texture array as the same rows but but with
-    // a stride of m_textureWidth * bitmapDepth bytes.
+    // a stride of texture_width_in_texels_ * bitmapDepth bytes.
     //
     Texture::iterator texPos = texture.begin()
                              + curTexY * stride
                              + curTexX * bitmapDepth;
-    Glyph::Bitmap::size_type bitmapWidth = m_glyph[c].width * bitmapDepth;
-    for (Glyph::Bitmap::const_iterator bitmapLine = m_glyph[c].bitmap.begin();
-         bitmapLine != m_glyph[c].bitmap.end();
+    Glyph::Bitmap::size_type bitmapWidth = glyph_metrics_[c].width * bitmapDepth;
+    for (Glyph::Bitmap::const_iterator bitmapLine = glyph_metrics_[c].bitmap.begin();
+         bitmapLine != glyph_metrics_[c].bitmap.end();
          bitmapLine += bitmapWidth, texPos += stride)
     {
       std::copy(bitmapLine, bitmapLine + bitmapWidth, texPos);
     }
 
     // Remember the texel coordinates for the glyph
-    m_glyph[c].s = static_cast<GLfloat>(curTexX) / fTextureWidth;
-    m_glyph[c].t = static_cast<GLfloat>(curTexY) / fTextureHeight;
-    m_glyph[c].w = static_cast<GLfloat>(m_glyph[c].width) / fTextureWidth;
-    m_glyph[c].h = static_cast<GLfloat>(m_glyph[c].height) / fTextureHeight;
+    glyph_metrics_[c].s = static_cast<float>(curTexX) / texture_width;
+    glyph_metrics_[c].t = static_cast<float>(curTexY) / texture_height;
+    glyph_metrics_[c].w = static_cast<float>(glyph_metrics_[c].width) / texture_width;
+    glyph_metrics_[c].h = static_cast<float>(glyph_metrics_[c].height) / texture_height;
 
     // Adjust the destination offset for the next glyph
-    if (curTexX + m_glyph[c].width < m_textureWidth)
+    if (curTexX + glyph_metrics_[c].width < texture_width_in_texels_)
     {
-      curTexX += m_glyph[c].width;
+      curTexX += glyph_metrics_[c].width;
     }
     else
     {
@@ -238,9 +240,9 @@ mapToTexture()
   }
 
   // Send it to the OpenGL engine.
-  glGenTextures(1, &m_texture);
+  glGenTextures(1, &texture_id_);
   check_gl_error("Font::mapToTexture() glGenTextures()");
-  glBindTexture(GL_TEXTURE_2D, m_texture);
+  glBindTexture(GL_TEXTURE_2D, texture_id_);
   check_gl_error("Font::mapToTexture() glBindTexture()");
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S,     GL_CLAMP_TO_EDGE);
   check_gl_error("Font::mapToTexture() glTexParameteri(GL_TEXTURE_WRAP_S)");
@@ -253,29 +255,29 @@ mapToTexture()
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
   check_gl_error("Font::mapToTexture() glPixelStorei(GL_UNPACK_ALIGNMENT)");
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RED,
-               m_textureWidth, m_textureHeight,
+               static_cast<GLsizei>(texture_width_in_texels_), static_cast<GLsizei>(texture_height_in_texels_),
                0, GL_RED, GL_UNSIGNED_BYTE,
                &texture[0]);
   check_gl_error("Font::mapToTexture() glTexImage2D");
 }
 
 
-GLsizei NoDice::Font::
+uint16_t NoDice::Font::
 height() const
 {
-  return m_height;
+  return pointsize_;
 }
 
 
 void NoDice::Font::
 print(GLfloat x, GLfloat y, GLfloat scale, const std::string& text)
 {
-  static const GLuint coords_per_vertex = 2;
-  static const GLuint coords_per_texture = 2;
-  static const GLuint row_width = coords_per_vertex + coords_per_texture;
-  static const GLuint stride_bytes = row_width * sizeof(GLfloat);
-  static const GLuint vertexes_per_glyph = 4;
-  static const GLuint indexes_per_glyph = 6;
+  constexpr int coords_per_vertex  = 2;
+  constexpr int coords_per_texture = 2;
+  constexpr int row_width = coords_per_vertex + coords_per_texture;
+  constexpr int stride_bytes = row_width * sizeof(GLfloat);
+  constexpr int vertexes_per_glyph = 4;
+  constexpr int indexes_per_glyph = 6;
 
   // This will be an interleaved array of { X Y S T } values for each vertex.
   using VertexData = std::vector<vec4>;
@@ -290,12 +292,12 @@ print(GLfloat x, GLfloat y, GLfloat scale, const std::string& text)
   for (GLushort i = 0; i < text.length(); ++i)
   {
     auto const& c = text[i];
-    auto const& glyph = m_glyph[c];
+    auto const& glyph = glyph_metrics_[c];
 
-    GLfloat left   = x + glyph.left * scale;
-    GLfloat right  = x + glyph.width * scale;
-    GLfloat top    = y - (glyph.height - glyph.top) * scale;
-    GLfloat bottom = y + glyph.top * scale;
+    float left   = x + glyph.left * scale;
+    float right  = x + glyph.width * scale;
+    float top    = y - (glyph.height - glyph.top) * scale;
+    float bottom = y + glyph.top * scale;
 
     vertexes.emplace_back(left,  top,    glyph.s,           glyph.t + glyph.h);
     vertexes.emplace_back(right, top,    glyph.s + glyph.w, glyph.t + glyph.h);
@@ -342,7 +344,7 @@ print(GLfloat x, GLfloat y, GLfloat scale, const std::string& text)
   /** @todo move into ShaderPipeline... */
   glActiveTexture(GL_TEXTURE0);
   check_gl_error("Font::print() glActiveTexture()");
-  glBindTexture(GL_TEXTURE_2D, m_texture);
+  glBindTexture(GL_TEXTURE_2D, texture_id_);
   check_gl_error("Font::print() glBindTexture()");
   glUniform1i(1, 0);
   check_gl_error("Font::print() glUniform1i()");
