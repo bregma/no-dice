@@ -44,6 +44,7 @@ libnodice_la_SOURCES = \
 	fontcache.h        fontcache.cpp \
 	gamestate.h        gamestate.cpp \
 	introstate.h       introstate.cpp \
+	mesh.h             mesh.cpp \
 	maths.h \
 	object.h           object.cpp \
 	opengl.h           opengl.cpp \

@@ -22,7 +22,8 @@ check_PROGRAMS = test-no-dice
 
 test_no_dice_SOURCES = \
   test-no-dice.cpp \
-  test_config.cpp
+  test_config.cpp \
+  test_mesh.cpp
 
 test_no_dice_CPPFLAGS = \
   -I$(top_srcdir) \
