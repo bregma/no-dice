@@ -25,6 +25,7 @@
 
 #include "nodice/fontcache.h"
 #include "nodice/gamestate.h"
+#include "nodice/mesh.h"
 #include "nodice/shadercache.h"
 #include "nodice/video.h"
 #include <stack>
@@ -63,6 +64,9 @@ namespace NoDice
 
     FontCache&
     font_cache();
+
+    Mesh::OwningPtr
+    create_mesh();
 
   private:
     /** @brief A special RAII object for SDL initialization and teardown. */

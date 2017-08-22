@@ -24,6 +24,7 @@
 #define NODICE_MESH_H 1
 
 #include <cstdint>
+#include <memory>
 #include <vector>
 
 
@@ -62,6 +63,8 @@ namespace NoDice
     };
 
     using VertexDescriptorList = std::vector<VertexDescriptor>;
+
+    using OwningPtr = std::unique_ptr<Mesh>;
 
   public:
     Mesh();

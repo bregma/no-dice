@@ -28,6 +28,7 @@
 #include <iostream>
 #include "nodice/config.h"
 #include "nodice/introstate.h"
+#include "nodice/openglmesh.h"
 #include "nodice/video.h"
 #include <SDL.h>
 
@@ -137,6 +138,13 @@ NoDice::FontCache& NoDice::App::
 font_cache()
 {
   return font_cache_;
+}
+
+
+NoDice::Mesh::OwningPtr NoDice::App::
+create_mesh()
+{
+  return Mesh::OwningPtr(new OpenGLMesh());
 }
 
 

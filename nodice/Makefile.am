@@ -48,6 +48,7 @@ libnodice_la_SOURCES = \
 	maths.h \
 	object.h           object.cpp \
 	opengl.h           opengl.cpp \
+	openglmesh.h       openglmesh.cpp \
 	playstate.h        playstate.cpp \
 	shadercache.h      shadercache.cpp \
 	shaderpipeline.h   shaderpipeline.cpp \
