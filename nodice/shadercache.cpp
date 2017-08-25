@@ -25,6 +25,7 @@
 #include <iostream>
 #include "nodice/app.h"
 #include "nodice/config.h"
+#include "nodice/openglshaderpipeline.h"
 #include <stdexcept>
 
 
@@ -73,7 +74,8 @@ get(std::vector<NoDice::ShaderCache::StageDesc> const& stage_desc)
   auto it = pipeline_cache_.find(pipeline_id);
   if (it == pipeline_cache_.end())
   {
-    auto pipeline_pair = pipeline_cache_.emplace(pipeline_id, std::make_unique<ShaderPipeline>(pipeline_id));
+    auto pipeline_pair = pipeline_cache_.emplace(pipeline_id,
+                                                 ShaderPipelineOwningPtr{new OpenGLShaderPipeline(pipeline_id)});
     pipeline = pipeline_pair.first->second.get();
 
     for (auto const d: stage_desc)

@@ -36,8 +36,7 @@ OpenGLMesh()
 NoDice::OpenGLMesh::
 ~OpenGLMesh()
 {
-  glBindVertexArray(this->vao);
-  check_gl_error(std::string{__PRETTY_FUNCTION__} + " glBindVertexArray()");
+  this->activate();
 
   for (auto b: this->vbo)
   {
@@ -48,8 +47,7 @@ NoDice::OpenGLMesh::
     }
   }
 
-  glBindVertexArray(0);
-  check_gl_error(std::string{__PRETTY_FUNCTION__} + " glBindVertexArray()");
+  this->deactivate();
   glDeleteVertexArrays(1, &this->vao);
   check_gl_error(std::string{__PRETTY_FUNCTION__} + " glDeleteVertexArrays()");
 }
@@ -58,8 +56,7 @@ NoDice::OpenGLMesh::
 void NoDice::OpenGLMesh::
 store_vertex_data(float const* data)
 {
-  glBindVertexArray(this->vao);
-  check_gl_error(std::string{__PRETTY_FUNCTION__} + " glBindVertexArray()");
+  this->activate();
 
   glGenBuffers(1, &this->vbo[0]);
   check_gl_error(std::string{__PRETTY_FUNCTION__} + " glGenBuffers()");
@@ -71,16 +68,14 @@ store_vertex_data(float const* data)
                GL_STATIC_DRAW);
   check_gl_error(std::string{__PRETTY_FUNCTION__} + " glBufferData()");
 
-  glBindVertexArray(0);
-  check_gl_error(std::string{__PRETTY_FUNCTION__} + " glBindVertexArray()");
+  this->deactivate();
 }
 
 
 void NoDice::OpenGLMesh::
 reset_vertex_data()
 {
-  glBindVertexArray(this->vao);
-  check_gl_error(std::string{__PRETTY_FUNCTION__} + " glBindVertexArray()");
+  this->activate();
 
   if (this->vbo[0])
   {
@@ -89,18 +84,16 @@ reset_vertex_data()
     this->vbo[0] = 0;
   }
 
-  glBindVertexArray(0);
-  check_gl_error(std::string{__PRETTY_FUNCTION__} + " glBindVertexArray()");
+  this->deactivate();
 }
 
 
 void NoDice::OpenGLMesh::
 store_index_data(std::uint16_t const* data)
 {
-  glBindVertexArray(this->vao);
-  check_gl_error(std::string{__PRETTY_FUNCTION__} + " glBindVertexArray()");
+  this->activate();
 
-  glGenBuffers(1, &this->vbo[0]);
+  glGenBuffers(1, &this->vbo[1]);
   check_gl_error(std::string{__PRETTY_FUNCTION__} + " glGenBuffers()");
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->vbo[1]);
   check_gl_error(std::string{__PRETTY_FUNCTION__} + " glBindBuffer()");
@@ -110,16 +103,14 @@ store_index_data(std::uint16_t const* data)
                GL_STATIC_DRAW);
   check_gl_error(std::string{__PRETTY_FUNCTION__} + " glBufferData()");
 
-  glBindVertexArray(0);
-  check_gl_error(std::string{__PRETTY_FUNCTION__} + " glBindVertexArray()");
+  this->deactivate();
 }
 
 
 void NoDice::OpenGLMesh::
 reset_index_data()
 {
-  glBindVertexArray(this->vao);
-  check_gl_error(std::string{__PRETTY_FUNCTION__} + " glBindVertexArray()");
+  this->activate();
 
   if (this->vbo[1])
   {
@@ -128,6 +119,31 @@ reset_index_data()
     this->vbo[1] = 0;
   }
 
+  this->deactivate();
+}
+
+
+void NoDice::OpenGLMesh::
+activate()
+{
+  glBindVertexArray(this->vao);
+  check_gl_error(std::string{__PRETTY_FUNCTION__} + " glBindVertexArray()");
+}
+
+
+bool NoDice::OpenGLMesh::
+is_active_p() const
+{
+  GLuint active_vao;
+  glGetIntegerv(GL_VERTEX_ARRAY_BINDING, reinterpret_cast<GLint*>(&active_vao));
+  check_gl_error(std::string{__PRETTY_FUNCTION__} + " glGetIntegerv()");
+  return active_vao == this->vao;
+}
+
+
+void NoDice::OpenGLMesh::
+deactivate()
+{
   glBindVertexArray(0);
   check_gl_error(std::string{__PRETTY_FUNCTION__} + " glBindVertexArray()");
 }
@@ -136,27 +152,29 @@ reset_index_data()
 void NoDice::OpenGLMesh::
 draw_indexed()
 {
-  glBindVertexArray(this->vao);
-  check_gl_error(std::string{__PRETTY_FUNCTION__} + " glBindVertexArray()");
+  this->activate();
 
   glDrawElements(GL_TRIANGLES, this->index_count_, GL_UNSIGNED_SHORT, NULL);
   check_gl_error(std::string{__PRETTY_FUNCTION__} + " glDrawElements()");
 
   glBindVertexArray(0);
   check_gl_error(std::string{__PRETTY_FUNCTION__} + " glBindVertexArray()");
+
+  this->deactivate();
 }
 
 
 void NoDice::OpenGLMesh::
 draw_direct()
 {
-  glBindVertexArray(this->vao);
-  check_gl_error(std::string{__PRETTY_FUNCTION__} + " glBindVertexArray()");
+  this->activate();
 
   glDrawArrays(GL_TRIANGLES, 0, this->vertex_count_);
   check_gl_error(std::string{__PRETTY_FUNCTION__} + " glDrawArrays()");
 
   glBindVertexArray(0);
   check_gl_error(std::string{__PRETTY_FUNCTION__} + " glBindVertexArray()");
+
+  this->deactivate();
 }
 

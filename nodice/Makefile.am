@@ -31,32 +31,33 @@ endif
 noinst_LTLIBRARIES = libnodice.la
 
 libnodice_la_SOURCES = \
-	app.h              app.cpp \
-	board.h            board.cpp \
-	colour.h           colour.cpp \
-	config.h           config.cpp \
-	d4.h               d4.cpp \
-	d6.h               d6.cpp \
-	d8.h               d8.cpp \
-	d12.h              d12.cpp \
-	d20.h              d20.cpp \
-	font.h             font.cpp \
-	fontcache.h        fontcache.cpp \
-	gamestate.h        gamestate.cpp \
-	introstate.h       introstate.cpp \
-	mesh.h             mesh.cpp \
+	app.h                   app.cpp \
+	board.h                 board.cpp \
+	colour.h                colour.cpp \
+	config.h                config.cpp \
+	d4.h                    d4.cpp \
+	d6.h                    d6.cpp \
+	d8.h                    d8.cpp \
+	d12.h                   d12.cpp \
+	d20.h                   d20.cpp \
+	font.h                  font.cpp \
+	fontcache.h             fontcache.cpp \
+	gamestate.h             gamestate.cpp \
+	introstate.h            introstate.cpp \
+	mesh.h                  mesh.cpp \
 	maths.h \
-	object.h           object.cpp \
-	opengl.h           opengl.cpp \
-	openglmesh.h       openglmesh.cpp \
-	playstate.h        playstate.cpp \
-	shadercache.h      shadercache.cpp \
-	shaderpipeline.h   shaderpipeline.cpp \
-	shaderstage.h      shaderstage.cpp \
-	shape.h            shape.cpp \
-	vertexarray.h      vertexarray.cpp \
-	vertexbuffer.h     vertexbuffer.cpp \
-	video.h            video.cpp \
+	object.h                object.cpp \
+	opengl.h                opengl.cpp \
+	openglmesh.h            openglmesh.cpp \
+	openglshaderpipeline.h  openglshaderpipeline.cpp \
+	playstate.h             playstate.cpp \
+	shadercache.h           shadercache.cpp \
+	shaderpipeline.h        shaderpipeline.cpp \
+	shaderstage.h           shaderstage.cpp \
+	shape.h                 shape.cpp \
+	vertexarray.h           vertexarray.cpp \
+	vertexbuffer.h          vertexbuffer.cpp \
+	video.h                 video.cpp \
 	videocontext.h \
 	$(vcontext_SOURCES)
 

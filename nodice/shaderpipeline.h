@@ -45,27 +45,32 @@ namespace NoDice
     ShaderPipeline(Id id);
 
     /** Destroys a ShaderPipeline. */
-    ~ShaderPipeline();
+    virtual
+    ~ShaderPipeline() = 0;
 
     Id
     id() const;
 
-    /** Attaches a shader to the program. */
+    /** Attaches a shader stage to the pipeline. */
     void
     attach(ShaderStage const& shader_stage);
 
-    /** Links the shader program (the final step in creation). */
+    /** Links the shader pipeline (the final step in creation). */
     void
     link();
 
-    /** Makes this shader program the active one in the current context. */
+    /** Makes this shader pipeline the active one in the current context. */
     void
     activate();
 
-    /** Deactivates this shader program within the current context. */
+    bool
+    is_active() const;
+
+    /** Deactivates this shader pipeline within the current context. */
     void
     deactivate();
 
+#if 0
     /** Sets a scalar uniform value. */
     void
     set_uniform(const std::string& name, float value);
@@ -73,24 +78,44 @@ namespace NoDice
     /** Sets a (vec3) uniform value. */
     void
     set_uniform(const std::string& name, float v1, float v2, float v3);
+#endif
 
     /** Sets a mat4 uniform value. */
     void
     set_uniform(const std::string& name, const mat4& mat);
 
     /** Sets an attribute value. */
-    void
+    virtual void
     set_attribute(const std::string& name, int size, int stride, void const* ptr);
 
   private:
     ShaderPipeline(ShaderPipeline const&) = delete;
     ShaderPipeline& operator=(ShaderPipeline const&) = delete;
 
-  private:
-    class Impl;
+    virtual void
+    attach_stage_p(ShaderStage const& shader_stage) = 0;
 
-    Id                    id_;
-    std::unique_ptr<Impl> impl_;
+    virtual void
+    link_p() = 0;
+
+    virtual void
+    activate_p() = 0;
+
+    virtual bool
+    is_pipeline_active() const = 0;
+
+    virtual void
+    deactivate_p() = 0;
+
+    virtual void
+    set_uniform_p(const std::string& name, const mat4& mat) = 0;
+
+    virtual void
+    set_attribute_p(const std::string& name, int size, int stride, void const* ptr) = 0;
+
+  private:
+    Id    pipeline_id;
+    bool  is_linked;
   };
 
   using ShaderPipelineOwningPtr = std::unique_ptr<ShaderPipeline>;

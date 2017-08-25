@@ -23,6 +23,37 @@
 #include "nodice/mesh.h"
 
 #include <cassert>
+#include "nodice/shaderpipeline.h"
+
+
+namespace
+{
+
+/**
+ * Maps Mesh target types to shader attribute names.
+ */
+std::string
+target_type_to_attribute_name(NoDice::Mesh::VertexTargetType target_type)
+{
+  static struct {
+    NoDice::Mesh::VertexTargetType target_type;
+    std::string                    attribute_name;
+  } mapping[] = {
+    { NoDice::Mesh::VertexTargetType::Position, "in_position" },
+    { NoDice::Mesh::VertexTargetType::Normal,   "in_normal"   },
+    { NoDice::Mesh::VertexTargetType::Color,    "in_color"    },
+    { NoDice::Mesh::VertexTargetType::Texcoord, "in_texcoord" },
+  };
+
+  for (auto const& map: mapping)
+  {
+    if (target_type == map.target_type)
+      return map.attribute_name;
+  }
+  return "unknown";
+}
+
+} // anonuymous namespace
 
 
 NoDice::Mesh::
@@ -46,7 +77,7 @@ add_vertex_data(std::size_t vertex_count, std::vector<VertexDescriptor> const& d
   this->vertex_stride_bytes_ = 0;
   for (auto const& d: desc)
   {
-    this->vertex_offsets_.push_back({d.target_type, this->vertex_stride_bytes_});
+    this->vertex_offsets_.push_back({d.target_type, d.rank, this->vertex_stride_bytes_});
     this->vertex_stride_bytes_ += d.rank * sizeof(float);
   }
   this->vertex_count_ = vertex_count;
@@ -78,9 +109,42 @@ add_index_data(std::size_t index_count, std::uint16_t const* data)
 
 
 void NoDice::Mesh::
-draw()
+make_active()
+{
+  this->activate();
+}
+
+
+bool NoDice::Mesh::
+is_active() const
+{
+  return this->is_active_p();
+}
+
+
+void NoDice::Mesh::
+make_inactive()
+{
+  this->deactivate();
+}
+
+
+void NoDice::Mesh::
+draw(NoDice::ShaderPipeline& pipeline)
 {
   assert(this->has_position_data());
+  assert(this->is_active());
+  assert(pipeline.is_active());
+
+  for (auto const& offset: this->vertex_offsets_)
+  {
+    std::string attribute_name = target_type_to_attribute_name(offset.target_type);
+    pipeline.set_attribute(attribute_name,
+                           offset.rank,
+                           this->vertex_stride_bytes_,
+                           static_cast<std::uint8_t*>(nullptr) + offset.offset_bytes);
+  }
+
   if (this->index_count_ > 0)
   {
     this->draw_indexed();

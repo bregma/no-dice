@@ -30,11 +30,10 @@
 #include <map>
 #include "nodice/maths.h"
 #include "nodice/app.h"
+#include "nodice/mesh.h"
 #include "nodice/shadercache.h"
 #include "nodice/shaderpipeline.h"
 #include "nodice/shaderstage.h"
-#include "nodice/vertexarray.h"
-#include "nodice/vertexbuffer.h"
 #include <sstream>
 #include <stdexcept>
 #include <unistd.h>
@@ -272,10 +271,6 @@ height() const
 void NoDice::Font::
 print(GLfloat x, GLfloat y, GLfloat scale, const std::string& text)
 {
-  constexpr int coords_per_vertex  = 2;
-  constexpr int coords_per_texture = 2;
-  constexpr int row_width = coords_per_vertex + coords_per_texture;
-  constexpr int stride_bytes = row_width * sizeof(GLfloat);
   constexpr int vertexes_per_glyph = 4;
   constexpr int indexes_per_glyph = 6;
 
@@ -314,12 +309,12 @@ print(GLfloat x, GLfloat y, GLfloat scale, const std::string& text)
     x += glyph.advance * scale;
   }
 
-  VertexArray  text_line_vao;
-  VertexArrayBinding vao_binding(text_line_vao);
-
-  // @todo: make these belong to the VAO object so their lifetime depends on the VAO lifetime.
-  VertexBuffer vertex_vbo(GL_ARRAY_BUFFER, vertexes.size() * sizeof(VertexData::value_type), &vertexes[0], GL_STATIC_DRAW);
-  VertexBuffer index_vbo(GL_ELEMENT_ARRAY_BUFFER, indexes.size() * sizeof(IndexData::value_type), &indexes[0], GL_STATIC_DRAW);
+  Mesh::OwningPtr mesh = app_->create_mesh();
+  mesh->add_vertex_data(vertexes.size(),
+                        {{Mesh::VertexTargetType::Position, 2, Mesh::VertexUsageHint::Static},
+                         {Mesh::VertexTargetType::Texcoord, 2, Mesh::VertexUsageHint::Static}},
+                        reinterpret_cast<float const*>(&vertexes[0]));
+  mesh->add_index_data(indexes.size(), &indexes[0]);
 
   /* -- separation of mesh creation and rendering -- */
 
@@ -334,12 +329,7 @@ print(GLfloat x, GLfloat y, GLfloat scale, const std::string& text)
                                         {ShaderStage::Type::Fragment, "intro-fragment.glsl"}
                                       });
   shader_pipeline->activate();
-
-  // -- rebind VAO here with separate renderer --
-
   shader_pipeline->set_uniform("mvp", MVP_matrix);
-  shader_pipeline->set_attribute("in_position", coords_per_vertex, stride_bytes, (const void*)0);
-  shader_pipeline->set_attribute("in_texcoord", coords_per_vertex, stride_bytes, (const void*)(2*sizeof(GLfloat)));
 
   /** @todo move into ShaderPipeline... */
   glActiveTexture(GL_TEXTURE0);
@@ -355,9 +345,9 @@ print(GLfloat x, GLfloat y, GLfloat scale, const std::string& text)
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   check_gl_error("Font::print() glBlendFunc()");
 
-  glDrawElements(GL_TRIANGLES, text.length() * indexes_per_glyph, GL_UNSIGNED_SHORT, NULL);
-  check_gl_error("Font::print() glDrawArrays()");
-
+  mesh->make_active();
+  mesh->draw(*shader_pipeline);
+  mesh->make_inactive();
   shader_pipeline->deactivate();
 }
 

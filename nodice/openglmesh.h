@@ -54,6 +54,15 @@ namespace NoDice
     reset_index_data() override;
 
     void
+    activate() override;
+
+    bool
+    is_active_p() const override;
+
+    void
+    deactivate() override;
+
+    void
     draw_indexed() override;
 
     void

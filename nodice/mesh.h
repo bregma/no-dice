@@ -30,6 +30,8 @@
 
 namespace NoDice
 {
+  class ShaderPipeline;
+
   /**
    * A collection of basic vertex and primitive information.
    *
@@ -79,7 +81,16 @@ namespace NoDice
     add_index_data(std::size_t index_count, std::uint16_t const* data);
 
     void
-    draw();
+    make_active();
+
+    bool
+    is_active() const;
+
+    void
+    make_inactive();
+
+    void
+    draw(ShaderPipeline& pipeline);
 
   private:
     Mesh(Mesh const&) = delete;
@@ -101,6 +112,15 @@ namespace NoDice
     reset_index_data() = 0;
 
     virtual void
+    activate() = 0;
+
+    virtual bool
+    is_active_p() const = 0;
+
+    virtual void
+    deactivate() = 0;
+
+    virtual void
     draw_indexed() = 0;
 
     virtual void
@@ -110,6 +130,7 @@ namespace NoDice
     struct ArrayOffset
     {
       VertexTargetType target_type;
+      std::uint16_t    rank;
       std::size_t      offset_bytes;
     };
     using ArrayOffsets = std::vector<ArrayOffset>;
