@@ -55,7 +55,6 @@ libnodice_la_SOURCES = \
 	shaderpipeline.h        shaderpipeline.cpp \
 	shaderstage.h           shaderstage.cpp \
 	shape.h                 shape.cpp \
-	vertexarray.h           vertexarray.cpp \
 	vertexbuffer.h          vertexbuffer.cpp \
 	video.h                 video.cpp \
 	videocontext.h \

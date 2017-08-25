@@ -273,6 +273,7 @@ print(GLfloat x, GLfloat y, GLfloat scale, const std::string& text)
 {
   constexpr int vertexes_per_glyph = 4;
   constexpr int indexes_per_glyph = 6;
+  constexpr std::uint16_t index_order[] = { 0, 1, 2, 2, 1, 3 };
 
   // This will be an interleaved array of { X Y S T } values for each vertex.
   using VertexData = std::vector<vec4>;
@@ -299,12 +300,9 @@ print(GLfloat x, GLfloat y, GLfloat scale, const std::string& text)
     vertexes.emplace_back(left,  bottom, glyph.s,           glyph.t);
     vertexes.emplace_back(right, bottom, glyph.s + glyph.w, glyph.t);
 
-    indexes.push_back(0 + i * vertexes_per_glyph);
-    indexes.push_back(1 + i * vertexes_per_glyph);
-    indexes.push_back(2 + i * vertexes_per_glyph);
-    indexes.push_back(2 + i * vertexes_per_glyph);
-    indexes.push_back(1 + i * vertexes_per_glyph);
-    indexes.push_back(3 + i * vertexes_per_glyph);
+    std::uint16_t index_offset = i * vertexes_per_glyph;
+    for (auto n: index_order)
+      indexes.push_back(n + index_offset);
 
     x += glyph.advance * scale;
   }
