@@ -50,11 +50,13 @@ libnodice_la_SOURCES = \
 	opengl.h                opengl.cpp \
 	openglmesh.h            openglmesh.cpp \
 	openglshaderpipeline.h  openglshaderpipeline.cpp \
+	opengltexture.h         opengltexture.cpp \
 	playstate.h             playstate.cpp \
 	shadercache.h           shadercache.cpp \
 	shaderpipeline.h        shaderpipeline.cpp \
 	shaderstage.h           shaderstage.cpp \
 	shape.h                 shape.cpp \
+	texture.h               texture.cpp \
 	vertexbuffer.h          vertexbuffer.cpp \
 	video.h                 video.cpp \
 	videocontext.h \

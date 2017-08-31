@@ -29,6 +29,7 @@
 #include "nodice/config.h"
 #include "nodice/introstate.h"
 #include "nodice/openglmesh.h"
+#include "nodice/opengltexture.h"
 #include "nodice/video.h"
 #include <SDL.h>
 
@@ -145,6 +146,13 @@ NoDice::Mesh::OwningPtr NoDice::App::
 create_mesh()
 {
   return Mesh::OwningPtr(new OpenGLMesh());
+}
+
+
+NoDice::Texture::OwningPtr NoDice::App::
+create_texture()
+{
+  return Texture::OwningPtr(new OpenGLTexture());
 }
 
 

@@ -27,6 +27,7 @@
 #include "nodice/gamestate.h"
 #include "nodice/mesh.h"
 #include "nodice/shadercache.h"
+#include "nodice/texture.h"
 #include "nodice/video.h"
 #include <stack>
 #include <vector>
@@ -67,6 +68,9 @@ namespace NoDice
 
     Mesh::OwningPtr
     create_mesh();
+
+    Texture::OwningPtr
+    create_texture();
 
   private:
     /** @brief A special RAII object for SDL initialization and teardown. */

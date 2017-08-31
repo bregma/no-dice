@@ -23,6 +23,7 @@
 #define NODICE_FONT_H 1
 
 #include <cstdint>
+#include "nodice/texture.h"
 #include <string>
 #include <vector>
 
@@ -55,7 +56,7 @@ namespace NoDice
     ~Font();
 
     void
-    mapToTexture();
+    mapToTexture(std::size_t texture_width_in_texels, std::size_t texture_height_in_texels);
 
     uint16_t
     height() const;
@@ -65,14 +66,11 @@ namespace NoDice
     print(float x, float y, float scale, std::string const& text);
 
   private:
-    App*               app_;
-    std::string        typeface_;
-    uint16_t           pointsize_;
-    std::vector<Glyph> glyph_metrics_;
-
-    uint16_t           texture_width_in_texels_;
-    uint16_t           texture_height_in_texels_;
-    uint32_t           texture_id_;
+    App*               app;
+    std::string        typeface;
+    uint16_t           pointsize;
+    std::vector<Glyph> glyph_metrics;
+    Texture::OwningPtr texture;
   };
 } // namespace NoDice
 
