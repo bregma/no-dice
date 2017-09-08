@@ -52,6 +52,7 @@ libnodice_la_SOURCES = \
 	openglshaderpipeline.h  openglshaderpipeline.cpp \
 	opengltexture.h         opengltexture.cpp \
 	playstate.h             playstate.cpp \
+	renderable.h            renderable.cpp \
 	shadercache.h           shadercache.cpp \
 	shaderpipeline.h        shaderpipeline.cpp \
 	shaderstage.h           shaderstage.cpp \

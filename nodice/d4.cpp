@@ -46,7 +46,7 @@ namespace
   using FaceVertexIndex = int[3];
 
   // Table of vertexes making up the faces of the tetrahedron.
-  const FaceVertexIndex index[] =
+  const FaceVertexIndex indexes[] =
   {
     { 1, 2, 0 },
     { 2, 3, 0 },
@@ -54,7 +54,7 @@ namespace
     { 0, 3, 1 }
   };
 
-  const int num_faces    = sizeof(index) / sizeof(FaceVertexIndex);
+  const int num_faces    = sizeof(indexes) / sizeof(FaceVertexIndex);
   const int vertex_count = num_faces * triangles_per_face * NoDice::vertexes_per_triangle;
 } // anonymous namespace
 
@@ -68,7 +68,7 @@ D4()
   GLfloat* p = shape;
   for (int i = 0; i < num_faces; ++i)
   {
-    triangle(vertex, index[i], p);
+    triangle(vertex, indexes[i], p);
   }
 
   VertexBufferBinding vbo_binding(vbo_);

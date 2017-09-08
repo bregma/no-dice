@@ -32,6 +32,7 @@
 #include "nodice/app.h"
 #include "nodice/mesh.h"
 #include "nodice/opengltexture.h"
+#include "nodice/renderable.h"
 #include "nodice/shadercache.h"
 #include "nodice/shaderpipeline.h"
 #include "nodice/shaderstage.h"
@@ -300,6 +301,8 @@ print(GLfloat x, GLfloat y, GLfloat scale, const std::string& text)
                         reinterpret_cast<float const*>(&vertexes[0]));
   mesh->add_index_data(indexes.size(), &indexes[0]);
 
+  Renderable renderable;
+
   /* -- separation of mesh creation and rendering -- */
 
   GLint viewport[4];
@@ -312,24 +315,33 @@ print(GLfloat x, GLfloat y, GLfloat scale, const std::string& text)
                                         {ShaderStage::Type::Vertex,   "intro-vertex.glsl"},
                                         {ShaderStage::Type::Fragment, "intro-fragment.glsl"}
                                       });
+
+  renderable.set_shader_pipeline(shader_pipeline);
+  renderable.add_mesh(mesh.release(), Renderable::PointerOwnership::Owned);
+  renderable.add_texture(0, this->texture.get());
+
+  /** @todo move into ShaderPipeline... */
+
   shader_pipeline->activate();
   shader_pipeline->set_uniform("mvp", MVP_matrix);
 
-  /** @todo move into ShaderPipeline... */
-  glActiveTexture(GL_TEXTURE0);
-  check_gl_error("Font::print() glActiveTexture()");
-  this->texture->make_active();
-  this->texture->add_to_pipeline(*shader_pipeline);
+  for (std::uint16_t t = 0; t < renderable.get_texture_count(); ++t)
+  {
+    glActiveTexture(GL_TEXTURE0 + t);
+    check_gl_error("Font::print() glActiveTexture()");
+    Texture* tex = renderable.get_texture(t);
+    tex->make_active();
+    tex->add_to_pipeline(*shader_pipeline);
+  }
 
   glEnable(GL_BLEND);
   check_gl_error("Font::print() glEnable(GL_BLEND)");
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   check_gl_error("Font::print() glBlendFunc()");
 
-  mesh->make_active();
-  mesh->draw(*shader_pipeline);
-  mesh->make_inactive();
+  renderable.draw();
   shader_pipeline->deactivate();
+  /* ... */
 }
 
 

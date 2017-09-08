@@ -24,6 +24,7 @@
 #ifndef NODICE_MATH_H
 #define NODICE_MATH_H 1
 
+#include <string.h> /// @todo: remove me when vmmlib gets replaced
 #include <vmmlib/vmmlib.h>
 
 

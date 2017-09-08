@@ -22,47 +22,49 @@
 #include "nodice/shaderpipeline.h"
 
 
-class MockMesh
-: public NoDice::Mesh
+namespace 
 {
-private:
-  ~MockMesh() {}
+  class MockMesh
+  : public NoDice::Mesh
+  {
+  private:
+    ~MockMesh() {}
 
-  void store_vertex_data(float const*) override { }
-  void reset_vertex_data() override { }
-  void store_index_data(std::uint16_t const*) override { }
-  void reset_index_data() override { }
-  void activate() override { }
-  bool is_active_p() const override { return true; }
-  void deactivate() override { }
-  void draw_direct() override { ++draw_direct_count; }
-  void draw_indexed() override { ++draw_indexed_count; }
+    void store_vertex_data(float const*) override { }
+    void reset_vertex_data() override { }
+    void store_index_data(std::uint16_t const*) override { }
+    void reset_index_data() override { }
+    void activate() override { }
+    bool is_active_p() const override { return true; }
+    void deactivate() override { }
+    void draw_direct() override { ++draw_direct_count; }
+    void draw_indexed() override { ++draw_indexed_count; }
 
-public:
-  int draw_direct_count = 0;
-  int draw_indexed_count = 0;
-};
+  public:
+    int draw_direct_count = 0;
+    int draw_indexed_count = 0;
+  };
 
 
-class MockShaderPipeline
-: public NoDice::ShaderPipeline
-{
-public:
-  MockShaderPipeline(NoDice::ShaderPipeline::Id id) : NoDice::ShaderPipeline(id) {}
-  ~MockShaderPipeline() {}
+  class MockShaderPipeline
+  : public NoDice::ShaderPipeline
+  {
+  public:
+    MockShaderPipeline(NoDice::ShaderPipeline::Id id) : NoDice::ShaderPipeline(id) {}
+    ~MockShaderPipeline() {}
 
-  void attach_stage_p(NoDice::ShaderStage const&) override { }
-  void link_p() override { }
-  void activate_p() override { }
-  bool is_pipeline_active() const override { return true; }
-  void deactivate_p() override { }
-  void set_uniform_p(const std::string&, const NoDice::mat4&) override { }
-  void set_attribute_p(const std::string&, int, int, void const*) override { ++this->set_attribute_count; }
+    void attach_stage_p(NoDice::ShaderStage const&) override { }
+    void link_p() override { }
+    void activate_p() override { }
+    bool is_pipeline_active() const override { return true; }
+    void deactivate_p() override { }
+    void set_uniform_p(const std::string&, const NoDice::mat4&) override { }
+    void set_attribute_p(const std::string&, int, int, void const*) override { ++this->set_attribute_count; }
 
-public:
-  int set_attribute_count = 0;
-};
-
+  public:
+    int set_attribute_count = 0;
+  };
+} // anonymous namespace
 
 
 SCENARIO("default-constructed Mesh")
